@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * @package App/Http/Controller/Api
+ *
+ * @class SubCategoryController
+ *
+ * @author Kandarp Pandya <kandarp.d9ithub@gmail.com>
+ *
+ */
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
@@ -7,6 +14,7 @@ use App\Http\Controllers\Controller;
 use Auth;
 use DB;
 use App\SubCategories;
+use App\Categories;
 
 class SubCategoryController extends Controller
 {
@@ -18,7 +26,6 @@ class SubCategoryController extends Controller
     public function index()
     {
         $subCategories = SubCategories::all();
-
         return response()->json([
             'subCategories'=>$subCategories,
             'success'   => true,
@@ -43,7 +50,25 @@ class SubCategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name'        => 'required|max:100',
+            'categories_id' => 'required',
+        ]);
+        //$request['created_by'] = Auth::user()->id;
+        try {
+            DB::beginTransaction();
+            //$request['created_by'] = Auth::user()->id;
+            $category = SubCategories::create($request->all());
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['error'=>'Internal server error.','success'=>false]);
+        }
+        return response()->json([
+            'categories'    => SubCategories::where('id',$category->id)->first(),
+            'message' => 'Success',
+            'success' => true,
+        ], 200);
     }
 
     /**
@@ -77,7 +102,26 @@ class SubCategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $req = $request->validate([
+            'name'        => 'required|max:100',
+            'categories_id' => 'required',
+            'is_active' => '',
+            'available' =>'',
+        ]);
+        try {
+            DB::beginTransaction();
+        //$request['created_by'] = Auth::user()->id;
+            $category = SubCategories::where('id',$id)->update($req);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['error'=>'Internal server error.','success'=>false]);
+        }
+        return response()->json([
+            'categories'    => SubCategories::where('id',$id)->first(),
+            'message' => 'Success',
+            'success' => true,
+        ], 200);
     }
 
     /**
@@ -88,6 +132,31 @@ class SubCategoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {    
+            DB::beginTransaction();        
+                SubCategories::where('id',$id)->delete();
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['error'=>'Internal server error.','success'=>false]);
+        }
+        return response()->json([
+            'message' => 'Sub-Category deleted successfully!',
+            'success' => true,
+        ], 200);
+    }
+
+    /**
+     * Display a listing of the resource from category controller.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getSubCategory()
+    {
+        $Categories = Categories::where('is_active',1)->get();
+        return response()->json([
+            'categories'=>$Categories,
+            'success'   => true,
+        ], 200);
     }
 }

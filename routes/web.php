@@ -1,4 +1,4 @@
-<?php
+  <?php
 
 /*
 |--------------------------------------------------------------------------
@@ -11,10 +11,12 @@
 |
 */
 
-Route::get('/', function () {
+Route::get('/','BackEnd\ShowController@getLogin');
+Route::get('/login', function () {
     return view('users.login');
 });
-Route::resource('Login','LoginController');
+Route::post('Login','BackEnd\ShowController@Login');
+Route::post('Register','BackEnd\ShowController@Register');
 
 Route::group( [ 'middleware' => [ 'auth','web' ] ], function() {
 
@@ -25,6 +27,8 @@ Route::group( [ 'middleware' => [ 'auth','web' ] ], function() {
 	Route::get('users','BackEnd\ShowController@showUsers');
 	Route::get('category','BackEnd\ShowController@showCategory');
 	Route::get('subCategories','BackEnd\ShowController@showSubCategories');
+	Route::get('products','BackEnd\ShowController@showProducts');
+	Route::get('taxRules','BackEnd\ShowController@showTaxRules');
 	Route::get('logOut',function(){
 		Auth::logout();
 		return redirect()->to('/');

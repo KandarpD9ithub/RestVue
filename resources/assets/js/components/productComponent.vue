@@ -7,7 +7,7 @@
                         <button @click="initAddProduct()" class="btn btn-primary btn-xs pull-right">
                             + Add New Product
                         </button>
-                        <h3><strong>Product</strong></h3>
+                        <h3><strong>Products</strong></h3>
                     </div>
                     <div class="alert alert-success" v-if="success.length > 0">
                         <ul>
@@ -28,6 +28,9 @@
                                         Price
                                     </th>
                                     <th>
+                                        Active
+                                    </th>
+                                    <th>
                                         Action
                                     </th>
                                 </tr>
@@ -37,7 +40,11 @@
                                         {{ product.name }}
                                     </td>
                                     <td>
-                                        {{ product.mobile }}
+                                        {{ product.price }}
+                                    </td>
+                                    <td>
+                                    <div v-if="product.is_active==1">Active</div>
+                                    <div v-if="product.is_active==0">InActive</div>
                                     </td>
                                     <td>
                                         <button @click="initUpdate(index)" class="btn btn-success btn-xs">Edit</button>
@@ -81,21 +88,16 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="mobile">category:</label>
-                            <input type="number" name="mobile" id="mobile" class="form-control" placeholder="Mobile" v-model="productModel.mobile">
-                        </div>
-
-                        <div class="form-group">
                             <label for="category_id" name="category">Category:</label>
-                            <select id="category_id" name="category_id" class="form-control" v-model="subCategoryModel.category_id">
-                                <option value="">Select Category </option>
-                                <option v-for="(category,id,name) in Category" v-bind:value="category.id"> {{category.name}} </option>
+                            <select id="category_id" name="categories_id" class="form-control" v-model="productModel.categories_id">
+                                <option value="">Select Categorys </option>
+                                <option v-for="(cat,id,name) in category" v-bind:value="cat.id"> {{cat.name}} </option>
                             </select>
                         </div>
 
                         <div class="form-group">
-                            <label for="sub_category_id" name="category">Category:</label>
-                            <select id="sub_category_id" name="sub_category_id" class="form-control" v-model="subCategoryModel.sub_category_id">
+                            <label for="sub_category_id" name="sub_cate">Category:</label>
+                            <select id="sub_category_id" name="sub_categories_id" class="form-control" v-model="productModel.sub_categories_id">
                                 <option value="">Select Sub-Category </option>
                                 <option v-for="(subcat,id,name) in subCategory" v-bind:value="subcat.id"> {{subcat.name}} </option>
                             </select>
@@ -103,7 +105,7 @@
 
                         <div class="form-group">
                             <label for="tax_id" name="category">Tax:</label>
-                            <select id="tax_id" name="tax_id" class="form-control" v-model="subCategoryModel.tax_id">
+                            <select id="tax_id" name="tax_id" class="form-control" v-model="productModel.tax_id">
                                 <option value="">Tax </option>
                                 <option v-for="(tax,id,name) in taxes" v-bind:value="tax.id"> {{tax.name}} </option>
                             </select>
@@ -148,7 +150,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title">Add New Customer</h4>
+                            <h4 class="modal-title">Update Product</h4>
                         </div>
                         <div class="modal-body">
                             <div class="alert alert-danger" v-if="errors.length > 0">
@@ -164,21 +166,16 @@
 
                             <div class="form-group">
                                 <label for="name">Name:</label>
-                                <input type="text" name="name" id="name" placeholder="Name" class="form-control" v-model="productModel.name">
+                                <input type="text" name="name" id="name" placeholder="Name" class="form-control" v-model="productUpdateModel.name">
                             </div>
                             <div class="form-group">
                                 <label for="price">Price:</label>
-                                <input type="text" name="price" id="price" class="form-control" placeholder="Price" v-model="productModel.price">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="mobile">category:</label>
-                                <input type="number" name="mobile" id="mobile" class="form-control" placeholder="Mobile" v-model="productModel.mobile">
+                                <input type="text" name="price" id="price" class="form-control" placeholder="Price" v-model="productUpdateModel.price">
                             </div>
 
                             <div class="form-group">
                                 <label for="category_id" name="category">Category:</label>
-                                <select id="category_id" name="category_id" class="form-control" v-model="productUpdateModel.category_id">
+                                <select id="category_id" name="categories_id" class="form-control" v-model="productUpdateModel.categories_id">
                                     <option value="">Select Category </option>
                                     <option v-for="(category,id,name) in category" v-bind:value="category.id"> {{category.name}} </option>
                                 </select>
@@ -186,7 +183,7 @@
 
                             <div class="form-group">
                                 <label for="sub_category_id" name="category">Sub-Category:</label>
-                                <select id="sub_category_id" name="sub_category_id" class="form-control" v-model="productUpdateModel.sub_category_id">
+                                <select id="sub_category_id" name="sub_categories_id" class="form-control" v-model="productUpdateModel.sub_categories_id">
                                     <option value="">Select Sub-Category </option>
                                     <option v-for="(subcat,id,name) in subCategory" v-bind:value="subcat.id"> {{subcat.name}} </option>
                                 </select>
@@ -195,14 +192,14 @@
                             <div class="form-group">
                                 <label for="tax_id" name="tax_id">Tax:</label>
                                 <select id="tax_id" name="tax_id" class="form-control" v-model="productUpdateModel.tax_id">
-                                    <option value="">Tax </option>
+                                    <option value="">Select Tax </option>
                                     <option v-for="(tax,id,name) in taxes" v-bind:value="tax.id"> {{tax.name}} </option>
                                 </select>
                             </div>
 
                             <div class="form-group">
                                 <label for="is_active">isActive:</label>
-                                <input type="checkbox" name="is_active" id="is_active" v-model="productUpdateModel.is_active">
+                                <input type="checkbox" name="is_active" id="is_active" v-model="productUpdateModel.is_active" value="1">
                             </div>
                             <div class="form-group">
                                 <label for="available">Avaliable:</label>
@@ -227,7 +224,7 @@
                           </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                <button type="button" @click="createProduct" class="btn btn-primary">Submit</button>
+                                <button type="button" @click="updateProduct" class="btn btn-primary">Submit</button>
                             </div>
                         </div>
                         <!-- /.modal-content -->
@@ -246,23 +243,18 @@
                 productModel: {
                     name: '',
                     price: '',
-                    category_id: '',
-                    sub_category_id: '',
+                    categories_id: '',
+                    sub_categories_id: '',
                     tax_id: '',
                     available: '',
                     description: '',
                     image: '',
                     is_active: '',
                     time_duration: '',
-                },//this is for customer creation time set all data null
-                errors: [],//errors varidale define as null
-                prodcutUpdateModelData: [],//this varidale define as null when instant changes in table
-                productUpdateModel: {},//this varidale for get value from the model
-                /*roles: [{'key':1,'value':'Admin'},
-                    {'key':2,'value': 'Accountant'},
-                    {'key':3,'value': 'Store Manager'},
-                    {'key':4,'value': 'Cashier'},
-                    {'key':5,'value': 'chef'}],*/
+                },
+                errors: [],
+                prodcutUpdateModelData: [],
+                productUpdateModel: {},
                 category : [],
                 subCategory : [],
                 taxes: [],
@@ -272,20 +264,12 @@
         },
         mounted()
         {
-            this.readProducts();//call when page load
-            axios.get('/api/categoryList')
-                .then(response => {
-                    this.category = response.data.categoryList
-                });
-            axios.get('/api/subCategoryList')
-                .then(response => {
-                    this.subCategory = response.data.subCategoryList
-                });
-
-            axios.get('/api/taxes')
-                .then(response => {
-                    this.taxes = response.data.taxes
-                });
+        axios.get('/api/products')
+                    .then(response => {
+                        console.log(response.data.products);
+                        this.prodcutUpdateModelData = response.data.products;
+                    });
+            this.readProducts();
         },
         methods: {
             initAddProduct()
@@ -297,8 +281,8 @@
                 axios.post('/api/products', {
                     name: this.productModel.name,
                     price: this.productModel.price,
-                    category_id: this.productModel.category_id,
-                    sub_category_id: this.productModel.sub_category_id,
+                    categories_id: this.productModel.categories_id,
+                    sub_categories_id: this.productModel.sub_categories_id,
                     tax_id: this.productModel.tax_id,
                     available: this.productModel.available,
                     description: this.productModel.description,
@@ -320,8 +304,6 @@
                             this.internal = [];
                             this.internal.push(response.data.error);
                         }
-
-
                     })
                     .catch(error => {
                         //error handling
@@ -332,15 +314,31 @@
                         if (error.response.data.errors.price) {
                             this.errors.push(error.response.data.errors.price[0]);
                         }
-                        if (error.response.data.errors.category_id) {
-                            this.errors.push(error.response.data.errors.category_id[0]);
+                        if (error.response.data.errors.categories_id) {
+                            this.errors.push(error.response.data.errors.categories_id[0]);
                         }
-                        if (error.response.data.errors.sub_category_id) {
-                            this.errors.push(error.response.data.errors.sub_category_id[0]);
+                        if (error.response.data.errors.sub_categories_id) {
+                            this.errors.push(error.response.data.errors.sub_categories_id[0]);
                         }
                         if (error.response.data.errors.tax_id) {
                             this.errors.push(error.response.data.errors.tax_id[0]);
                         }
+                        if (error.response.data.errors.available) {
+                            this.errors.push(error.response.data.errors.available[0]);
+                        }
+                        if (error.response.data.errors.description) {
+                            this.errors.push(error.response.data.errors.description[0]);
+                        }
+                        if (error.response.data.errors.image) {
+                            this.errors.push(error.response.data.errors.image[0]);
+                        }
+                        if (error.response.data.errors.is_active) {
+                            this.errors.push(error.response.data.errors.is_active[0]);
+                        }
+                        if (error.response.data.errors.time_duration) {
+                            this.errors.push(error.response.data.errors.time_duration[0]);
+                        }
+                        
 
                     });
             },
@@ -349,34 +347,52 @@
                 //reset all the vue models data
                 this.productModel.name = '';
                 this.productModel.price = '';
-                this.productModel.category_id = '';
-                this.productModel.sub_category_id = '';
+                this.productModel.categories_id = '';
+                this.productModel.sub_categories_id = '';
                 this.productModel.tax_id = '';
+                this.productModel.available = '';
+                this.productModel.description = '';
+                this.productModel.image = '';
+                this.productModel.is_active = '';
+                this.productModel.time_duration = '';
+
             },
             readProducts()
             {
-            //get all the customers list
-            //get request using axios
+            axios.get('/api/categoryList')
+                .then(response => {
+                    this.category = response.data.categoryList;
+                });
+            axios.get('/api/subCategoryList')
+                .then(response => {
+                    this.subCategory = response.data.subCategoryList;
+                });
+
+            axios.get('/api/taxRules')
+                .then(response => {
+                    this.taxes = response.data.tax;
+                });
                 axios.get('/api/products')
                     .then(response => {
-                        this.prodcutUpdateModelData = response.data.products;//asign responce to the prodcutUpdateModelData
+                        console.log(response.data.products);
+                        this.prodcutUpdateModelData = response.data.products;
                     });
             },
             initUpdate(index)
             {
-                //set data for update perticular id
+            
                 this.errors = [];
                 $("#update_product_model").modal("show");
+                console.log(this.prodcutUpdateModelData[index]);
                 this.productUpdateModel = this.prodcutUpdateModelData[index];
             },
             updateProduct()
             {
-                //send data to the api for update
                 axios.put('/api/products/' + this.productUpdateModel.id, {
                     name: this.productUpdateModel.name,
                     price: this.productUpdateModel.price,
-                    category_id: this.productUpdateModel.category_id,
-                    sub_category_id: this.productUpdateModel.sub_category_id,
+                    categories_id: this.productUpdateModel.categories_id,
+                    sub_categories_id: this.productUpdateModel.sub_categories_id,
                     tax_id: this.productUpdateModel.tax_id,
                     available: this.productUpdateModel.available,
                     description: this.productUpdateModel.description,
@@ -401,20 +417,35 @@
                     })
                     .catch(error => {
                         this.errors = [];
-                       if (error.response.data.errors.name) {
+                        if (error.response.data.errors.name) {
                             this.errors.push(error.response.data.errors.name[0]);
                         }
                         if (error.response.data.errors.price) {
                             this.errors.push(error.response.data.errors.price[0]);
                         }
-                        if (error.response.data.errors.category_id) {
-                            this.errors.push(error.response.data.errors.category_id[0]);
+                        if (error.response.data.errors.categories_id) {
+                            this.errors.push(error.response.data.errors.categories_id[0]);
                         }
-                        if (error.response.data.errors.sub_category_id) {
-                            this.errors.push(error.response.data.errors.sub_category_id[0]);
+                        if (error.response.data.errors.sub_categories_id) {
+                            this.errors.push(error.response.data.errors.sub_categories_id[0]);
                         }
                         if (error.response.data.errors.tax_id) {
                             this.errors.push(error.response.data.errors.tax_id[0]);
+                        }
+                        if (error.response.data.errors.available) {
+                            this.errors.push(error.response.data.errors.available[0]);
+                        }
+                        if (error.response.data.errors.description) {
+                            this.errors.push(error.response.data.errors.description[0]);
+                        }
+                        if (error.response.data.errors.image) {
+                            this.errors.push(error.response.data.errors.image[0]);
+                        }
+                        if (error.response.data.errors.is_active) {
+                            this.errors.push(error.response.data.errors.is_active[0]);
+                        }
+                        if (error.response.data.errors.time_duration) {
+                            this.errors.push(error.response.data.errors.time_duration[0]);
                         }
                     });
             },

@@ -1,4 +1,12 @@
 <?php
+/**
+ * @package App/Http/Controller
+ *
+ * @class LoginController
+ *
+ * @author Kandarp Pandya <kandarp.d9ithub@gmail.com>
+ *
+ */
 
 namespace App\Http\Controllers;
 

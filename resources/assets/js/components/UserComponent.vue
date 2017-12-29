@@ -89,6 +89,15 @@
                             <input type ="number" name="mobile" id="mobile" class="form-control"
                                       placeholder="Mobile" v-model="userModel.mobile">
                         </div>
+                        
+                        <div class="form-group">
+                            <label for="country">Country:</label>
+                            <select name="country" class="form-control" id="country" v-model="userModel.country">
+                                <option selected value="">Select Country </option>
+                                <option v-for="(cout,name,id) in countries" v-bind:value="cout.id">{{ cout.name }}</option>
+                            </select>
+                        </div>
+
                         <div class="form-group">
                             <label for="role_name">Role Name:</label>
                             <select name="role_name" class="form-control" id="role_name" v-model="userModel.role_name">
@@ -141,6 +150,13 @@
                                       placeholder="Mobile" v-model="userUpdateModel.mobile">
                         </div>
                         <div class="form-group">
+                            <label for="country">Country:</label>
+                            <select name="country" class="form-control" id="country" v-model="userUpdateModel.country">
+                                <option selected value="">Select Country </option>
+                                <option v-for="(cout,name,id) in countries" v-bind:value="cout.id">{{ cout.name }}</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label for="role_name">Role Name:</label>
                             <select name="role_name" class="form-control" id="role_name" v-model="userUpdateModel.role_name">
                                 <option value="">Select Role Name</option>
@@ -168,7 +184,8 @@
                     name: '',
                     email: '',
                     mobile: '',
-                    role_name: ''
+                    role_name: '',
+                    country: '',
                 },//this is for customer creation time set all data null
                 errors: [],//errors varidale define as null
                 userUpdateModelData: [],//this varidale define as null when instant changes in table
@@ -179,6 +196,7 @@
                     {'key':4,'value': 'Cashier'},
                     {'key':5,'value': 'chef'}],*/
                 roles : [],
+                countries : [],
                 success: [],
                 internal: [],
             }
@@ -189,6 +207,10 @@
             axios.get('/api/roles')
                 .then(response => {
                     this.roles = response.data.roles
+                });
+            axios.get('/api/country')
+                .then(response => {
+                    this.countries = response.data.country
                 });
         },
         methods: {
@@ -204,6 +226,7 @@
                     name: this.userModel.name,
                     email: this.userModel.email,
                     mobile: this.userModel.mobile,
+                    country: this.userModel.country,
                     role_name: this.userModel.role_name
                 })
                     .then(response => {
@@ -235,6 +258,9 @@
                         if (error.response.data.errors.mobile) {
                             this.errors.push(error.response.data.errors.mobile[0]);
                         }
+                        if (error.response.data.errors.country) {
+                            this.errors.push(error.response.data.errors.country[0]);
+                        }
                         if (error.response.data.errors.role_name) {
                             this.errors.push(error.response.data.errors.role_name[0]);
                         }
@@ -246,6 +272,7 @@
                 this.userModel.name = '';
                 this.userModel.email = '';
                 this.userModel.mobile = '';
+                this.userModel.country = '';
                 this.userModel.role_name = '';
             },
             readUsers()
@@ -271,6 +298,7 @@
                     name: this.userUpdateModel.name,
                     email: this.userUpdateModel.email,
                     mobile: this.userUpdateModel.mobile,
+                    country: this.userUpdateModel.country,
                     role_name: this.userUpdateModel.role_name,
 
                 })
@@ -298,6 +326,9 @@
                         }
                         if (error.response.data.errors.mobile) {
                             this.errors.push(error.response.data.errors.mobile[0]);
+                        }
+                        if (error.response.data.errors.country) {
+                            this.errors.push(error.response.data.errors.country[0]);
                         }
                         if (error.response.data.errors.role_name) {
                             this.errors.push(error.response.data.errors.role_name[0]);

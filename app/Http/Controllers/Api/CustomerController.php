@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * @package App/Http/Controller/Api
+ *
+ * @class CustomerController
+ *
+ * @author Kandarp Pandya <kandarp.d9ithub@gmail.com>
+ *
+ */
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
@@ -44,10 +51,12 @@ class CustomerController extends Controller
     {
         $request->validate([
             'name'        => 'required|max:100|regex:/^[a-zA-Z\s]*$/',
-            'email' => 'required|email|max:150',
+            //'email' => 'required|email|max:150',
             'mobile_number'=> 'required|max:10|min:10',
-            'gender'=> 'required',
+            //'country'   => 'required',
+            //'gender'=> 'required',
             //'birth_date'=> 'required',
+            'address'       => 'max:200',
 
         ]);
         try {
@@ -104,10 +113,12 @@ class CustomerController extends Controller
     {
         $req = $request->validate([
             'name'        => 'required|max:100|regex:/^[a-zA-Z\s]*$/',
-            'email' => 'required|email|max:150',
+            //'email' => 'required|email|max:150',
             'mobile_number'=> 'required|max:10|min:10',
-            'gender'=> 'required',
+            //'country'   => 'required',
+            //'gender'=> 'required',
             //'birth_date'=> 'required',
+            'address'       => 'max:200',
 
         ]);
 
@@ -144,7 +155,7 @@ class CustomerController extends Controller
             return response()->json(['error'=>'Internal server error.','success'=>false]);
         }
         return response()->json([
-            'message' => 'Task deleted successfully!',
+            'message' => 'Category deleted successfully!',
             'success' => true,
         ], 200);
     }

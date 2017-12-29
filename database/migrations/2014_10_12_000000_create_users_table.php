@@ -26,6 +26,7 @@ class CreateUsersTable extends Migration
             $table->string('name', 100);
             $table->string('email', 150)->unique();
             $table->string('password');
+            $table->integer('country')->nullable();
             $table->string('mobile', 15)->nullable();
             $table->unsignedTinyInteger('role_name')->comment('1 (Admin), 2 (Accountant), 3 (Cashier), 4 (Store Manager), 5 ( Chef)');
             $table->enum('is_active', [0,1])->default(1);

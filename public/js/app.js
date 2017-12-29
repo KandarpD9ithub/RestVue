@@ -377,133 +377,6 @@ module.exports = {
 /* 1 */
 /***/ (function(module, exports) {
 
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(process) {
-
-var utils = __webpack_require__(0);
-var normalizeHeaderName = __webpack_require__(21);
-
-var DEFAULT_CONTENT_TYPE = {
-  'Content-Type': 'application/x-www-form-urlencoded'
-};
-
-function setContentTypeIfUnset(headers, value) {
-  if (!utils.isUndefined(headers) && utils.isUndefined(headers['Content-Type'])) {
-    headers['Content-Type'] = value;
-  }
-}
-
-function getDefaultAdapter() {
-  var adapter;
-  if (typeof XMLHttpRequest !== 'undefined') {
-    // For browsers use XHR adapter
-    adapter = __webpack_require__(6);
-  } else if (typeof process !== 'undefined') {
-    // For node use HTTP adapter
-    adapter = __webpack_require__(6);
-  }
-  return adapter;
-}
-
-var defaults = {
-  adapter: getDefaultAdapter(),
-
-  transformRequest: [function transformRequest(data, headers) {
-    normalizeHeaderName(headers, 'Content-Type');
-    if (utils.isFormData(data) ||
-      utils.isArrayBuffer(data) ||
-      utils.isBuffer(data) ||
-      utils.isStream(data) ||
-      utils.isFile(data) ||
-      utils.isBlob(data)
-    ) {
-      return data;
-    }
-    if (utils.isArrayBufferView(data)) {
-      return data.buffer;
-    }
-    if (utils.isURLSearchParams(data)) {
-      setContentTypeIfUnset(headers, 'application/x-www-form-urlencoded;charset=utf-8');
-      return data.toString();
-    }
-    if (utils.isObject(data)) {
-      setContentTypeIfUnset(headers, 'application/json;charset=utf-8');
-      return JSON.stringify(data);
-    }
-    return data;
-  }],
-
-  transformResponse: [function transformResponse(data) {
-    /*eslint no-param-reassign:0*/
-    if (typeof data === 'string') {
-      try {
-        data = JSON.parse(data);
-      } catch (e) { /* Ignore */ }
-    }
-    return data;
-  }],
-
-  timeout: 0,
-
-  xsrfCookieName: 'XSRF-TOKEN',
-  xsrfHeaderName: 'X-XSRF-TOKEN',
-
-  maxContentLength: -1,
-
-  validateStatus: function validateStatus(status) {
-    return status >= 200 && status < 300;
-  }
-};
-
-defaults.headers = {
-  common: {
-    'Accept': 'application/json, text/plain, */*'
-  }
-};
-
-utils.forEach(['delete', 'get', 'head'], function forEachMethodNoData(method) {
-  defaults.headers[method] = {};
-});
-
-utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
-  defaults.headers[method] = utils.merge(DEFAULT_CONTENT_TYPE);
-});
-
-module.exports = defaults;
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports) {
-
 /* globals __VUE_SSR_CONTEXT__ */
 
 // IMPORTANT: Do NOT use ES2015 features in this file.
@@ -608,6 +481,133 @@ module.exports = function normalizeComponent (
   }
 }
 
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(process) {
+
+var utils = __webpack_require__(0);
+var normalizeHeaderName = __webpack_require__(21);
+
+var DEFAULT_CONTENT_TYPE = {
+  'Content-Type': 'application/x-www-form-urlencoded'
+};
+
+function setContentTypeIfUnset(headers, value) {
+  if (!utils.isUndefined(headers) && utils.isUndefined(headers['Content-Type'])) {
+    headers['Content-Type'] = value;
+  }
+}
+
+function getDefaultAdapter() {
+  var adapter;
+  if (typeof XMLHttpRequest !== 'undefined') {
+    // For browsers use XHR adapter
+    adapter = __webpack_require__(6);
+  } else if (typeof process !== 'undefined') {
+    // For node use HTTP adapter
+    adapter = __webpack_require__(6);
+  }
+  return adapter;
+}
+
+var defaults = {
+  adapter: getDefaultAdapter(),
+
+  transformRequest: [function transformRequest(data, headers) {
+    normalizeHeaderName(headers, 'Content-Type');
+    if (utils.isFormData(data) ||
+      utils.isArrayBuffer(data) ||
+      utils.isBuffer(data) ||
+      utils.isStream(data) ||
+      utils.isFile(data) ||
+      utils.isBlob(data)
+    ) {
+      return data;
+    }
+    if (utils.isArrayBufferView(data)) {
+      return data.buffer;
+    }
+    if (utils.isURLSearchParams(data)) {
+      setContentTypeIfUnset(headers, 'application/x-www-form-urlencoded;charset=utf-8');
+      return data.toString();
+    }
+    if (utils.isObject(data)) {
+      setContentTypeIfUnset(headers, 'application/json;charset=utf-8');
+      return JSON.stringify(data);
+    }
+    return data;
+  }],
+
+  transformResponse: [function transformResponse(data) {
+    /*eslint no-param-reassign:0*/
+    if (typeof data === 'string') {
+      try {
+        data = JSON.parse(data);
+      } catch (e) { /* Ignore */ }
+    }
+    return data;
+  }],
+
+  timeout: 0,
+
+  xsrfCookieName: 'XSRF-TOKEN',
+  xsrfHeaderName: 'X-XSRF-TOKEN',
+
+  maxContentLength: -1,
+
+  validateStatus: function validateStatus(status) {
+    return status >= 200 && status < 300;
+  }
+};
+
+defaults.headers = {
+  common: {
+    'Accept': 'application/json, text/plain, */*'
+  }
+};
+
+utils.forEach(['delete', 'get', 'head'], function forEachMethodNoData(method) {
+  defaults.headers[method] = {};
+});
+
+utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
+  defaults.headers[method] = utils.merge(DEFAULT_CONTENT_TYPE);
+});
+
+module.exports = defaults;
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ }),
 /* 4 */
@@ -1072,14 +1072,13 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(11);
-module.exports = __webpack_require__(48);
+module.exports = __webpack_require__(54);
 
 
 /***/ }),
 /* 11 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -1103,7 +1102,11 @@ Vue.component('users', __webpack_require__(42));
 
 Vue.component('category', __webpack_require__(45));
 
-Vue.component('subcategory', __webpack_require__(63));
+Vue.component('subcategory', __webpack_require__(48));
+
+Vue.component('products', __webpack_require__(51));
+
+Vue.component('taxrules', __webpack_require__(64));
 /*Vue.component('pagination', require('laravel-vue-pagination'));*/
 
 var app = new Vue({
@@ -18258,7 +18261,7 @@ if (token) {
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(14)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(14)(module)))
 
 /***/ }),
 /* 14 */
@@ -30947,7 +30950,7 @@ module.exports = __webpack_require__(18);
 var utils = __webpack_require__(0);
 var bind = __webpack_require__(4);
 var Axios = __webpack_require__(20);
-var defaults = __webpack_require__(2);
+var defaults = __webpack_require__(3);
 
 /**
  * Create an instance of Axios
@@ -31030,7 +31033,7 @@ function isSlowBuffer (obj) {
 "use strict";
 
 
-var defaults = __webpack_require__(2);
+var defaults = __webpack_require__(3);
 var utils = __webpack_require__(0);
 var InterceptorManager = __webpack_require__(29);
 var dispatchRequest = __webpack_require__(30);
@@ -31571,7 +31574,7 @@ module.exports = InterceptorManager;
 var utils = __webpack_require__(0);
 var transformData = __webpack_require__(31);
 var isCancel = __webpack_require__(8);
-var defaults = __webpack_require__(2);
+var defaults = __webpack_require__(3);
 var isAbsoluteURL = __webpack_require__(32);
 var combineURLs = __webpack_require__(33);
 
@@ -42595,7 +42598,7 @@ Vue$3.compile = compileToFunctions;
 
 module.exports = Vue$3;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(37).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(37).setImmediate))
 
 /***/ }),
 /* 37 */
@@ -42847,14 +42850,14 @@ exports.clearImmediate = clearImmediate;
     attachTo.clearImmediate = clearImmediate;
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(5)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(5)))
 
 /***/ }),
 /* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(3)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(40)
 /* template */
@@ -43069,6 +43072,52 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -43077,17 +43126,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 name: '',
                 email: '',
                 mobile_number: '',
-                gender: ''
+                gender: '',
+                'birth_date': '',
+                'address': '',
+                country: ''
             }, //this is for customer creation time set all data null
             errors: [], //errors varidale define as null
             customerUpdateModelData: [], //this varidale define as null when instant changes in table
             customerUpdateModel: {}, //this varidale for get value from the model
             success: [],
+            countries: [],
             internal: []
 
         };
     },
     mounted: function mounted() {
+        var _this = this;
+
+        axios.get('/api/country').then(function (response) {
+            _this.countries = response.data.country;
+        });
         this.readCustomers(); //call when page load
     },
 
@@ -43096,44 +43154,52 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             $("#add_customer_model").modal("show"); //show customers popup when create
         },
         createCustomers: function createCustomers() {
-            var _this = this;
+            var _this2 = this;
 
             //create customer and axios used to set methods and hit api.
             axios.post('/api/customers', {
                 name: this.customerModel.name,
                 email: this.customerModel.email,
                 mobile_number: this.customerModel.mobile_number,
-                gender: this.customerModel.gender
+                country: this.customerModel.country,
+                gender: this.customerModel.gender,
+                birth_date: this.customerModel.birth_date,
+                address: this.customerModel.address
 
             }).then(function (response) {
-                _this.errors = [];
-                _this.internal = [];
+                _this2.errors = [];
+                _this2.internal = [];
                 if (response.data.success == true) {
-                    _this.success = [];
-                    _this.success.push('customer created successfully!.');
-                    _this.reset(); //reset this value
-                    _this.customerUpdateModelData.push(response.data.customers); //assign responce data to the customerUpdateModelData model to fetch data instantly
+                    _this2.success = [];
+                    _this2.success.push('customer created successfully!.');
+                    _this2.reset(); //reset this value
+                    _this2.customerUpdateModelData.push(response.data.customers); //assign responce data to the customerUpdateModelData model to fetch data instantly
                     $("#add_customer_model").modal("hide"); //hide model
                 }
                 if (response.data.success == false) {
-                    _this.internal = [];
-                    _this.internal.push(response.data.error);
+                    _this2.internal = [];
+                    _this2.internal.push(response.data.error);
                 }
             }).catch(function (error) {
                 //error handling
-                _this.errors = [];
+                _this2.errors = [];
                 if (error.response.data.errors.name) {
-                    _this.errors.push(error.response.data.errors.name[0]);
+                    _this2.errors.push(error.response.data.errors.name[0]);
                 }
-                if (error.response.data.errors.email) {
-                    _this.errors.push(error.response.data.errors.email[0]);
-                }
+                /*if (error.response.data.errors.email) {
+                    this.errors.push(error.response.data.errors.email[0]);
+                }*/
                 if (error.response.data.errors.mobile_number) {
-                    _this.errors.push(error.response.data.errors.mobile_number[0]);
+                    _this2.errors.push(error.response.data.errors.mobile_number[0]);
+                }
+                /*
+                if (error.response.data.errors.country) {
+                    this.errors.push(error.response.data.errors.country[0]);
                 }
                 if (error.response.data.errors.gender) {
-                    _this.errors.push(error.response.data.errors.gender[0]);
+                    this.errors.push(error.response.data.errors.gender[0]);
                 }
+                */
             });
         },
         reset: function reset() {
@@ -43141,15 +43207,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.customerModel.name = '';
             this.customerModel.email = '';
             this.customerModel.mobile_number = '';
+            this.customerModel.country = '';
             this.customerModel.gender = '';
+            this.customerModel.birth_date = '';
+            this.customerModel.address = '';
         },
         readCustomers: function readCustomers() {
-            var _this2 = this;
+            var _this3 = this;
 
             //get all the customers list
             //get request using axios
             axios.get('/api/customers').then(function (response) {
-                _this2.customerUpdateModelData = response.data.customers; //asign responce to the customerUpdateModelData
+                _this3.customerUpdateModelData = response.data.customers; //asign responce to the customerUpdateModelData
             });
         },
         initUpdate: function initUpdate(index) {
@@ -43159,56 +43228,63 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.customerUpdateModel = this.customerUpdateModelData[index];
         },
         updateCustomer: function updateCustomer() {
-            var _this3 = this;
+            var _this4 = this;
 
             //send data to the api for update
             axios.patch('/api/customers/' + this.customerUpdateModel.id, {
                 name: this.customerUpdateModel.name,
                 email: this.customerUpdateModel.email,
                 mobile_number: this.customerUpdateModel.mobile_number,
-                gender: this.customerUpdateModel.gender
+                country: this.customerUpdateModel.country,
+                gender: this.customerUpdateModel.gender,
+                birth_date: this.customerUpdateModel.birth_date,
+                address: this.customerUpdateModel.address
 
             }).then(function (response) {
-                _this3.errors = [];
-                _this3.internal = [];
+                _this4.errors = [];
+                _this4.internal = [];
                 if (response.data.success == true) {
-                    _this3.success = [];
-                    _this3.success.push('customer updated successfully!.');
+                    _this4.success = [];
+                    _this4.success.push('customer updated successfully!.');
                     $("#update_customer_model").modal("hide"); //hide model
                 }
                 if (response.data.success == false) {
-                    _this3.internal = [];
-                    _this3.internal.push(response.data.error);
+                    _this4.internal = [];
+                    _this4.internal.push(response.data.error);
                 }
             }).catch(function (error) {
 
-                _this3.errors = [];
+                _this4.errors = [];
                 if (error.response.data.errors.name) {
-                    _this3.errors.push(error.response.data.errors.name[0]);
+                    _this4.errors.push(error.response.data.errors.name[0]);
                 }
-                if (error.response.data.errors.email) {
-                    _this3.errors.push(error.response.data.errors.email[0]);
-                }
+                /*if (error.response.data.errors.email) {
+                    this.errors.push(error.response.data.errors.email[0]);
+                }*/
                 if (error.response.data.errors.mobile_number) {
-                    _this3.errors.push(error.response.data.errors.mobile_number[0]);
+                    _this4.errors.push(error.response.data.errors.mobile_number[0]);
+                }
+                /*if (error.response.data.errors.country) {
+                    this.errors.push(error.response.data.errors.country[0]);
                 }
                 if (error.response.data.errors.gender) {
-                    _this3.errors.push(error.response.data.errors.gender[0]);
+                    this.errors.push(error.response.data.errors.gender[0]);
                 }
+                */
             });
         },
         deleteCustomer: function deleteCustomer(index) {
-            var _this4 = this;
+            var _this5 = this;
 
             //delete perticular data
             var conf = confirm("Do you ready want to delete this customer?");
             if (conf === true) {
                 axios.delete('/api/customers/' + this.customerUpdateModelData[index].id).then(function (response) {
                     if (response.data.success == true) {
-                        _this4.success = [];
-                        _this4.success.push('customer deleted successfully!.');
+                        _this5.success = [];
+                        _this5.success.push('customer deleted successfully!.');
                     }
-                    _this4.customerUpdateModelData.splice(index, 1);
+                    _this5.customerUpdateModelData.splice(index, 1);
                 }).catch(function (error) {});
             }
         }
@@ -43477,7 +43553,60 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [
-                  _c("label", { attrs: { for: "mobile_number" } }, [
+                  _c("label", { attrs: { for: "country" } }, [
+                    _vm._v("Country:")
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.customerModel.country,
+                          expression: "customerModel.country"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { name: "country", id: "country" },
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            _vm.customerModel,
+                            "country",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        }
+                      }
+                    },
+                    [
+                      _c("option", { attrs: { selected: "", value: "" } }, [
+                        _vm._v("Select Country ")
+                      ]),
+                      _vm._v(" "),
+                      _vm._l(_vm.countries, function(cout, name, id) {
+                        return _c("option", { domProps: { value: cout.id } }, [
+                          _vm._v(_vm._s(cout.name))
+                        ])
+                      })
+                    ],
+                    2
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "gender" } }, [
                     _vm._v("gender:")
                   ]),
                   _vm._v(" "),
@@ -43531,6 +43660,79 @@ var render = function() {
                     }
                   }),
                   _vm._v("Female\n                    ")
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "birth_date" } }, [
+                    _vm._v("Birth Date:")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.customerModel.birth_date,
+                        expression: "customerModel.birth_date"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "date",
+                      name: "birth_date",
+                      id: "birth_date"
+                    },
+                    domProps: { value: _vm.customerModel.birth_date },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.customerModel,
+                          "birth_date",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "address" } }, [
+                    _vm._v("Birth Date:")
+                  ]),
+                  _vm._v(" "),
+                  _c("textarea", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.customerModel.address,
+                        expression: "customerModel.address"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      name: "address",
+                      id: "address",
+                      placeholder: "Address",
+                      rows: "3"
+                    },
+                    domProps: { value: _vm.customerModel.address },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.customerModel,
+                          "address",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
                 ])
               ]),
               _vm._v(" "),
@@ -43705,6 +43907,59 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "country" } }, [
+                    _vm._v("Country:")
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.customerUpdateModel.country,
+                          expression: "customerUpdateModel.country"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { name: "country", id: "country" },
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            _vm.customerUpdateModel,
+                            "country",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        }
+                      }
+                    },
+                    [
+                      _c("option", { attrs: { selected: "", value: "" } }, [
+                        _vm._v("Select Country ")
+                      ]),
+                      _vm._v(" "),
+                      _vm._l(_vm.countries, function(cout, name, id) {
+                        return _c("option", { domProps: { value: cout.id } }, [
+                          _vm._v(_vm._s(cout.name))
+                        ])
+                      })
+                    ],
+                    2
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
                   _c("label", { attrs: { for: "mobile_number" } }, [
                     _vm._v("gender:")
                   ]),
@@ -43759,6 +44014,79 @@ var render = function() {
                     }
                   }),
                   _vm._v("Female\n                    ")
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "birth_date" } }, [
+                    _vm._v("Birth Date:")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.customerUpdateModel.birth_date,
+                        expression: "customerUpdateModel.birth_date"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "date",
+                      name: "birth_date",
+                      id: "birth_date"
+                    },
+                    domProps: { value: _vm.customerUpdateModel.birth_date },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.customerUpdateModel,
+                          "birth_date",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "address" } }, [
+                    _vm._v("Birth Date:")
+                  ]),
+                  _vm._v(" "),
+                  _c("textarea", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.customerUpdateModel.address,
+                        expression: "customerUpdateModel.address"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      name: "address",
+                      id: "address",
+                      placeholder: "Address",
+                      rows: "3"
+                    },
+                    domProps: { value: _vm.customerUpdateModel.address },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.customerUpdateModel,
+                          "address",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
                 ])
               ]),
               _vm._v(" "),
@@ -43883,7 +44211,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(3)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(43)
 /* template */
@@ -44093,6 +44421,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -44101,7 +44445,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 name: '',
                 email: '',
                 mobile: '',
-                role_name: ''
+                role_name: '',
+                country: ''
             }, //this is for customer creation time set all data null
             errors: [], //errors varidale define as null
             userUpdateModelData: [], //this varidale define as null when instant changes in table
@@ -44112,6 +44457,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 {'key':4,'value': 'Cashier'},
                 {'key':5,'value': 'chef'}],*/
             roles: [],
+            countries: [],
             success: [],
             internal: []
         };
@@ -44122,6 +44468,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         this.readUsers(); //call when page load
         axios.get('/api/roles').then(function (response) {
             _this.roles = response.data.roles;
+        });
+        axios.get('/api/country').then(function (response) {
+            _this.countries = response.data.country;
         });
     },
 
@@ -44138,6 +44487,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 name: this.userModel.name,
                 email: this.userModel.email,
                 mobile: this.userModel.mobile,
+                country: this.userModel.country,
                 role_name: this.userModel.role_name
             }).then(function (response) {
                 _this2.errors = [];
@@ -44165,6 +44515,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 if (error.response.data.errors.mobile) {
                     _this2.errors.push(error.response.data.errors.mobile[0]);
                 }
+                if (error.response.data.errors.country) {
+                    _this2.errors.push(error.response.data.errors.country[0]);
+                }
                 if (error.response.data.errors.role_name) {
                     _this2.errors.push(error.response.data.errors.role_name[0]);
                 }
@@ -44175,6 +44528,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.userModel.name = '';
             this.userModel.email = '';
             this.userModel.mobile = '';
+            this.userModel.country = '';
             this.userModel.role_name = '';
         },
         readUsers: function readUsers() {
@@ -44200,6 +44554,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 name: this.userUpdateModel.name,
                 email: this.userUpdateModel.email,
                 mobile: this.userUpdateModel.mobile,
+                country: this.userUpdateModel.country,
                 role_name: this.userUpdateModel.role_name
 
             }).then(function (response) {
@@ -44224,6 +44579,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }
                 if (error.response.data.errors.mobile) {
                     _this4.errors.push(error.response.data.errors.mobile[0]);
+                }
+                if (error.response.data.errors.country) {
+                    _this4.errors.push(error.response.data.errors.country[0]);
                 }
                 if (error.response.data.errors.role_name) {
                     _this4.errors.push(error.response.data.errors.role_name[0]);
@@ -44499,6 +44857,59 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "country" } }, [
+                    _vm._v("Country:")
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.userModel.country,
+                          expression: "userModel.country"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { name: "country", id: "country" },
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            _vm.userModel,
+                            "country",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        }
+                      }
+                    },
+                    [
+                      _c("option", { attrs: { selected: "", value: "" } }, [
+                        _vm._v("Select Country ")
+                      ]),
+                      _vm._v(" "),
+                      _vm._l(_vm.countries, function(cout, name, id) {
+                        return _c("option", { domProps: { value: cout.id } }, [
+                          _vm._v(_vm._s(cout.name))
+                        ])
+                      })
+                    ],
+                    2
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
                   _c("label", { attrs: { for: "role_name" } }, [
                     _vm._v("Role Name:")
                   ]),
@@ -44723,6 +45134,59 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "country" } }, [
+                    _vm._v("Country:")
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.userUpdateModel.country,
+                          expression: "userUpdateModel.country"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { name: "country", id: "country" },
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            _vm.userUpdateModel,
+                            "country",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        }
+                      }
+                    },
+                    [
+                      _c("option", { attrs: { selected: "", value: "" } }, [
+                        _vm._v("Select Country ")
+                      ]),
+                      _vm._v(" "),
+                      _vm._l(_vm.countries, function(cout, name, id) {
+                        return _c("option", { domProps: { value: cout.id } }, [
+                          _vm._v(_vm._s(cout.name))
+                        ])
+                      })
+                    ],
+                    2
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
                   _c("label", { attrs: { for: "role_name" } }, [
                     _vm._v("Role Name:")
                   ]),
@@ -44897,7 +45361,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(3)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(46)
 /* template */
@@ -45128,7 +45592,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             categoryUpdateModel: {}, //this varidale for get value from the model
             success: [],
             internal: [],
-            categories: [{ 'key': 'Veg', 'value': 0 }, { 'key': 'NonVeg', 'value': 1 }]
+            categories: []
 
         };
     },
@@ -45138,10 +45602,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     methods: {
         initAddCategory: function initAddCategory() {
+            var _this = this;
+
+            axios.get('api/getCategoryList').then(function (response) {
+                _this.categories = response.data.categoryList;
+            });
             $("#add_category_model").modal("show"); //show category popup when create
         },
         createCategory: function createCategory() {
-            var _this = this;
+            var _this2 = this;
 
             //create category and axios used to set methods and hit api.
             axios.post('/api/category', {
@@ -45151,27 +45620,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 is_active: this.categoryModel.is_active
 
             }).then(function (response) {
-                _this.errors = [];
-                _this.internal = [];
+                _this2.errors = [];
+                _this2.internal = [];
                 if (response.data.success == true) {
-                    _this.success = [];
-                    _this.success.push('category created successfully!.');
-                    _this.reset(); //reset this value
-                    _this.categoryUpdateModelData.push(response.data.categories); //assign responce data to the categoryUpdateModelData model to fetch data instantly
+                    _this2.success = [];
+                    _this2.success.push('category created successfully!.');
+                    _this2.reset(); //reset this value
+                    _this2.categoryUpdateModelData.push(response.data.categories); //assign responce data to the categoryUpdateModelData model to fetch data instantly
                     $("#add_category_model").modal("hide"); //hide model
                 }
                 if (response.data.success == false) {
-                    _this.internal = [];
-                    _this.internal.push(response.data.error);
+                    _this2.internal = [];
+                    _this2.internal.push(response.data.error);
                 }
             }).catch(function (error) {
                 //error handling
-                _this.errors = [];
+                _this2.errors = [];
                 if (error.response.data.errors.name) {
-                    _this.errors.push(error.response.data.errors.name[0]);
+                    _this2.errors.push(error.response.data.errors.name[0]);
                 }
                 if (error.response.data.errors.category) {
-                    _this.errors.push(error.response.data.errors.category[0]);
+                    _this2.errors.push(error.response.data.errors.category[0]);
                 }
             });
         },
@@ -45183,22 +45652,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.categoryModel.is_active = '';
         },
         readCategory: function readCategory() {
-            var _this2 = this;
+            var _this3 = this;
 
             //get all the category list
             //get request using axios
             axios.get('/api/category').then(function (response) {
-                _this2.categoryUpdateModelData = response.data.categories; //asign responce to the categoryUpdateModelData
+                _this3.categoryUpdateModelData = response.data.categories; //asign responce to the categoryUpdateModelData
             });
         },
         initUpdate: function initUpdate(index) {
+            var _this4 = this;
+
             //set data for update perticular id
             this.errors = [];
+            axios.get('api/getCategoryList').then(function (response) {
+                _this4.categories = response.data.categoryList;
+            });
             $("#update_category_model").modal("show");
             this.categoryUpdateModel = this.categoryUpdateModelData[index];
         },
         updateCategory: function updateCategory() {
-            var _this3 = this;
+            var _this5 = this;
 
             //send data to the api for update
             axios.patch('/api/category/' + this.categoryUpdateModel.id, {
@@ -45208,40 +45682,40 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 is_active: this.categoryUpdateModel.is_active
 
             }).then(function (response) {
-                _this3.errors = [];
-                _this3.internal = [];
+                _this5.errors = [];
+                _this5.internal = [];
                 if (response.data.success == true) {
-                    _this3.success = [];
-                    _this3.success.push('category updated successfully!.');
+                    _this5.success = [];
+                    _this5.success.push('category updated successfully!.');
                     $("#update_category_model").modal("hide"); //hide model
                 }
                 if (response.data.success == false) {
-                    _this3.internal = [];
-                    _this3.internal.push(response.data.error);
+                    _this5.internal = [];
+                    _this5.internal.push(response.data.error);
                 }
             }).catch(function (error) {
 
-                _this3.errors = [];
+                _this5.errors = [];
                 if (error.response.data.errors.name) {
-                    _this3.errors.push(error.response.data.errors.name[0]);
+                    _this5.errors.push(error.response.data.errors.name[0]);
                 }
                 if (error.response.data.errors.category) {
-                    _this3.errors.push(error.response.data.errors.category[0]);
+                    _this5.errors.push(error.response.data.errors.category[0]);
                 }
             });
         },
         deleteCategory: function deleteCategory(index) {
-            var _this4 = this;
+            var _this6 = this;
 
             //delete perticular data
             var conf = confirm("Do you ready want to delete this category?");
             if (conf === true) {
                 axios.delete('/api/category/' + this.categoryUpdateModelData[index].id).then(function (response) {
                     if (response.data.success == true) {
-                        _this4.success = [];
-                        _this4.success.push('category deleted successfully!.');
+                        _this6.success = [];
+                        _this6.success.push('category deleted successfully!.');
                     }
-                    _this4.categoryUpdateModelData.splice(index, 1);
+                    _this6.categoryUpdateModelData.splice(index, 1);
                 }).catch(function (error) {});
             }
         }
@@ -45484,11 +45958,11 @@ var render = function() {
                         _vm._v("Select Category ")
                       ]),
                       _vm._v(" "),
-                      _vm._l(_vm.categories, function(category, key, value) {
+                      _vm._l(_vm.categories, function(category, id, name) {
                         return _c(
                           "option",
-                          { domProps: { value: category.value } },
-                          [_vm._v(" " + _vm._s(category.key) + " ")]
+                          { domProps: { value: category.id } },
+                          [_vm._v(" " + _vm._s(category.name) + " ")]
                         )
                       })
                     ],
@@ -45746,11 +46220,11 @@ var render = function() {
                         _vm._v("Select Category ")
                       ]),
                       _vm._v(" "),
-                      _vm._l(_vm.categories, function(category, key, value) {
+                      _vm._l(_vm.categories, function(category, id, name) {
                         return _c(
                           "option",
-                          { domProps: { value: category.value } },
-                          [_vm._v(" " + _vm._s(category.key) + " ")]
+                          { domProps: { value: category.id } },
+                          [_vm._v(" " + _vm._s(category.name) + " ")]
                         )
                       })
                     ],
@@ -45985,34 +46459,14 @@ if (false) {
 
 /***/ }),
 /* 48 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 49 */,
-/* 50 */,
-/* 51 */,
-/* 52 */,
-/* 53 */,
-/* 54 */,
-/* 55 */,
-/* 56 */,
-/* 57 */,
-/* 58 */,
-/* 59 */,
-/* 60 */,
-/* 61 */,
-/* 62 */,
-/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(3)
+var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(64)
+var __vue_script__ = __webpack_require__(49)
 /* template */
-var __vue_template__ = __webpack_require__(65)
+var __vue_template__ = __webpack_require__(50)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -46051,7 +46505,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 64 */
+/* 49 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -46230,129 +46684,137 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             subCategoryModel: {
                 name: '',
-                category: '',
+                categories_id: '',
                 available: '',
                 is_active: ''
             }, //this is for category creation time set all data null
             errors: [], //errors varidale define as null
             subCategoryUpdateModelData: [], //this varidale define as null when instant changes in table
-            categoryUpdateModel: {}, //this varidale for get value from the model
+            subCategoryUpdateModel: {}, //this varidale for get value from the model
             success: [],
             internal: [],
-            categories: [{ 'key': 'Veg', 'value': 0 }, { 'key': 'NonVeg', 'value': 1 }]
+            subCategory: [],
+            categories: []
 
         };
     },
     mounted: function mounted() {
+        var _this = this;
+
+        this.subCategory = [];
+        axios.get('api/getSubCategory').then(function (response) {
+            _this.subCategory = response.data.categories;
+        });
         this.readCategory(); //call when page load
     },
 
     methods: {
         initAddSubCategory: function initAddSubCategory() {
+
             $("#add_sub_category_model").modal("show"); //show category popup when create
         },
         createCategory: function createCategory() {
-            var _this = this;
+            var _this2 = this;
 
             //create category and axios used to set methods and hit api.
-            axios.post('/api/category', {
+            axios.post('/api/subCategory', {
                 name: this.subCategoryModel.name,
-                category: this.subCategoryModel.category,
+                categories_id: this.subCategoryModel.categories_id,
                 available: this.subCategoryModel.available,
                 is_active: this.subCategoryModel.is_active
 
             }).then(function (response) {
-                _this.errors = [];
-                _this.internal = [];
+                _this2.errors = [];
+                _this2.internal = [];
                 if (response.data.success == true) {
-                    _this.success = [];
-                    _this.success.push('category created successfully!.');
-                    _this.reset(); //reset this value
-                    _this.subCategoryUpdateModelData.push(response.data.categories); //assign responce data to the subCategoryUpdateModelData model to fetch data instantly
+                    _this2.success = [];
+                    _this2.success.push('Sub-Category created successfully!.');
+                    _this2.reset(); //reset this value
+                    _this2.subCategoryUpdateModelData.push(response.data.categories); //assign responce data to the subCategoryUpdateModelData model to fetch data instantly
                     $("#add_sub_category_model").modal("hide"); //hide model
                 }
                 if (response.data.success == false) {
-                    _this.internal = [];
-                    _this.internal.push(response.data.error);
+                    _this2.internal = [];
+                    _this2.internal.push(response.data.error);
                 }
             }).catch(function (error) {
                 //error handling
-                _this.errors = [];
+                _this2.errors = [];
                 if (error.response.data.errors.name) {
-                    _this.errors.push(error.response.data.errors.name[0]);
+                    _this2.errors.push(error.response.data.errors.name[0]);
                 }
-                if (error.response.data.errors.category) {
-                    _this.errors.push(error.response.data.errors.category[0]);
+                if (error.response.data.errors.categories_id) {
+                    _this2.errors.push(error.response.data.errors.categories_id[0]);
                 }
             });
         },
         reset: function reset() {
             //reset all the vue models data
             this.subCategoryModel.name = '';
-            this.subCategoryModel.category = '';
+            this.subCategoryModel.categories_id = '';
             this.subCategoryModel.available = '';
             this.subCategoryModel.is_active = '';
         },
         readCategory: function readCategory() {
-            var _this2 = this;
+            var _this3 = this;
 
-            //get all the category list
+            //get all the subcategory list
             //get request using axios
-            axios.get('/api/category').then(function (response) {
-                _this2.subCategoryUpdateModelData = response.data.categories; //asign responce to the subCategoryUpdateModelData
+            axios.get('/api/subCategory').then(function (response) {
+                _this3.subCategoryUpdateModelData = response.data.subCategories; //asign responce to the subCategoryUpdateModelData
             });
         },
         initUpdate: function initUpdate(index) {
             //set data for update perticular id
             this.errors = [];
             $("#update_category_model").modal("show");
-            this.categoryUpdateModel = this.subCategoryUpdateModelData[index];
+            this.subCategoryUpdateModel = this.subCategoryUpdateModelData[index];
         },
         updateCategory: function updateCategory() {
-            var _this3 = this;
+            var _this4 = this;
 
             //send data to the api for update
-            axios.patch('/api/category/' + this.categoryUpdateModel.id, {
-                name: this.categoryUpdateModel.name,
-                category: this.categoryUpdateModel.category,
-                available: this.categoryUpdateModel.available,
-                is_active: this.categoryUpdateModel.is_active
+            axios.patch('/api/subCategory/' + this.subCategoryUpdateModel.id, {
+                name: this.subCategoryUpdateModel.name,
+                categories_id: this.subCategoryUpdateModel.categories_id,
+                available: this.subCategoryUpdateModel.available,
+                is_active: this.subCategoryUpdateModel.is_active
 
             }).then(function (response) {
-                _this3.errors = [];
-                _this3.internal = [];
+                _this4.errors = [];
+                _this4.internal = [];
                 if (response.data.success == true) {
-                    _this3.success = [];
-                    _this3.success.push('category updated successfully!.');
+                    _this4.success = [];
+                    _this4.success.push('Sub-Category updated successfully!.');
                     $("#update_category_model").modal("hide"); //hide model
                 }
                 if (response.data.success == false) {
-                    _this3.internal = [];
-                    _this3.internal.push(response.data.error);
+                    _this4.internal = [];
+                    _this4.internal.push(response.data.error);
                 }
             }).catch(function (error) {
 
-                _this3.errors = [];
+                _this4.errors = [];
                 if (error.response.data.errors.name) {
-                    _this3.errors.push(error.response.data.errors.name[0]);
+                    _this4.errors.push(error.response.data.errors.name[0]);
                 }
-                if (error.response.data.errors.category) {
-                    _this3.errors.push(error.response.data.errors.category[0]);
+                if (error.response.data.errors.categories_id) {
+                    _this4.errors.push(error.response.data.errors.categories_id[0]);
                 }
             });
         },
         deleteSubCategory: function deleteSubCategory(index) {
-            var _this4 = this;
+            var _this5 = this;
 
             //delete perticular data
-            var conf = confirm("Do you ready want to delete this category?");
+            var conf = confirm("Do you ready want to delete this Sub-Category?");
             if (conf === true) {
-                axios.delete('/api/category/' + this.subCategoryUpdateModelData[index].id).then(function (response) {
+                axios.delete('/api/subCategory/' + this.subCategoryUpdateModelData[index].id).then(function (response) {
                     if (response.data.success == true) {
-                        _this4.success = [];
-                        _this4.success.push('category deleted successfully!.');
+                        _this5.success = [];
+                        _this5.success.push('Sub-Category deleted successfully!.');
                     }
-                    _this4.subCategoryUpdateModelData.splice(index, 1);
+                    _this5.subCategoryUpdateModelData.splice(index, 1);
                 }).catch(function (error) {});
             }
         }
@@ -46360,7 +46822,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 65 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -46557,8 +47019,8 @@ var render = function() {
                 _c("div", { staticClass: "form-group" }, [
                   _c(
                     "label",
-                    { attrs: { for: "category", name: "category" } },
-                    [_vm._v("Category:")]
+                    { attrs: { for: "categories_id", name: "categories_id" } },
+                    [_vm._v("Parent Category:")]
                   ),
                   _vm._v(" "),
                   _c(
@@ -46568,12 +47030,12 @@ var render = function() {
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: _vm.subCategoryModel.category,
-                          expression: "subCategoryModel.category"
+                          value: _vm.subCategoryModel.categories_id,
+                          expression: "subCategoryModel.categories_id"
                         }
                       ],
                       staticClass: "form-control",
-                      attrs: { id: "category", name: "category" },
+                      attrs: { id: "categories_id", name: "categories_id" },
                       on: {
                         change: function($event) {
                           var $$selectedVal = Array.prototype.filter
@@ -46586,7 +47048,7 @@ var render = function() {
                             })
                           _vm.$set(
                             _vm.subCategoryModel,
-                            "category",
+                            "categories_id",
                             $event.target.multiple
                               ? $$selectedVal
                               : $$selectedVal[0]
@@ -46599,11 +47061,11 @@ var render = function() {
                         _vm._v("Select Category ")
                       ]),
                       _vm._v(" "),
-                      _vm._l(_vm.categories, function(category, key, value) {
+                      _vm._l(_vm.subCategory, function(category, id, name) {
                         return _c(
                           "option",
-                          { domProps: { value: category.value } },
-                          [_vm._v(" " + _vm._s(category.key) + " ")]
+                          { domProps: { value: category.id } },
+                          [_vm._v(" " + _vm._s(category.name) + " ")]
                         )
                       })
                     ],
@@ -46791,8 +47253,8 @@ var render = function() {
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.categoryUpdateModel.name,
-                        expression: "categoryUpdateModel.name"
+                        value: _vm.subCategoryUpdateModel.name,
+                        expression: "subCategoryUpdateModel.name"
                       }
                     ],
                     staticClass: "form-control",
@@ -46802,14 +47264,14 @@ var render = function() {
                       id: "name",
                       placeholder: "Name"
                     },
-                    domProps: { value: _vm.categoryUpdateModel.name },
+                    domProps: { value: _vm.subCategoryUpdateModel.name },
                     on: {
                       input: function($event) {
                         if ($event.target.composing) {
                           return
                         }
                         _vm.$set(
-                          _vm.categoryUpdateModel,
+                          _vm.subCategoryUpdateModel,
                           "name",
                           $event.target.value
                         )
@@ -46821,8 +47283,8 @@ var render = function() {
                 _c("div", { staticClass: "form-group" }, [
                   _c(
                     "label",
-                    { attrs: { for: "category", name: "category" } },
-                    [_vm._v("Category:")]
+                    { attrs: { for: "categories_id", name: "categories_id" } },
+                    [_vm._v("Parent Category:")]
                   ),
                   _vm._v(" "),
                   _c(
@@ -46832,12 +47294,12 @@ var render = function() {
                         {
                           name: "model",
                           rawName: "v-model",
-                          value: _vm.categoryUpdateModel.category,
-                          expression: "categoryUpdateModel.category"
+                          value: _vm.subCategoryUpdateModel.categories_id,
+                          expression: "subCategoryUpdateModel.categories_id"
                         }
                       ],
                       staticClass: "form-control",
-                      attrs: { id: "category", name: "category" },
+                      attrs: { id: "categories_id", name: "categories_id" },
                       on: {
                         change: function($event) {
                           var $$selectedVal = Array.prototype.filter
@@ -46849,8 +47311,8 @@ var render = function() {
                               return val
                             })
                           _vm.$set(
-                            _vm.categoryUpdateModel,
-                            "category",
+                            _vm.subCategoryUpdateModel,
+                            "categories_id",
                             $event.target.multiple
                               ? $$selectedVal
                               : $$selectedVal[0]
@@ -46863,11 +47325,11 @@ var render = function() {
                         _vm._v("Select Category ")
                       ]),
                       _vm._v(" "),
-                      _vm._l(_vm.categories, function(category, key, value) {
+                      _vm._l(_vm.subCategory, function(category, id, name) {
                         return _c(
                           "option",
-                          { domProps: { value: category.value } },
-                          [_vm._v(" " + _vm._s(category.key) + " ")]
+                          { domProps: { value: category.id } },
+                          [_vm._v(" " + _vm._s(category.name) + " ")]
                         )
                       })
                     ],
@@ -46885,8 +47347,8 @@ var render = function() {
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.categoryUpdateModel.is_active,
-                        expression: "categoryUpdateModel.is_active"
+                        value: _vm.subCategoryUpdateModel.is_active,
+                        expression: "subCategoryUpdateModel.is_active"
                       }
                     ],
                     attrs: {
@@ -46895,13 +47357,16 @@ var render = function() {
                       id: "is_active"
                     },
                     domProps: {
-                      checked: Array.isArray(_vm.categoryUpdateModel.is_active)
-                        ? _vm._i(_vm.categoryUpdateModel.is_active, null) > -1
-                        : _vm.categoryUpdateModel.is_active
+                      checked: Array.isArray(
+                        _vm.subCategoryUpdateModel.is_active
+                      )
+                        ? _vm._i(_vm.subCategoryUpdateModel.is_active, null) >
+                          -1
+                        : _vm.subCategoryUpdateModel.is_active
                     },
                     on: {
                       change: function($event) {
-                        var $$a = _vm.categoryUpdateModel.is_active,
+                        var $$a = _vm.subCategoryUpdateModel.is_active,
                           $$el = $event.target,
                           $$c = $$el.checked ? true : false
                         if (Array.isArray($$a)) {
@@ -46909,17 +47374,17 @@ var render = function() {
                             $$i = _vm._i($$a, $$v)
                           if ($$el.checked) {
                             $$i < 0 &&
-                              (_vm.categoryUpdateModel.is_active = $$a.concat([
-                                $$v
-                              ]))
+                              (_vm.subCategoryUpdateModel.is_active = $$a.concat(
+                                [$$v]
+                              ))
                           } else {
                             $$i > -1 &&
-                              (_vm.categoryUpdateModel.is_active = $$a
+                              (_vm.subCategoryUpdateModel.is_active = $$a
                                 .slice(0, $$i)
                                 .concat($$a.slice($$i + 1)))
                           }
                         } else {
-                          _vm.$set(_vm.categoryUpdateModel, "is_active", $$c)
+                          _vm.$set(_vm.subCategoryUpdateModel, "is_active", $$c)
                         }
                       }
                     }
@@ -46936,8 +47401,8 @@ var render = function() {
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.categoryUpdateModel.available,
-                        expression: "categoryUpdateModel.available"
+                        value: _vm.subCategoryUpdateModel.available,
+                        expression: "subCategoryUpdateModel.available"
                       }
                     ],
                     attrs: {
@@ -46947,11 +47412,11 @@ var render = function() {
                       value: "0"
                     },
                     domProps: {
-                      checked: _vm._q(_vm.categoryUpdateModel.available, "0")
+                      checked: _vm._q(_vm.subCategoryUpdateModel.available, "0")
                     },
                     on: {
                       change: function($event) {
-                        _vm.$set(_vm.categoryUpdateModel, "available", "0")
+                        _vm.$set(_vm.subCategoryUpdateModel, "available", "0")
                       }
                     }
                   }),
@@ -46961,8 +47426,8 @@ var render = function() {
                       {
                         name: "model",
                         rawName: "v-model",
-                        value: _vm.categoryUpdateModel.available,
-                        expression: "categoryUpdateModel.available"
+                        value: _vm.subCategoryUpdateModel.available,
+                        expression: "subCategoryUpdateModel.available"
                       }
                     ],
                     attrs: {
@@ -46972,11 +47437,11 @@ var render = function() {
                       value: "1"
                     },
                     domProps: {
-                      checked: _vm._q(_vm.categoryUpdateModel.available, "1")
+                      checked: _vm._q(_vm.subCategoryUpdateModel.available, "1")
                     },
                     on: {
                       change: function($event) {
-                        _vm.$set(_vm.categoryUpdateModel, "available", "1")
+                        _vm.$set(_vm.subCategoryUpdateModel, "available", "1")
                       }
                     }
                   }),
@@ -47097,6 +47562,2714 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-5ee908d4", module.exports)
+  }
+}
+
+/***/ }),
+/* 51 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(52)
+/* template */
+var __vue_template__ = __webpack_require__(53)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\productComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-74ff1925", Component.options)
+  } else {
+    hotAPI.reload("data-v-74ff1925", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 52 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            productModel: {
+                name: '',
+                price: '',
+                categories_id: '',
+                sub_categories_id: '',
+                tax_id: '',
+                available: '',
+                description: '',
+                image: '',
+                is_active: '',
+                time_duration: ''
+            },
+            errors: [],
+            prodcutUpdateModelData: [],
+            productUpdateModel: {},
+            category: [],
+            subCategory: [],
+            taxes: [],
+            success: [],
+            internal: []
+        };
+    },
+    mounted: function mounted() {
+        var _this = this;
+
+        axios.get('/api/products').then(function (response) {
+            console.log(response.data.products);
+            _this.prodcutUpdateModelData = response.data.products;
+        });
+        this.readProducts();
+    },
+
+    methods: {
+        initAddProduct: function initAddProduct() {
+            $("#add_product_model").modal("show");
+        },
+        createProduct: function createProduct() {
+            var _this2 = this;
+
+            axios.post('/api/products', {
+                name: this.productModel.name,
+                price: this.productModel.price,
+                categories_id: this.productModel.categories_id,
+                sub_categories_id: this.productModel.sub_categories_id,
+                tax_id: this.productModel.tax_id,
+                available: this.productModel.available,
+                description: this.productModel.description,
+                image: this.productModel.image,
+                is_active: this.productModel.is_active,
+                time_duration: this.productModel.time_duration
+            }).then(function (response) {
+                _this2.errors = [];
+                _this2.internal = [];
+                if (response.data.success == true) {
+                    _this2.success = [];
+                    _this2.success.push('Product created successfully!.');
+                    _this2.reset(); //reset this value
+                    _this2.prodcutUpdateModelData.push(response.data.products); //assign responce data to the prodcutUpdateModelData model to fetch data instantly
+                    $("#add_product_model").modal("hide"); //hide model
+                }
+                if (response.data.success == false) {
+                    _this2.internal = [];
+                    _this2.internal.push(response.data.error);
+                }
+            }).catch(function (error) {
+                //error handling
+                _this2.errors = [];
+                if (error.response.data.errors.name) {
+                    _this2.errors.push(error.response.data.errors.name[0]);
+                }
+                if (error.response.data.errors.price) {
+                    _this2.errors.push(error.response.data.errors.price[0]);
+                }
+                if (error.response.data.errors.categories_id) {
+                    _this2.errors.push(error.response.data.errors.categories_id[0]);
+                }
+                if (error.response.data.errors.sub_categories_id) {
+                    _this2.errors.push(error.response.data.errors.sub_categories_id[0]);
+                }
+                if (error.response.data.errors.tax_id) {
+                    _this2.errors.push(error.response.data.errors.tax_id[0]);
+                }
+                if (error.response.data.errors.available) {
+                    _this2.errors.push(error.response.data.errors.available[0]);
+                }
+                if (error.response.data.errors.description) {
+                    _this2.errors.push(error.response.data.errors.description[0]);
+                }
+                if (error.response.data.errors.image) {
+                    _this2.errors.push(error.response.data.errors.image[0]);
+                }
+                if (error.response.data.errors.is_active) {
+                    _this2.errors.push(error.response.data.errors.is_active[0]);
+                }
+                if (error.response.data.errors.time_duration) {
+                    _this2.errors.push(error.response.data.errors.time_duration[0]);
+                }
+            });
+        },
+        reset: function reset() {
+            //reset all the vue models data
+            this.productModel.name = '';
+            this.productModel.price = '';
+            this.productModel.categories_id = '';
+            this.productModel.sub_categories_id = '';
+            this.productModel.tax_id = '';
+            this.productModel.available = '';
+            this.productModel.description = '';
+            this.productModel.image = '';
+            this.productModel.is_active = '';
+            this.productModel.time_duration = '';
+        },
+        readProducts: function readProducts() {
+            var _this3 = this;
+
+            axios.get('/api/categoryList').then(function (response) {
+                _this3.category = response.data.categoryList;
+            });
+            axios.get('/api/subCategoryList').then(function (response) {
+                _this3.subCategory = response.data.subCategoryList;
+            });
+
+            axios.get('/api/taxRules').then(function (response) {
+                _this3.taxes = response.data.tax;
+            });
+            axios.get('/api/products').then(function (response) {
+                console.log(response.data.products);
+                _this3.prodcutUpdateModelData = response.data.products;
+            });
+        },
+        initUpdate: function initUpdate(index) {
+
+            this.errors = [];
+            $("#update_product_model").modal("show");
+            console.log(this.prodcutUpdateModelData[index]);
+            this.productUpdateModel = this.prodcutUpdateModelData[index];
+        },
+        updateProduct: function updateProduct() {
+            var _this4 = this;
+
+            axios.put('/api/products/' + this.productUpdateModel.id, {
+                name: this.productUpdateModel.name,
+                price: this.productUpdateModel.price,
+                categories_id: this.productUpdateModel.categories_id,
+                sub_categories_id: this.productUpdateModel.sub_categories_id,
+                tax_id: this.productUpdateModel.tax_id,
+                available: this.productUpdateModel.available,
+                description: this.productUpdateModel.description,
+                image: this.productUpdateModel.image,
+                is_active: this.productUpdateModel.is_active,
+                time_duration: this.productUpdateModel.time_duration
+
+            }).then(function (response) {
+                _this4.errors = [];
+                _this4.internal = [];
+                if (response.data.success == true) {
+                    _this4.success = [];
+                    _this4.success.push('Product updated successfully!.');
+                    $("#update_product_model").modal("hide"); //hide model
+                }
+                if (response.data.success == false) {
+                    _this4.internal = [];
+                    _this4.internal.push(response.data.error);
+                }
+            }).catch(function (error) {
+                _this4.errors = [];
+                if (error.response.data.errors.name) {
+                    _this4.errors.push(error.response.data.errors.name[0]);
+                }
+                if (error.response.data.errors.price) {
+                    _this4.errors.push(error.response.data.errors.price[0]);
+                }
+                if (error.response.data.errors.categories_id) {
+                    _this4.errors.push(error.response.data.errors.categories_id[0]);
+                }
+                if (error.response.data.errors.sub_categories_id) {
+                    _this4.errors.push(error.response.data.errors.sub_categories_id[0]);
+                }
+                if (error.response.data.errors.tax_id) {
+                    _this4.errors.push(error.response.data.errors.tax_id[0]);
+                }
+                if (error.response.data.errors.available) {
+                    _this4.errors.push(error.response.data.errors.available[0]);
+                }
+                if (error.response.data.errors.description) {
+                    _this4.errors.push(error.response.data.errors.description[0]);
+                }
+                if (error.response.data.errors.image) {
+                    _this4.errors.push(error.response.data.errors.image[0]);
+                }
+                if (error.response.data.errors.is_active) {
+                    _this4.errors.push(error.response.data.errors.is_active[0]);
+                }
+                if (error.response.data.errors.time_duration) {
+                    _this4.errors.push(error.response.data.errors.time_duration[0]);
+                }
+            });
+        },
+        deleteProduct: function deleteProduct(index) {
+            var _this5 = this;
+
+            //delete perticular data
+            var conf = confirm("Do you ready want to delete this Product?");
+            if (conf === true) {
+                axios.delete('/api/products/' + this.prodcutUpdateModelData[index].id).then(function (response) {
+
+                    _this5.prodcutUpdateModelData.splice(index, 1);
+                }).catch(function (error) {});
+            }
+        }
+    }
+});
+
+/***/ }),
+/* 53 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "row" }, [
+    _c("div", { staticClass: "col-md-11" }, [
+      _c("div", [
+        _c("div", [
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-primary btn-xs pull-right",
+              on: {
+                click: function($event) {
+                  _vm.initAddProduct()
+                }
+              }
+            },
+            [
+              _vm._v(
+                "\n                    + Add New Product\n                "
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _vm._m(0)
+        ]),
+        _vm._v(" "),
+        _vm.success.length > 0
+          ? _c("div", { staticClass: "alert alert-success" }, [
+              _c(
+                "ul",
+                _vm._l(_vm.success, function(suc) {
+                  return _c("li", [_vm._v(_vm._s(suc))])
+                })
+              )
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _c("div", { staticClass: "panel-body" }, [
+          _vm.prodcutUpdateModelData.length > 0
+            ? _c(
+                "table",
+                {
+                  staticClass:
+                    "table table-bordered table-striped table-responsive"
+                },
+                [
+                  _c(
+                    "tbody",
+                    [
+                      _vm._m(1),
+                      _vm._v(" "),
+                      _vm._l(_vm.prodcutUpdateModelData, function(
+                        product,
+                        index
+                      ) {
+                        return _c("tr", [
+                          _c("td", [_vm._v(_vm._s(index + 1))]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _vm._v(
+                              "\n                                " +
+                                _vm._s(product.name) +
+                                "\n                            "
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _vm._v(
+                              "\n                                " +
+                                _vm._s(product.price) +
+                                "\n                            "
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            product.is_active == 1
+                              ? _c("div", [_vm._v("Active")])
+                              : _vm._e(),
+                            _vm._v(" "),
+                            product.is_active == 0
+                              ? _c("div", [_vm._v("InActive")])
+                              : _vm._e()
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-success btn-xs",
+                                on: {
+                                  click: function($event) {
+                                    _vm.initUpdate(index)
+                                  }
+                                }
+                              },
+                              [_vm._v("Edit")]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-danger btn-xs",
+                                on: {
+                                  click: function($event) {
+                                    _vm.deleteProduct(index)
+                                  }
+                                }
+                              },
+                              [_vm._v("Delete")]
+                            )
+                          ])
+                        ])
+                      })
+                    ],
+                    2
+                  )
+                ]
+              )
+            : _vm._e()
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: { tabindex: "-1", role: "dialog", id: "add_product_model" }
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "modal-dialog", attrs: { role: "document" } },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _vm._m(2),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-body" }, [
+                _vm.errors.length > 0
+                  ? _c("div", { staticClass: "alert alert-danger" }, [
+                      _c(
+                        "ul",
+                        _vm._l(_vm.errors, function(error) {
+                          return _c("li", [_vm._v(_vm._s(error))])
+                        })
+                      )
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.internal.length > 0
+                  ? _c("div", { staticClass: "alert alert-danger" }, [
+                      _c(
+                        "ul",
+                        _vm._l(_vm.internal, function(inter) {
+                          return _c("li", [_vm._v(_vm._s(inter))])
+                        })
+                      )
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "name" } }, [_vm._v("Name:")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.productModel.name,
+                        expression: "productModel.name"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      name: "name",
+                      id: "name",
+                      placeholder: "Name"
+                    },
+                    domProps: { value: _vm.productModel.name },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.productModel, "name", $event.target.value)
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "price" } }, [_vm._v("Price:")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.productModel.price,
+                        expression: "productModel.price"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      name: "price",
+                      id: "price",
+                      placeholder: "Price"
+                    },
+                    domProps: { value: _vm.productModel.price },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.productModel, "price", $event.target.value)
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c(
+                    "label",
+                    { attrs: { for: "category_id", name: "category" } },
+                    [_vm._v("Category:")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.productModel.categories_id,
+                          expression: "productModel.categories_id"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { id: "category_id", name: "categories_id" },
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            _vm.productModel,
+                            "categories_id",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        }
+                      }
+                    },
+                    [
+                      _c("option", { attrs: { value: "" } }, [
+                        _vm._v("Select Categorys ")
+                      ]),
+                      _vm._v(" "),
+                      _vm._l(_vm.category, function(cat, id, name) {
+                        return _c("option", { domProps: { value: cat.id } }, [
+                          _vm._v(" " + _vm._s(cat.name) + " ")
+                        ])
+                      })
+                    ],
+                    2
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c(
+                    "label",
+                    { attrs: { for: "sub_category_id", name: "sub_cate" } },
+                    [_vm._v("Category:")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.productModel.sub_categories_id,
+                          expression: "productModel.sub_categories_id"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        id: "sub_category_id",
+                        name: "sub_categories_id"
+                      },
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            _vm.productModel,
+                            "sub_categories_id",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        }
+                      }
+                    },
+                    [
+                      _c("option", { attrs: { value: "" } }, [
+                        _vm._v("Select Sub-Category ")
+                      ]),
+                      _vm._v(" "),
+                      _vm._l(_vm.subCategory, function(subcat, id, name) {
+                        return _c(
+                          "option",
+                          { domProps: { value: subcat.id } },
+                          [_vm._v(" " + _vm._s(subcat.name) + " ")]
+                        )
+                      })
+                    ],
+                    2
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "tax_id", name: "category" } }, [
+                    _vm._v("Tax:")
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.productModel.tax_id,
+                          expression: "productModel.tax_id"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { id: "tax_id", name: "tax_id" },
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            _vm.productModel,
+                            "tax_id",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        }
+                      }
+                    },
+                    [
+                      _c("option", { attrs: { value: "" } }, [_vm._v("Tax ")]),
+                      _vm._v(" "),
+                      _vm._l(_vm.taxes, function(tax, id, name) {
+                        return _c("option", { domProps: { value: tax.id } }, [
+                          _vm._v(" " + _vm._s(tax.name) + " ")
+                        ])
+                      })
+                    ],
+                    2
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "is_active" } }, [
+                    _vm._v("isActive:")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.productModel.is_active,
+                        expression: "productModel.is_active"
+                      }
+                    ],
+                    attrs: {
+                      type: "checkbox",
+                      name: "is_active",
+                      id: "is_active"
+                    },
+                    domProps: {
+                      checked: Array.isArray(_vm.productModel.is_active)
+                        ? _vm._i(_vm.productModel.is_active, null) > -1
+                        : _vm.productModel.is_active
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$a = _vm.productModel.is_active,
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = null,
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 &&
+                              (_vm.productModel.is_active = $$a.concat([$$v]))
+                          } else {
+                            $$i > -1 &&
+                              (_vm.productModel.is_active = $$a
+                                .slice(0, $$i)
+                                .concat($$a.slice($$i + 1)))
+                          }
+                        } else {
+                          _vm.$set(_vm.productModel, "is_active", $$c)
+                        }
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "available" } }, [
+                    _vm._v("Avaliable:")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.productModel.available,
+                        expression: "productModel.available"
+                      }
+                    ],
+                    attrs: {
+                      type: "radio",
+                      name: "available",
+                      id: "available",
+                      value: "0"
+                    },
+                    domProps: {
+                      checked: _vm._q(_vm.productModel.available, "0")
+                    },
+                    on: {
+                      change: function($event) {
+                        _vm.$set(_vm.productModel, "available", "0")
+                      }
+                    }
+                  }),
+                  _vm._v("No\n                    "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.productModel.available,
+                        expression: "productModel.available"
+                      }
+                    ],
+                    attrs: {
+                      type: "radio",
+                      name: "available",
+                      id: "available",
+                      value: "1"
+                    },
+                    domProps: {
+                      checked: _vm._q(_vm.productModel.available, "1")
+                    },
+                    on: {
+                      change: function($event) {
+                        _vm.$set(_vm.productModel, "available", "1")
+                      }
+                    }
+                  }),
+                  _vm._v("Yes\n                ")
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "image" } }, [_vm._v("Image:")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.productModel.image,
+                        expression: "productModel.image"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      name: "image",
+                      id: "image",
+                      placeholder: "image"
+                    },
+                    domProps: { value: _vm.productModel.image },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.productModel, "image", $event.target.value)
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "description" } }, [
+                    _vm._v("Description:")
+                  ]),
+                  _vm._v(" "),
+                  _c("textarea", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.productModel.description,
+                        expression: "productModel.description"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      name: "description",
+                      id: "description",
+                      placeholder: "Description",
+                      rows: "3"
+                    },
+                    domProps: { value: _vm.productModel.description },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.productModel,
+                          "description",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "time_duration" } }, [
+                    _vm._v("Time Duration:")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.productModel.time_duration,
+                        expression: "productModel.time_duration"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "time",
+                      name: "time_duration",
+                      id: "time_duration",
+                      placeholder: "Mobile"
+                    },
+                    domProps: { value: _vm.productModel.time_duration },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.productModel,
+                          "time_duration",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-footer" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-default",
+                    attrs: { type: "button", "data-dismiss": "modal" }
+                  },
+                  [_vm._v("Close")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary",
+                    attrs: { type: "button" },
+                    on: { click: _vm.createProduct }
+                  },
+                  [_vm._v("Submit")]
+                )
+              ])
+            ])
+          ]
+        )
+      ]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: { tabindex: "-1", role: "dialog", id: "update_product_model" }
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "modal-dialog", attrs: { role: "document" } },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _vm._m(3),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-body" }, [
+                _vm.errors.length > 0
+                  ? _c("div", { staticClass: "alert alert-danger" }, [
+                      _c(
+                        "ul",
+                        _vm._l(_vm.errors, function(error) {
+                          return _c("li", [_vm._v(_vm._s(error))])
+                        })
+                      )
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.internal.length > 0
+                  ? _c("div", { staticClass: "alert alert-danger" }, [
+                      _c(
+                        "ul",
+                        _vm._l(_vm.internal, function(inter) {
+                          return _c("li", [_vm._v(_vm._s(inter))])
+                        })
+                      )
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "name" } }, [_vm._v("Name:")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.productUpdateModel.name,
+                        expression: "productUpdateModel.name"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      name: "name",
+                      id: "name",
+                      placeholder: "Name"
+                    },
+                    domProps: { value: _vm.productUpdateModel.name },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.productUpdateModel,
+                          "name",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "price" } }, [_vm._v("Price:")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.productUpdateModel.price,
+                        expression: "productUpdateModel.price"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      name: "price",
+                      id: "price",
+                      placeholder: "Price"
+                    },
+                    domProps: { value: _vm.productUpdateModel.price },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.productUpdateModel,
+                          "price",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c(
+                    "label",
+                    { attrs: { for: "category_id", name: "category" } },
+                    [_vm._v("Category:")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.productUpdateModel.categories_id,
+                          expression: "productUpdateModel.categories_id"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { id: "category_id", name: "categories_id" },
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            _vm.productUpdateModel,
+                            "categories_id",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        }
+                      }
+                    },
+                    [
+                      _c("option", { attrs: { value: "" } }, [
+                        _vm._v("Select Category ")
+                      ]),
+                      _vm._v(" "),
+                      _vm._l(_vm.category, function(category, id, name) {
+                        return _c(
+                          "option",
+                          { domProps: { value: category.id } },
+                          [_vm._v(" " + _vm._s(category.name) + " ")]
+                        )
+                      })
+                    ],
+                    2
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c(
+                    "label",
+                    { attrs: { for: "sub_category_id", name: "category" } },
+                    [_vm._v("Sub-Category:")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.productUpdateModel.sub_categories_id,
+                          expression: "productUpdateModel.sub_categories_id"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        id: "sub_category_id",
+                        name: "sub_categories_id"
+                      },
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            _vm.productUpdateModel,
+                            "sub_categories_id",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        }
+                      }
+                    },
+                    [
+                      _c("option", { attrs: { value: "" } }, [
+                        _vm._v("Select Sub-Category ")
+                      ]),
+                      _vm._v(" "),
+                      _vm._l(_vm.subCategory, function(subcat, id, name) {
+                        return _c(
+                          "option",
+                          { domProps: { value: subcat.id } },
+                          [_vm._v(" " + _vm._s(subcat.name) + " ")]
+                        )
+                      })
+                    ],
+                    2
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "tax_id", name: "tax_id" } }, [
+                    _vm._v("Tax:")
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.productUpdateModel.tax_id,
+                          expression: "productUpdateModel.tax_id"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { id: "tax_id", name: "tax_id" },
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            _vm.productUpdateModel,
+                            "tax_id",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        }
+                      }
+                    },
+                    [
+                      _c("option", { attrs: { value: "" } }, [
+                        _vm._v("Select Tax ")
+                      ]),
+                      _vm._v(" "),
+                      _vm._l(_vm.taxes, function(tax, id, name) {
+                        return _c("option", { domProps: { value: tax.id } }, [
+                          _vm._v(" " + _vm._s(tax.name) + " ")
+                        ])
+                      })
+                    ],
+                    2
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "is_active" } }, [
+                    _vm._v("isActive:")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.productUpdateModel.is_active,
+                        expression: "productUpdateModel.is_active"
+                      }
+                    ],
+                    attrs: {
+                      type: "checkbox",
+                      name: "is_active",
+                      id: "is_active",
+                      value: "1"
+                    },
+                    domProps: {
+                      checked: Array.isArray(_vm.productUpdateModel.is_active)
+                        ? _vm._i(_vm.productUpdateModel.is_active, "1") > -1
+                        : _vm.productUpdateModel.is_active
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$a = _vm.productUpdateModel.is_active,
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = "1",
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 &&
+                              (_vm.productUpdateModel.is_active = $$a.concat([
+                                $$v
+                              ]))
+                          } else {
+                            $$i > -1 &&
+                              (_vm.productUpdateModel.is_active = $$a
+                                .slice(0, $$i)
+                                .concat($$a.slice($$i + 1)))
+                          }
+                        } else {
+                          _vm.$set(_vm.productUpdateModel, "is_active", $$c)
+                        }
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "available" } }, [
+                    _vm._v("Avaliable:")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.productUpdateModel.available,
+                        expression: "productUpdateModel.available"
+                      }
+                    ],
+                    attrs: {
+                      type: "radio",
+                      name: "available",
+                      id: "available",
+                      value: "0"
+                    },
+                    domProps: {
+                      checked: _vm._q(_vm.productUpdateModel.available, "0")
+                    },
+                    on: {
+                      change: function($event) {
+                        _vm.$set(_vm.productUpdateModel, "available", "0")
+                      }
+                    }
+                  }),
+                  _vm._v("No\n                        "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.productUpdateModel.available,
+                        expression: "productUpdateModel.available"
+                      }
+                    ],
+                    attrs: {
+                      type: "radio",
+                      name: "available",
+                      id: "available",
+                      value: "1"
+                    },
+                    domProps: {
+                      checked: _vm._q(_vm.productUpdateModel.available, "1")
+                    },
+                    on: {
+                      change: function($event) {
+                        _vm.$set(_vm.productUpdateModel, "available", "1")
+                      }
+                    }
+                  }),
+                  _vm._v("Yes\n                    ")
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "image" } }, [_vm._v("Image:")]),
+                  _vm._v(" "),
+                  _c("textarea", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.productUpdateModel.image,
+                        expression: "productUpdateModel.image"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      name: "image",
+                      id: "mobile",
+                      placeholder: "image",
+                      rows: "3"
+                    },
+                    domProps: { value: _vm.productUpdateModel.image },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.productUpdateModel,
+                          "image",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "description" } }, [
+                    _vm._v("Description:")
+                  ]),
+                  _vm._v(" "),
+                  _c("textarea", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.productUpdateModel.description,
+                        expression: "productUpdateModel.description"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      name: "description",
+                      id: "description",
+                      placeholder: "Description",
+                      rows: "3"
+                    },
+                    domProps: { value: _vm.productUpdateModel.description },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.productUpdateModel,
+                          "description",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "time_duration" } }, [
+                    _vm._v("Time Duration:")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.productUpdateModel.time_duration,
+                        expression: "productUpdateModel.time_duration"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "time",
+                      name: "time_duration",
+                      id: "time_duration",
+                      placeholder: "Mobile"
+                    },
+                    domProps: { value: _vm.productUpdateModel.time_duration },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.productUpdateModel,
+                          "time_duration",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-footer" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-default",
+                    attrs: { type: "button", "data-dismiss": "modal" }
+                  },
+                  [_vm._v("Close")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary",
+                    attrs: { type: "button" },
+                    on: { click: _vm.updateProduct }
+                  },
+                  [_vm._v("Submit")]
+                )
+              ])
+            ])
+          ]
+        )
+      ]
+    )
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("h3", [_c("strong", [_vm._v("Products")])])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c("th", [
+        _vm._v(
+          "\n                                No.\n                            "
+        )
+      ]),
+      _vm._v(" "),
+      _c("th", [
+        _vm._v(
+          "\n                                Name\n                            "
+        )
+      ]),
+      _vm._v(" "),
+      _c("th", [
+        _vm._v(
+          "\n                                Price\n                            "
+        )
+      ]),
+      _vm._v(" "),
+      _c("th", [
+        _vm._v(
+          "\n                                Active\n                            "
+        )
+      ]),
+      _vm._v(" "),
+      _c("th", [
+        _vm._v(
+          "\n                                Action\n                            "
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      ),
+      _vm._v(" "),
+      _c("h4", { staticClass: "modal-title" }, [_vm._v("Add New Product")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      ),
+      _vm._v(" "),
+      _c("h4", { staticClass: "modal-title" }, [_vm._v("Update Product")])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-74ff1925", module.exports)
+  }
+}
+
+/***/ }),
+/* 54 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 55 */,
+/* 56 */,
+/* 57 */,
+/* 58 */,
+/* 59 */,
+/* 60 */,
+/* 61 */,
+/* 62 */,
+/* 63 */,
+/* 64 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(65)
+/* template */
+var __vue_template__ = __webpack_require__(66)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\taxRulesComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-072ca78a", Component.options)
+  } else {
+    hotAPI.reload("data-v-072ca78a", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 65 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            taxesModel: {
+                name: '',
+                percentage: '',
+                is_active: ''
+            }, //this is for tax creation time set all data null
+            errors: [], //errors varidale define as null
+            taxesUpdateModelData: [], //this varidale define as null when instant changes in table
+            taxesUpdateModel: {}, //this varidale for get value from the model
+            success: [],
+            internal: []
+
+        };
+    },
+    mounted: function mounted() {
+        this.readTax(); //call when page load
+    },
+
+    methods: {
+        initAddTaxes: function initAddTaxes() {
+
+            $("#add_tax_model").modal("show"); //show tax popup when create
+        },
+        createTax: function createTax() {
+            var _this = this;
+
+            //create tax and axios used to set methods and hit api.
+            axios.post('/api/taxRules', {
+                name: this.taxesModel.name,
+                percentage: this.taxesModel.percentage,
+                is_active: this.taxesModel.is_active
+
+            }).then(function (response) {
+                _this.errors = [];
+                _this.internal = [];
+                if (response.data.success == true) {
+                    _this.success = [];
+                    _this.success.push('Tax created successfully!.');
+                    _this.reset(); //reset this value
+                    _this.taxesUpdateModelData.push(response.data.tax); //assign responce data to the taxesUpdateModelData model to fetch data instantly
+                    $("#add_tax_model").modal("hide"); //hide model
+                }
+                if (response.data.success == false) {
+                    _this.internal = [];
+                    _this.internal.push(response.data.error);
+                }
+            }).catch(function (error) {
+                //error handling
+                _this.errors = [];
+                if (error.response.data.errors.name) {
+                    _this.errors.push(error.response.data.errors.name[0]);
+                }
+                if (error.response.data.errors.percentage) {
+                    _this.errors.push(error.response.data.errors.percentage[0]);
+                }
+            });
+        },
+        reset: function reset() {
+            //reset all the vue models data
+            this.taxesModel.name = '';
+            this.taxesModel.percentage = '';
+            this.taxesModel.available = '';
+            this.taxesModel.is_active = '';
+        },
+        readTax: function readTax() {
+            var _this2 = this;
+
+            axios.get('/api/taxRules').then(function (response) {
+                _this2.taxesUpdateModelData = response.data.tax;
+            });
+        },
+        initUpdate: function initUpdate(index) {
+            this.errors = [];
+            $("#update_tax_model").modal("show");
+            this.taxesUpdateModel = this.taxesUpdateModelData[index];
+        },
+        updateTax: function updateTax() {
+            var _this3 = this;
+
+            axios.patch('/api/taxRules/' + this.taxesUpdateModel.id, {
+                name: this.taxesUpdateModel.name,
+                percentage: this.taxesUpdateModel.percentage,
+                is_active: this.taxesUpdateModel.is_active
+
+            }).then(function (response) {
+                _this3.errors = [];
+                _this3.internal = [];
+                if (response.data.success == true) {
+                    _this3.success = [];
+                    _this3.success.push('Tax updated successfully!.');
+                    $("#update_tax_model").modal("hide"); //hide model
+                }
+                if (response.data.success == false) {
+                    _this3.internal = [];
+                    _this3.internal.push(response.data.error);
+                }
+            }).catch(function (error) {
+
+                _this3.errors = [];
+                if (error.response.data.errors.name) {
+                    _this3.errors.push(error.response.data.errors.name[0]);
+                }
+                if (error.response.data.errors.percentage) {
+                    _this3.errors.push(error.response.data.errors.percentage[0]);
+                }
+            });
+        },
+        deleteTaxes: function deleteTaxes(index) {
+            var _this4 = this;
+
+            //delete perticular data
+            var conf = confirm("Do you ready want to delete this Tax?");
+            if (conf === true) {
+                axios.delete('/api/taxRules/' + this.taxesUpdateModelData[index].id).then(function (response) {
+                    if (response.data.success == true) {
+                        _this4.success = [];
+                        _this4.success.push('Tax deleted successfully!.');
+                    }
+                    _this4.taxesUpdateModelData.splice(index, 1);
+                }).catch(function (error) {});
+            }
+        }
+    }
+});
+
+/***/ }),
+/* 66 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-md-11" }, [
+        _c("div", [
+          _c("div", [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary btn-xs pull-right",
+                on: {
+                  click: function($event) {
+                    _vm.initAddTaxes()
+                  }
+                }
+              },
+              [
+                _vm._v(
+                  "\n                        + Add New Tax\n                    "
+                )
+              ]
+            ),
+            _vm._v(" "),
+            _vm._m(0)
+          ]),
+          _vm._v(" "),
+          _vm.success.length > 0
+            ? _c("div", { staticClass: "alert alert-success" }, [
+                _c(
+                  "ul",
+                  _vm._l(_vm.success, function(suc) {
+                    return _c("li", [_vm._v(_vm._s(suc))])
+                  })
+                )
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c("div", { staticClass: "panel-body" }, [
+            _vm.taxesUpdateModelData.length > 0
+              ? _c(
+                  "table",
+                  {
+                    staticClass:
+                      "table table-bordered table-striped table-responsive"
+                  },
+                  [
+                    _c(
+                      "tbody",
+                      [
+                        _vm._m(1),
+                        _vm._v(" "),
+                        _vm._l(_vm.taxesUpdateModelData, function(tax, index) {
+                          return _c("tr", [
+                            _c("td", [_vm._v(_vm._s(index + 1))]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _vm._v(
+                                "\n                                " +
+                                  _vm._s(tax.name) +
+                                  "\n                            "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _vm._v(
+                                "\n                                " +
+                                  _vm._s(tax.percentage) +
+                                  "\n                            "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              tax.is_active == 1
+                                ? _c("div", [_vm._v("Yes")])
+                                : _vm._e(),
+                              _vm._v(" "),
+                              tax.is_active == 0
+                                ? _c("div", [_vm._v("No")])
+                                : _vm._e()
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-success btn-xs",
+                                  on: {
+                                    click: function($event) {
+                                      _vm.initUpdate(index)
+                                    }
+                                  }
+                                },
+                                [_vm._v("Edit")]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-danger btn-xs",
+                                  on: {
+                                    click: function($event) {
+                                      _vm.deleteTaxes(index)
+                                    }
+                                  }
+                                },
+                                [_vm._v("Delete")]
+                              )
+                            ])
+                          ])
+                        })
+                      ],
+                      2
+                    )
+                  ]
+                )
+              : _vm._e()
+          ])
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: { tabindex: "-1", role: "dialog", id: "add_tax_model" }
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "modal-dialog", attrs: { role: "document" } },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _vm._m(2),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-body" }, [
+                _vm.errors.length > 0
+                  ? _c("div", { staticClass: "alert alert-danger" }, [
+                      _c(
+                        "ul",
+                        _vm._l(_vm.errors, function(error) {
+                          return _c("li", [_vm._v(_vm._s(error))])
+                        })
+                      )
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.internal.length > 0
+                  ? _c("div", { staticClass: "alert alert-danger" }, [
+                      _c(
+                        "ul",
+                        _vm._l(_vm.internal, function(inter) {
+                          return _c("li", [_vm._v(_vm._s(inter))])
+                        })
+                      )
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "name" } }, [_vm._v("Name:")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.taxesModel.name,
+                        expression: "taxesModel.name"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      name: "name",
+                      id: "name",
+                      placeholder: "Name"
+                    },
+                    domProps: { value: _vm.taxesModel.name },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.taxesModel, "name", $event.target.value)
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c(
+                    "label",
+                    { attrs: { for: "categories_id", name: "categories_id" } },
+                    [_vm._v("Percentage:")]
+                  ),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.taxesModel.percentage,
+                        expression: "taxesModel.percentage"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      name: "percentage",
+                      id: "percentage",
+                      placeholder: "Percentage"
+                    },
+                    domProps: { value: _vm.taxesModel.percentage },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.taxesModel,
+                          "percentage",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "is_active" } }, [
+                    _vm._v("isActive:")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.taxesModel.is_active,
+                        expression: "taxesModel.is_active"
+                      }
+                    ],
+                    attrs: {
+                      type: "checkbox",
+                      name: "is_active",
+                      id: "is_active"
+                    },
+                    domProps: {
+                      checked: Array.isArray(_vm.taxesModel.is_active)
+                        ? _vm._i(_vm.taxesModel.is_active, null) > -1
+                        : _vm.taxesModel.is_active
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$a = _vm.taxesModel.is_active,
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = null,
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 &&
+                              (_vm.taxesModel.is_active = $$a.concat([$$v]))
+                          } else {
+                            $$i > -1 &&
+                              (_vm.taxesModel.is_active = $$a
+                                .slice(0, $$i)
+                                .concat($$a.slice($$i + 1)))
+                          }
+                        } else {
+                          _vm.$set(_vm.taxesModel, "is_active", $$c)
+                        }
+                      }
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-footer" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-default",
+                    attrs: { type: "button", "data-dismiss": "modal" }
+                  },
+                  [_vm._v("Close")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary",
+                    attrs: { type: "button" },
+                    on: { click: _vm.createTax }
+                  },
+                  [_vm._v("Submit")]
+                )
+              ])
+            ])
+          ]
+        )
+      ]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: { tabindex: "-1", role: "dialog", id: "update_tax_model" }
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "modal-dialog", attrs: { role: "document" } },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _vm._m(3),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-body" }, [
+                _vm.errors.length > 0
+                  ? _c("div", { staticClass: "alert alert-danger" }, [
+                      _c(
+                        "ul",
+                        _vm._l(_vm.errors, function(error) {
+                          return _c("li", [_vm._v(_vm._s(error))])
+                        })
+                      )
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.internal.length > 0
+                  ? _c("div", { staticClass: "alert alert-danger" }, [
+                      _c(
+                        "ul",
+                        _vm._l(_vm.internal, function(inter) {
+                          return _c("li", [_vm._v(_vm._s(inter))])
+                        })
+                      )
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "name" } }, [_vm._v("Name:")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.taxesUpdateModel.name,
+                        expression: "taxesUpdateModel.name"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      name: "name",
+                      id: "name",
+                      placeholder: "Name"
+                    },
+                    domProps: { value: _vm.taxesUpdateModel.name },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.taxesUpdateModel,
+                          "name",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c(
+                    "label",
+                    { attrs: { for: "percentage_id", name: "percentage_id" } },
+                    [_vm._v("Percentage:")]
+                  ),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.taxesUpdateModel.percentage,
+                        expression: "taxesUpdateModel.percentage"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      name: "percentage",
+                      id: "percentage",
+                      placeholder: "Percentage"
+                    },
+                    domProps: { value: _vm.taxesUpdateModel.percentage },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.taxesUpdateModel,
+                          "percentage",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "is_active" } }, [
+                    _vm._v("isActive:")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.taxesUpdateModel.is_active,
+                        expression: "taxesUpdateModel.is_active"
+                      }
+                    ],
+                    attrs: {
+                      type: "checkbox",
+                      name: "is_active",
+                      id: "is_active"
+                    },
+                    domProps: {
+                      checked: Array.isArray(_vm.taxesUpdateModel.is_active)
+                        ? _vm._i(_vm.taxesUpdateModel.is_active, null) > -1
+                        : _vm.taxesUpdateModel.is_active
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$a = _vm.taxesUpdateModel.is_active,
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = null,
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 &&
+                              (_vm.taxesUpdateModel.is_active = $$a.concat([
+                                $$v
+                              ]))
+                          } else {
+                            $$i > -1 &&
+                              (_vm.taxesUpdateModel.is_active = $$a
+                                .slice(0, $$i)
+                                .concat($$a.slice($$i + 1)))
+                          }
+                        } else {
+                          _vm.$set(_vm.taxesUpdateModel, "is_active", $$c)
+                        }
+                      }
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-footer" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-default",
+                    attrs: { type: "button", "data-dismiss": "modal" }
+                  },
+                  [_vm._v("Close")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary",
+                    attrs: { type: "button" },
+                    on: { click: _vm.updateTax }
+                  },
+                  [_vm._v("Submit")]
+                )
+              ])
+            ])
+          ]
+        )
+      ]
+    )
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("h3", [_c("strong", [_vm._v("Tax")])])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c("th", [
+        _vm._v(
+          "\n                                No.\n                            "
+        )
+      ]),
+      _vm._v(" "),
+      _c("th", [
+        _vm._v(
+          "\n                                Name\n                            "
+        )
+      ]),
+      _vm._v(" "),
+      _c("th", [
+        _vm._v(
+          "\n                                Percentage\n                            "
+        )
+      ]),
+      _vm._v(" "),
+      _c("th", [
+        _vm._v(
+          "\n                                Active\n                            "
+        )
+      ]),
+      _vm._v(" "),
+      _c("th", [
+        _vm._v(
+          "\n                                Action\n                            "
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      ),
+      _vm._v(" "),
+      _c("h4", { staticClass: "modal-title" }, [_vm._v("Add New Tax")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      ),
+      _vm._v(" "),
+      _c("h4", { staticClass: "modal-title" }, [_vm._v("Update Tax")])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-072ca78a", module.exports)
   }
 }
 

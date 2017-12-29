@@ -1,4 +1,12 @@
 <?php
+/**
+ * @package App/Http/Controller/Api
+ *
+ * @class UsersController
+ *
+ * @author Kandarp Pandya <kandarp.d9ithub@gmail.com>
+ *
+ */
 
 namespace App\Http\Controllers\Api;
 
@@ -50,6 +58,7 @@ class UsersController extends Controller
             'name'        => 'required|max:100|regex:/^[a-zA-Z\s]*$/',
             'email' => 'required|max:150|email|unique:users,email',
             'mobile'=> 'required|max:10|min:10',
+            'country'   => 'required',
             'role_name' => 'required',
 
         ]);
@@ -140,16 +149,43 @@ class UsersController extends Controller
             return response()->json(['error'=>'Internal server error.','success'=>false]);
         }
         return response()->json([
-            'message' => 'Task deleted successfully!',
+            'message' => 'User deleted successfully!',
             'success'   => true,
         ], 200);
     }
+
+    /**
+     * get roles
+     *
+     * @param  
+     * @return \Illuminate\Http\Response
+     */
+
     public function getRles()
     {
         try {
             $roles = [['key'=>1,'value'=>'Admin'],['key'=>2,'value'=>'Accountant'],['key'=>3,'value'=>'Cashier'],['key'=>4,'value'=>'Store Manager'],['key'=>5,'value'=>'Chef']];
             return response()->json([
                 'roles'    => $roles,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error'=>'Internal server error.','success'=>false]);
+        }
+    }
+
+    /**
+     * get countries from database
+     *
+     * @param  
+     * @return \Illuminate\Http\Response
+     */
+    public function getCountry()
+    {
+       try {
+            $country = DB::table('country')->get();
+            return response()->json([
+                'sucess'    => true,
+                'country'    => $country,
             ], 200);
         } catch (\Exception $e) {
             return response()->json(['error'=>'Internal server error.','success'=>false]);

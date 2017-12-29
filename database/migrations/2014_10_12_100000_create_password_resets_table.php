@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * @package Database/migrations
+ *
+ * @class CreateDiscountOfferRulesTable
+ *
+ * @author Kandarp Pandya <kandarp.d9ithub@gmail.com>
+ *
+ */
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;

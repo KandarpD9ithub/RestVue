@@ -83,7 +83,7 @@
                             <label for="category" name="category">Category:</label>
                             <select id="category" name="category" class="form-control" v-model="categoryModel.category">
                             	<option value="">Select Category </option>
-                            	<option v-for="(category,key,value) in categories" v-bind:value="category.value"> {{category.key}} </option>
+                            	<option v-for="(category,id,name) in categories" v-bind:value="category.id"> {{category.name}} </option>
                             </select>
                         </div>
                         
@@ -137,7 +137,7 @@
                             <label for="category" name="category">Category:</label>
                             <select id="category" name="category" class="form-control" v-model="categoryUpdateModel.category">
                             	<option value="">Select Category </option>
-                            	<option v-for="(category,key,value) in categories" v-bind:value="category.value"> {{category.key}} </option>
+                            	<option v-for="(category,id,name) in categories" v-bind:value="category.id"> {{category.name}} </option>
                             </select>
                         </div>
                         
@@ -181,7 +181,7 @@
                 categoryUpdateModel: {},  //this varidale for get value from the model
                 success: [],
                 internal: [],
-                categories: [{'key':'Veg','value':0},{'key':'NonVeg','value':1}],
+                categories: [],
 
             }
         },
@@ -192,6 +192,10 @@
         methods: {
             initAddCategory()
             {
+            	axios.get('api/getCategoryList')
+                .then(response => {
+                    this.categories = response.data.categoryList;
+                })
                 $("#add_category_model").modal("show");//show category popup when create
             },
             createCategory()
@@ -252,6 +256,10 @@
             {
                 //set data for update perticular id
                 this.errors = [];
+                axios.get('api/getCategoryList')
+                .then(response => {
+                    this.categories = response.data.categoryList;
+                })
                 $("#update_category_model").modal("show");
                 this.categoryUpdateModel = this.categoryUpdateModelData[index];
             },

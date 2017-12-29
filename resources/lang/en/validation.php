@@ -116,6 +116,10 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'sub_categories_id'    => 'sub category',
+        'categories_id'        => 'category',
+        'tax_id'               => 'tax'
+    ],
 
 ];

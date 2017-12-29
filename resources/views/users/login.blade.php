@@ -61,7 +61,7 @@ License: You must have a valid license purchased only from themeforest(the above
 <div class="content">
 	<!-- BEGIN LOGIN FORM -->
 	<!-- <form class="login-form" action="index.html" method="post"> -->
-		{{ Form::open(['url'=>'Login','class'=>'login-form']) }}
+		{{ Form::open(['url'=>'Login','class'=>'login-form','id'=>'loginId']) }}
 		<h3 class="form-title">Sign In</h3>
         <div class="alert alert-danger display-hide">
             <button class="close" data-close="alert"></button>
@@ -87,10 +87,10 @@ License: You must have a valid license purchased only from themeforest(the above
             <input class="form-control form-control-solid placeholder-no-fix" type="password" autocomplete="off" placeholder="Password" name="password"/>
         </div>
         <div class="form-actions">
-            <button type="submit" class="btn btn-success uppercase">Login</button>
+        	{{ Form::submit('Login',['class'=>'btn btn-success uppercase']) }}
             <label class="rememberme check">
             <input type="checkbox" name="remember" value="1"/>Remember </label>
-            <a href="javascript:;" id="forget-password" class="forget-password">Forgot Password?</a>
+            <a href="javascript:;" id="forget-password" onclick="showForm('forgot')" class="forget-password">Forgot Password?</a>
         </div>
         <div class="login-options">
             <h4>Or login with</h4>
@@ -109,16 +109,16 @@ License: You must have a valid license purchased only from themeforest(the above
                 </li>
             </ul>
         </div>
-        <div class="create-account">
+        <!-- <div class="create-account">
             <p>
-                <a href="javascript:;" id="register-btn" class="uppercase">Create an account</a>
+                <a href="javascript:;" onclick="showForm('register')" id="register-btn" class="uppercase">Create an account</a>
             </p>
-        </div>
+        </div> -->
 		{{ Form::Close() }}
 	<!-- </form> -->
 	<!-- END LOGIN FORM -->
 	<!-- BEGIN FORGOT PASSWORD FORM -->
-	<form class="forget-form" action="index.html" method="post">	
+	<form class="forget-form" action="index.html" id="forgot-form" method="post">	
 		<h3>Forget Password ?</h3>
 		<p>
 			 Enter your e-mail address below to reset your password.
@@ -127,49 +127,46 @@ License: You must have a valid license purchased only from themeforest(the above
 			<input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Email" name="email"/>
 		</div>
 		<div class="form-actions">
-			<button type="button" id="back-btn" class="btn btn-default">Back</button>
+			<button type="button" id="back-btn" class="btn btn-default" onclick="showForm('login')">Back</button>
 			<button type="submit" class="btn btn-success uppercase pull-right">Submit</button>
 		</div>
 	</form>
 	<!-- END FORGOT PASSWORD FORM -->
 	<!-- BEGIN REGISTRATION FORM -->
 	<!-- <form class="register-form" action="index.html" method="post"> -->
-		{{ Form::open(['url'=>'Register','class'=>'register-form']) }}
+		{{ Form::open(['url'=>'Register','class'=>'register-form','id'=>'registerId']) }}
 		<h3>Sign Up</h3>
 		<p class="hint">
 			 Enter your personal details below:
 		</p>
 		<div class="form-group">
-			<label class="control-label visible-ie8 visible-ie9">Full Name</label>
-			<input class="form-control placeholder-no-fix" type="text" placeholder="Full Name" name="name"/>
+			<label class="control-label visible-ie8 visible-ie9">Name</label>
+			<input class="form-control placeholder-no-fix" type="text" placeholder="Name" name="name"/>
 		</div>
 		<div class="form-group">
 			<!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
-			<label class="control-label visible-ie8 visible-ie9">Email</label>
-			<input class="form-control placeholder-no-fix" type="text" placeholder="Email" name="email"/>
+			<label class="control-label visible-ie8 visible-ie9">Email (Username)</label>
+			<input class="form-control placeholder-no-fix" type="text" placeholder="Email (Username)" name="email"/>
 		</div>
 		<div class="form-group">
-			<label class="control-label visible-ie8 visible-ie9">Address</label>
-			<input class="form-control placeholder-no-fix" type="text" placeholder="Address" name="address"/>
+			<label class="control-label visible-ie8 visible-ie9">Mobile</label>
+			<input class="form-control placeholder-no-fix" type="number" placeholder="Mobile" name="mobile"/>
 		</div>
-		<div class="form-group">
+		<!-- <div class="form-group">
 			<label class="control-label visible-ie8 visible-ie9">City/Town</label>
 			<input class="form-control placeholder-no-fix" type="text" placeholder="City/Town" name="city"/>
-		</div>
+		</div> -->
 		<div class="form-group">
 			<label class="control-label visible-ie8 visible-ie9">Country</label>
-			<select name="country" class="form-control">
-				<option value="">Country</option>
-				<option value="1">India</option>
-			</select>
+			{{ Form::select('country',$country,null,['class'=>'form-control','placeholder'=>'Select Country']) }}
 		</div>
 		<p class="hint">
 			 Enter your account details below:
 		</p>
-		<div class="form-group">
+		<!-- <div class="form-group">
 			<label class="control-label visible-ie8 visible-ie9">Username</label>
 			<input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Username" name="username"/>
-		</div>
+		</div> -->
 		<div class="form-group">
 			<label class="control-label visible-ie8 visible-ie9">Password</label>
 			<input class="form-control placeholder-no-fix" type="password" autocomplete="off" id="register_password" placeholder="Password" name="password"/>
@@ -189,7 +186,7 @@ License: You must have a valid license purchased only from themeforest(the above
 			</div>
 		</div>
 		<div class="form-actions">
-			<button type="button" id="register-back-btn" class="btn btn-default">Back</button>
+			<button type="button" id="register-back-btn" onclick="showForm('login')" class="btn btn-default">Back</button>
 			<button type="submit" id="register-submit-btn" class="btn btn-success uppercase pull-right">Submit</button>
 		</div>
 		{{ Form::close() }}
@@ -223,6 +220,30 @@ License: You must have a valid license purchased only from themeforest(the above
 <script src="../../assets/admin/pages/scripts/login.js" type="text/javascript"></script>
 <script src="{{asset('js/app.js')}}" type="text/javascript"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
+<script type="text/javascript">
+	
+
+	function showForm(id) {
+    var x = document.getElementById("loginId");
+    var y = document.getElementById("registerId");
+    var z = document.getElementById("forgot-form");
+		if (id == 'register') {
+			y.style.display = "block";
+        	x.style.display = "none";
+		}
+		if (id == 'login') {
+        	y.style.display = "none";
+        	z.style.display = "none";
+			x.style.display = "block";
+		}
+		if (id == 'forgot') {
+			z.style.display = "block";
+        	x.style.display = "none";	
+		}
+	}
+	
+
+</script>
 <script>
 jQuery(document).ready(function() {     
 Metronic.init(); // init metronic core components

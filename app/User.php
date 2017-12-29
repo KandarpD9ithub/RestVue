@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * @package App
+ *
+ * @class User
+ *
+ * @author Kandarp Pandya <kandarp.d9ithub@gmail.com>
+ *
+ */
 namespace App;
 
 use Illuminate\Notifications\Notifiable;
@@ -15,7 +22,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','mobile','role_name','is_active'
+        'name', 'email', 'password','mobile','role_name','is_active','country'
     ];
 
     /**

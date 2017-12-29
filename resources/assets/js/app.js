@@ -23,6 +23,10 @@ Vue.component('users', require('./components/UserComponent.vue'));
 Vue.component('category', require('./components/CategoryComponent.vue'));
 
 Vue.component('subcategory', require('./components/subCategoryComponent.vue'));
+
+Vue.component('products', require('./components/productComponent.vue'));
+
+Vue.component('taxrules', require('./components/taxRulesComponent.vue'));
 /*Vue.component('pagination', require('laravel-vue-pagination'));*/
 
 const app = new Vue({

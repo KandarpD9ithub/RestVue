@@ -5,10 +5,10 @@
             <div class="col-md-11">
                 <div>
                     <div>
-                        <button @click="initAddSubCategory()" class="btn btn-primary btn-xs pull-right">
-                            + Add New Sub-Category
+                        <button @click="initAddTaxes()" class="btn btn-primary btn-xs pull-right">
+                            + Add New Tax
                         </button>
-                        <h3><strong>Sub-Category</strong></h3>
+                        <h3><strong>Tax</strong></h3>
                     </div>
                     <div class="alert alert-success" v-if="success.length > 0">
                             <ul>
@@ -16,7 +16,7 @@
                             </ul>
                     </div>
                     <div class="panel-body">
-                        <table class="table table-bordered table-striped table-responsive" v-if="subCategoryUpdateModelData.length > 0">
+                        <table class="table table-bordered table-striped table-responsive" v-if="taxesUpdateModelData.length > 0">
                             <tbody>
                             <tr>
                                 <th>
@@ -26,24 +26,30 @@
                                     Name
                                 </th>
                                 <th>
+                                    Percentage
+                                </th>
+                                <th>
                                     Active
                                 </th>
                                 <th>
                                     Action
                                 </th>
                             </tr>
-                            <tr v-for="(category, index) in subCategoryUpdateModelData">
+                            <tr v-for="(tax, index) in taxesUpdateModelData">
                                 <td>{{ index + 1 }}</td>
                                 <td>
-                                    {{ category.name }}
+                                    {{ tax.name }}
                                 </td>
                                 <td>
-                                    <div v-if="category.is_active==1">Yes</div>
-                                    <div v-if="category.is_active==0">No</div>
+                                    {{ tax.percentage }}
+                                </td>
+                                <td>
+                                    <div v-if="tax.is_active==1">Yes</div>
+                                    <div v-if="tax.is_active==0">No</div>
                                 </td>
                                 <td>
                                     <button @click="initUpdate(index)" class="btn btn-success btn-xs">Edit</button>
-                                    <button @click="deleteSubCategory(index)" class="btn btn-danger btn-xs">Delete</button>
+                                    <button @click="deleteTaxes(index)" class="btn btn-danger btn-xs">Delete</button>
                                 </td>
                             </tr>
                             </tbody>
@@ -53,13 +59,13 @@
             </div>
         </div>
 
-        <div class="modal fade" tabindex="-1" role="dialog" id="add_sub_category_model">
+        <div class="modal fade" tabindex="-1" role="dialog" id="add_tax_model">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">Add New Sub-Category</h4>
+                        <h4 class="modal-title">Add New Tax</h4>
                     </div>
                     <div class="modal-body">
 
@@ -77,43 +83,35 @@
                         <div class="form-group">
                             <label for="name">Name:</label>
                             <input type="text" name="name" id="name" placeholder="Name" class="form-control"
-                                   v-model="subCategoryModel.name">
+                                   v-model="taxesModel.name">
                         </div>
                         <div class="form-group">
-                            <label for="categories_id" name="categories_id">Parent Category:</label>
-                            <select id="categories_id" name="categories_id" class="form-control" v-model="subCategoryModel.categories_id">
-                                <option value="">Select Category </option>
-                                <option v-for="(category,id,name) in subCategory" v-bind:value="category.id"> {{category.name}} </option>
-                            </select>
+                            <label for="categories_id" name="categories_id">Percentage:</label>
+                             
+                             <input type="text" name="percentage" id="percentage" placeholder="Percentage" class="form-control"
+                                   v-model="taxesModel.percentage">
                         </div>
                         
                         <div class="form-group">
                             <label for="is_active">isActive:</label>
-                            <input type ="checkbox" name="is_active" id="is_active"  v-model="subCategoryModel.is_active">
-                        </div>
-                        <div class="form-group">
-                            <label for="available">Avaliable:</label>
-                            <input type ="radio" name="available" id="available"
-                                     v-model="subCategoryModel.available" value="0">No
-                            <input type ="radio" name="available" id="available"
-                                     v-model="subCategoryModel.available" value="1">Yes
+                            <input type ="checkbox" name="is_active" id="is_active"  v-model="taxesModel.is_active">
                         </div>
                         
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" @click="createCategory" class="btn btn-primary">Submit</button>
+                        <button type="button" @click="createTax" class="btn btn-primary">Submit</button>
                     </div>
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
-        <div class="modal fade" tabindex="-1" role="dialog" id="update_category_model">
+        <div class="modal fade" tabindex="-1" role="dialog" id="update_tax_model">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">Update Category</h4>
+                        <h4 class="modal-title">Update Tax</h4>
                     </div>
                     <div class="modal-body">
 
@@ -131,32 +129,24 @@
                         <div class="form-group">
                             <label for="name">Name:</label>
                             <input type="text" name="name" id="name" placeholder="Name" class="form-control"
-                                   v-model="subCategoryUpdateModel.name">
+                                   v-model="taxesUpdateModel.name">
                         </div>
                         <div class="form-group">
-                            <label for="categories_id" name="categories_id">Parent Category:</label>
-                            <select id="categories_id" name="categories_id" class="form-control" v-model="subCategoryUpdateModel.categories_id">
-                                <option value="">Select Category </option>
-                                <option v-for="(category,id,name) in subCategory" v-bind:value="category.id"> {{category.name}} </option>
-                            </select>
+                            <label for="percentage_id" name="percentage_id">Percentage:</label>
+                             
+                             <input type="text" name="percentage" id="percentage" placeholder="Percentage" class="form-control"
+                                   v-model="taxesUpdateModel.percentage">
                         </div>
                         
                         <div class="form-group">
                             <label for="is_active">isActive:</label>
-                            <input type ="checkbox" name="is_active" id="is_active"  v-model="subCategoryUpdateModel.is_active">
-                        </div>
-                        <div class="form-group">
-                            <label for="available">Avaliable:</label>
-                            <input type ="radio" name="available" id="available"
-                                     v-model="subCategoryUpdateModel.available" value="0">No
-                            <input type ="radio" name="available" id="available"
-                                     v-model="subCategoryUpdateModel.available" value="1">Yes
+                            <input type ="checkbox" name="is_active" id="is_active"  v-model="taxesUpdateModel.is_active">
                         </div>
                         
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" @click="updateCategory" class="btn btn-primary">Submit</button>
+                        <button type="button" @click="updateTax" class="btn btn-primary">Submit</button>
                     </div>
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
@@ -170,45 +160,36 @@
     export default {
         data(){
             return {
-                subCategoryModel: {
+                taxesModel: {
                     name: '',
-                    categories_id: '',
-                    available: '',
+                    percentage: '',
                     is_active: '',
-                },//this is for category creation time set all data null
+                },//this is for tax creation time set all data null
                 errors: [],//errors varidale define as null
-                subCategoryUpdateModelData: [],//this varidale define as null when instant changes in table
-                subCategoryUpdateModel: {},  //this varidale for get value from the model
+                taxesUpdateModelData: [],//this varidale define as null when instant changes in table
+                taxesUpdateModel: {},  //this varidale for get value from the model
                 success: [],
                 internal: [],
-                subCategory: [],
-                categories: [],
 
             }
         },
         mounted()
         {
-        this.subCategory = [];
-                axios.get('api/getSubCategory')
-                .then(response => {
-                    this.subCategory = response.data.categories;
-                })
-            this.readCategory();//call when page load
+            this.readTax();//call when page load
         },
         methods: {
-            initAddSubCategory()
+            initAddTaxes()
             {
                 
-                $("#add_sub_category_model").modal("show");//show category popup when create
+                $("#add_tax_model").modal("show");//show tax popup when create
             },
-            createCategory()
+            createTax()
             {
-                //create category and axios used to set methods and hit api.
-                axios.post('/api/subCategory', {
-                    name: this.subCategoryModel.name,
-                    categories_id: this.subCategoryModel.categories_id,
-                    available: this.subCategoryModel.available,
-                    is_active: this.subCategoryModel.is_active,
+                //create tax and axios used to set methods and hit api.
+                axios.post('/api/taxRules', {
+                    name: this.taxesModel.name,
+                    percentage: this.taxesModel.percentage,
+                    is_active: this.taxesModel.is_active,
 
                 })
                     .then(response => {
@@ -216,10 +197,10 @@
                     this.internal = [];
                         if (response.data.success == true){
                             this.success = [];
-                            this.success.push('Sub-Category created successfully!.');
+                            this.success.push('Tax created successfully!.');
                         this.reset();//reset this value
-                        this.subCategoryUpdateModelData.push(response.data.categories);//assign responce data to the subCategoryUpdateModelData model to fetch data instantly
-                        $("#add_sub_category_model").modal("hide");//hide model
+                        this.taxesUpdateModelData.push(response.data.tax);//assign responce data to the taxesUpdateModelData model to fetch data instantly
+                        $("#add_tax_model").modal("hide");//hide model
                         }
                         if (response.data.success == false){
                             this.internal = [];
@@ -233,44 +214,38 @@
                         if (error.response.data.errors.name) {
                             this.errors.push(error.response.data.errors.name[0]);
                         }
-                        if (error.response.data.errors.categories_id) {
-                            this.errors.push(error.response.data.errors.categories_id[0]);
+                        if (error.response.data.errors.percentage) {
+                            this.errors.push(error.response.data.errors.percentage[0]);
                         }
                     });
             },
             reset()
             {
                 //reset all the vue models data
-                this.subCategoryModel.name = '';
-                this.subCategoryModel.categories_id = '';
-                this.subCategoryModel.available = '';
-                this.subCategoryModel.is_active = '';
+                this.taxesModel.name = '';
+                this.taxesModel.percentage = '';
+                this.taxesModel.available = '';
+                this.taxesModel.is_active = '';
             },
-            readCategory()
+            readTax()
             {
-            //get all the subcategory list
-            //get request using axios
-                axios.get('/api/subCategory')
+                axios.get('/api/taxRules')
                     .then(response => {
-                        this.subCategoryUpdateModelData = response.data.subCategories;//asign responce to the subCategoryUpdateModelData
+                        this.taxesUpdateModelData = response.data.tax;
                     });
             },
             initUpdate(index)
             {
-                //set data for update perticular id
                 this.errors = [];
-                $("#update_category_model").modal("show");
-                this.subCategoryUpdateModel = this.subCategoryUpdateModelData[index];
+                $("#update_tax_model").modal("show");
+                this.taxesUpdateModel = this.taxesUpdateModelData[index];
             },
-            updateCategory()
+            updateTax()
             {
-            
-                //send data to the api for update
-                axios.patch('/api/subCategory/' + this.subCategoryUpdateModel.id, {
-                    name: this.subCategoryUpdateModel.name,
-                    categories_id: this.subCategoryUpdateModel.categories_id,
-                    available: this.subCategoryUpdateModel.available,
-                    is_active: this.subCategoryUpdateModel.is_active,
+                axios.patch('/api/taxRules/' + this.taxesUpdateModel.id, {
+                    name: this.taxesUpdateModel.name,
+                    percentage: this.taxesUpdateModel.percentage,
+                    is_active: this.taxesUpdateModel.is_active,
                     
 
                 })
@@ -279,8 +254,8 @@
                     this.internal = [];
                     if (response.data.success == true){
                     this.success = [];
-                        this.success.push('Sub-Category updated successfully!.');
-                        $("#update_category_model").modal("hide");//hide model
+                        this.success.push('Tax updated successfully!.');
+                        $("#update_tax_model").modal("hide");//hide model
                     }
                     if (response.data.success == false){
                             this.internal = [];
@@ -293,23 +268,23 @@
                        if (error.response.data.errors.name) {
                             this.errors.push(error.response.data.errors.name[0]);
                         }
-                        if (error.response.data.errors.categories_id) {
-                            this.errors.push(error.response.data.errors.categories_id[0]);
+                        if (error.response.data.errors.percentage) {
+                            this.errors.push(error.response.data.errors.percentage[0]);
                         }
                     });
             },
-            deleteSubCategory(index)
+            deleteTaxes(index)
             {
                 //delete perticular data
-                let conf = confirm("Do you ready want to delete this Sub-Category?");
+                let conf = confirm("Do you ready want to delete this Tax?");
                 if (conf === true) {
-                    axios.delete('/api/subCategory/' + this.subCategoryUpdateModelData[index].id)
+                    axios.delete('/api/taxRules/' + this.taxesUpdateModelData[index].id)
                         .then(response => {
                             if (response.data.success == true){
                             this.success = [];
-                                this.success.push('Sub-Category deleted successfully!.');
+                                this.success.push('Tax deleted successfully!.');
                             }
-                            this.subCategoryUpdateModelData.splice(index, 1);
+                            this.taxesUpdateModelData.splice(index, 1);
 
                         })
                         .catch(error => {

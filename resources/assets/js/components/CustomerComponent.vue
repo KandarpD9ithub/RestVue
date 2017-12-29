@@ -89,13 +89,35 @@
                             <input type ="email" name="mobile_number" id="mobile_number" class="form-control"
                                       placeholder="Mobile Number" v-model="customerModel.mobile_number">
                         </div>
+
                         <div class="form-group">
-                            <label for="mobile_number">gender:</label>
+                            <label for="country">Country:</label>
+                            <select name="country" class="form-control" id="country" v-model="customerModel.country">
+                                <option selected value="">Select Country </option>
+                                <option v-for="(cout,name,id) in countries" v-bind:value="cout.id">{{ cout.name }}</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="gender">gender:</label>
 
                             <input type ="radio" name="gender" id="gender"
                                      v-model="customerModel.gender" value="0">Male
                             <input type ="radio" name="gender" id="gender"
                                      v-model="customerModel.gender" value="1">Female
+                        </div>
+                        <div class="form-group">
+                            <label for="birth_date">Birth Date:</label>
+
+                            <input type ="date" name="birth_date" class="form-control" id="birth_date"
+                                     v-model="customerModel.birth_date">
+                            
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Birth Date:</label>
+
+                            <textarea name="address" id="address" class="form-control" placeholder="Address" v-model="customerModel.address" rows="3"></textarea>
+                            
                         </div>
                         
                     </div>
@@ -143,6 +165,16 @@
                             <input type ="email" name="mobile_number" id="mobile_number" class="form-control"
                                       placeholder="Mobile Number" v-model="customerUpdateModel.mobile_number">
                         </div>
+
+                        <div class="form-group">
+                            <label for="country">Country:</label>
+                            <select name="country" class="form-control" id="country" v-model="customerUpdateModel.country">
+                                <option selected value="">Select Country </option>
+                                <option v-for="(cout,name,id) in countries" v-bind:value="cout.id">{{ cout.name }}</option>
+                            </select>
+                        </div>
+
+
                         <div class="form-group">
                             <label for="mobile_number">gender:</label>
 
@@ -150,6 +182,20 @@
                                      v-model="customerUpdateModel.gender" value="0">Male
                             <input type ="radio" name="gender" id="gender"
                                      v-model="customerUpdateModel.gender" value="1">Female
+                        </div>
+
+                        <div class="form-group">
+                            <label for="birth_date">Birth Date:</label>
+
+                            <input type ="date" name="birth_date" class="form-control" id="birth_date"
+                                     v-model="customerUpdateModel.birth_date">
+                            
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Birth Date:</label>
+
+                            <textarea name="address" id="address" class="form-control" placeholder="Address" v-model="customerUpdateModel.address" rows="3"></textarea>
+                            
                         </div>
                         
                     </div>
@@ -174,17 +220,25 @@
                     email: '',
                     mobile_number: '',
                     gender: '',
+                    'birth_date': '',
+                    'address': '',
+                    country: '',
                 },//this is for customer creation time set all data null
                 errors: [],//errors varidale define as null
                 customerUpdateModelData: [],//this varidale define as null when instant changes in table
                 customerUpdateModel: {},  //this varidale for get value from the model
                 success: [],
+                countries : [],
                 internal: [],
 
             }
         },
         mounted()
         {
+        axios.get('/api/country')
+                .then(response => {
+                    this.countries = response.data.country
+                });
             this.readCustomers();//call when page load
         },
         methods: {
@@ -199,7 +253,10 @@
                     name: this.customerModel.name,
                     email: this.customerModel.email,
                     mobile_number: this.customerModel.mobile_number,
+                    country: this.customerModel.country,
                     gender: this.customerModel.gender,
+                    birth_date: this.customerModel.birth_date,
+                    address: this.customerModel.address,
 
                 })
                     .then(response => {
@@ -224,15 +281,20 @@
                         if (error.response.data.errors.name) {
                             this.errors.push(error.response.data.errors.name[0]);
                         }
-                        if (error.response.data.errors.email) {
+                        /*if (error.response.data.errors.email) {
                             this.errors.push(error.response.data.errors.email[0]);
-                        }
+                        }*/
                         if (error.response.data.errors.mobile_number) {
                             this.errors.push(error.response.data.errors.mobile_number[0]);
+                        }
+                        /*
+                        if (error.response.data.errors.country) {
+                            this.errors.push(error.response.data.errors.country[0]);
                         }
                         if (error.response.data.errors.gender) {
                             this.errors.push(error.response.data.errors.gender[0]);
                         }
+                        */
                     });
             },
             reset()
@@ -241,7 +303,10 @@
                 this.customerModel.name = '';
                 this.customerModel.email = '';
                 this.customerModel.mobile_number = '';
+                this.customerModel.country = '';
                 this.customerModel.gender = '';
+                this.customerModel.birth_date = '';
+                this.customerModel.address = '';
             },
             readCustomers()
             {
@@ -267,7 +332,10 @@
                     name: this.customerUpdateModel.name,
                     email: this.customerUpdateModel.email,
                     mobile_number: this.customerUpdateModel.mobile_number,
+                    country: this.customerUpdateModel.country,
                     gender: this.customerUpdateModel.gender,
+                    birth_date: this.customerUpdateModel.birth_date,
+                    address: this.customerUpdateModel.address,
                     
 
                 })
@@ -290,15 +358,19 @@
                        if (error.response.data.errors.name) {
                             this.errors.push(error.response.data.errors.name[0]);
                         }
-                        if (error.response.data.errors.email) {
+                        /*if (error.response.data.errors.email) {
                             this.errors.push(error.response.data.errors.email[0]);
-                        }
+                        }*/
                         if (error.response.data.errors.mobile_number) {
                             this.errors.push(error.response.data.errors.mobile_number[0]);
+                        }
+                        /*if (error.response.data.errors.country) {
+                            this.errors.push(error.response.data.errors.country[0]);
                         }
                         if (error.response.data.errors.gender) {
                             this.errors.push(error.response.data.errors.gender[0]);
                         }
+                        */
                         
                     });
             },

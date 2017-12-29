@@ -1,21 +1,13 @@
 <?php
-/**
- * @package App/Http/Controller/Api
- *
- * @class CategoryController
- *
- * @author Kandarp Pandya <kandarp.d9ithub@gmail.com>
- *
- */
+
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Categories;
+use App\Taxes;
 use DB;
-use Auth;
 
-class CategoryController extends Controller
+class TaxesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -24,11 +16,12 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $cat = Categories::all();
+        $tax = Taxes::all();
+
         return response()->json([
-            'categories'    => $cat,
-            'success'   => true,
-        ], 200);
+            'sucess'    => true,
+            'tax'       => $tax,
+        ], 200); 
     }
 
     /**
@@ -50,21 +43,20 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'        => 'required|max:100',
-            'category' => 'required',
+            'name'                   => 'required|max:100',
+            'percentage'             => 'required|max:100',
         ]);
-        //$request['created_by'] = Auth::user()->id;
+
         try {
             DB::beginTransaction();
-            //$request['created_by'] = Auth::user()->id;
-            $category = Categories::create($request->all());
+            $tax = Taxes::create($request->all());
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
             return response()->json(['error'=>'Internal server error.','success'=>false]);
         }
         return response()->json([
-            'categories'    => Categories::where('id',$category->id)->first(),
+            'tax'    => Taxes::where('id',$tax->id)->first(),
             'message' => 'Success',
             'success' => true,
         ], 200);
@@ -102,22 +94,21 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         $req = $request->validate([
-            'name'        => 'required|max:100',
-            'category' => 'required',
-            'is_active' => '',
-            'available' =>'',
+            'name'                   => 'required|max:100',
+            'percentage'             => 'required|max:100',
+            'is_ctive'              => '',
         ]);
+
         try {
             DB::beginTransaction();
-        //$request['created_by'] = Auth::user()->id;
-            $category = Categories::where('id',$id)->update($req);
+            $tax = Taxes::where('id',$id)->update($req);
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
             return response()->json(['error'=>'Internal server error.','success'=>false]);
         }
         return response()->json([
-            'categories'    => Categories::where('id',$id)->first(),
+            'tax'    => Taxes::where('id',$id)->first(),
             'message' => 'Success',
             'success' => true,
         ], 200);
@@ -133,29 +124,14 @@ class CategoryController extends Controller
     {
         try {    
             DB::beginTransaction();        
-                Categories::where('id',$id)->delete();
+                Taxes::where('id',$id)->delete();
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
             return response()->json(['error'=>'Internal server error.','success'=>false]);
         }
         return response()->json([
-            'message' => 'Task deleted successfully!',
-            'success' => true,
-        ], 200);
-    }
-
-    /**
-     * get category list.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function getCategoryList()
-    {
-        $cat = [['id'=>'0','name'=>'Veg'],['id'=>'1','name'=>'NonVeg']];
-       return response()->json([
-            'categoryList' => $cat,
+            'message' => 'Tax deleted successfully!',
             'success' => true,
         ], 200);
     }
