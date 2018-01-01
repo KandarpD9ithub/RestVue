@@ -10,10 +10,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 class SubCategories extends Model
 {
+  use SoftDeletes;
    protected $fillable = [
    		'name','categories_id','available','is_active','created_by','updated_by',
    ];
@@ -26,4 +28,6 @@ class SubCategories extends Model
     {
         return $this->belongsTo(Categories::class);
     }
+
+    protected $dats =['deleted_at'];
 }

@@ -1,13 +1,21 @@
 <?php
-
+/**
+ * @package App
+ *
+ * @class TablesController
+ *
+ * @author Kandarp Pandya <kandarp.d9ithub@gmail.com>
+ *
+ */
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Taxes;
+use App\Tables;
 use DB;
+use Auth;
 
-class TaxesController extends Controller
+class TablesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,12 +24,10 @@ class TaxesController extends Controller
      */
     public function index()
     {
-        $tax = Taxes::all();
-
         return response()->json([
+            'tables'    => Tables::all(),
             'sucess'    => true,
-            'tax'       => $tax,
-        ], 200); 
+        ], 200);
     }
 
     /**
@@ -43,20 +49,19 @@ class TaxesController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'                   => 'required|max:100',
-            'percentage'             => 'required|max:100|numeric',
+            'name'          => 'required|max:100|unique:tables,name',
         ]);
 
         try {
             DB::beginTransaction();
-            $tax = Taxes::create($request->all());
+            $table = Tables::create($request->all());
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
             return response()->json(['error'=>'Internal server error.','success'=>false]);
         }
         return response()->json([
-            'tax'    => Taxes::where('id',$tax->id)->first(),
+            'tables'    => Tables::where('id',$table->id)->first(),
             'message' => 'Success',
             'success' => true,
         ], 200);
@@ -94,21 +99,19 @@ class TaxesController extends Controller
     public function update(Request $request, $id)
     {
         $req = $request->validate([
-            'name'                   => 'required|max:100',
-            'percentage'             => 'required|max:100|numeric',
-            'is_ctive'              => '',
+            'name'          => 'required|max:100|unique:tables,name,'.$id,
+            'is_active'     => '',
         ]);
-
         try {
             DB::beginTransaction();
-            $tax = Taxes::where('id',$id)->update($req);
+            $tablw = Tables::where('id',$id)->update($request->all());
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
             return response()->json(['error'=>'Internal server error.','success'=>false]);
         }
         return response()->json([
-            'tax'    => Taxes::where('id',$id)->first(),
+            'tables'    => Tables::where('id',$id)->first(),
             'message' => 'Success',
             'success' => true,
         ], 200);
@@ -124,14 +127,14 @@ class TaxesController extends Controller
     {
         try {    
             DB::beginTransaction();        
-                Taxes::where('id',$id)->delete();
+                Tables::where('id',$id)->delete();
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
             return response()->json(['error'=>'Internal server error.','success'=>false]);
         }
         return response()->json([
-            'message' => 'Tax deleted successfully!',
+            'message' => 'Table deleted successfully!',
             'success' => true,
         ], 200);
     }

@@ -17,16 +17,15 @@ use Illuminate\Http\Request;
     return $request->user();
 });*/
 
-Route::group( [ 'middleware' => ['basicAuth'] ], function() {
-
 Route::resource('customers','Api\CustomerController');
 Route::resource('users','Api\UsersController');
 Route::resource('category','Api\CategoryController');
 Route::resource('subCategory','Api\SubCategoryController');
 Route::resource('products','Api\ProductController');
 Route::resource('taxRules','Api\TaxesController');
+Route::resource('discounts','Api\DiscountController');
+Route::resource('tables','Api\TablesController');
 
-});
 
 Route::get('getSubCategory','Api\SubCategoryController@getSubCategory');
 Route::get('getCategoryList','Api\CategoryController@getCategoryList');
@@ -36,7 +35,7 @@ Route::get('country','Api\UsersController@getCountry');
 
 Route::get('categoryList','Api\FetchDataController@getCategoryList');
 Route::get('subCategoryList','Api\FetchDataController@getsubCategoryList');
-
+Route::get('types','Api\FetchDataController@');
 
 
 Route::get('productList','Api\ProductController@productList');

@@ -1,13 +1,21 @@
 <?php
-
+/**
+ * @package App
+ *
+ * @class DiscountController
+ *
+ * @author Kandarp Pandya <kandarp.d9ithub@gmail.com>
+ *
+ */
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Taxes;
+use App\Discounts;
 use DB;
+use Auth;
 
-class TaxesController extends Controller
+class DiscountController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,12 +24,11 @@ class TaxesController extends Controller
      */
     public function index()
     {
-        $tax = Taxes::all();
-
+        $discounts = Discounts::get();
         return response()->json([
-            'sucess'    => true,
-            'tax'       => $tax,
-        ], 200); 
+            'discounts'    => $discounts,
+            'success'   => true,
+        ], 200);
     }
 
     /**
@@ -43,20 +50,25 @@ class TaxesController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'                   => 'required|max:100',
-            'percentage'             => 'required|max:100|numeric',
+            'name'          => 'required|max:100',
+            'description'   => 'max:200',
+            'type'          => 'required',
+            'minimum_amount'=> 'required|max:100|numeric',
+            'value'         => 'required|max:100|numeric',
+            'start_date'    => 'required',
+            'end_date'      => 'required',
         ]);
 
         try {
             DB::beginTransaction();
-            $tax = Taxes::create($request->all());
+            $discount = Discounts::create($request->all());
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
             return response()->json(['error'=>'Internal server error.','success'=>false]);
         }
         return response()->json([
-            'tax'    => Taxes::where('id',$tax->id)->first(),
+            'discounts'    => Discounts::where('id',$discount->id)->first(),
             'message' => 'Success',
             'success' => true,
         ], 200);
@@ -94,21 +106,25 @@ class TaxesController extends Controller
     public function update(Request $request, $id)
     {
         $req = $request->validate([
-            'name'                   => 'required|max:100',
-            'percentage'             => 'required|max:100|numeric',
-            'is_ctive'              => '',
+            'name'          => 'required|max:100',
+            'description'   => 'max:200',
+            'type'          => 'required',
+            'minimum_amount'=> 'required|max:200|numeric',
+            'value'         => 'required|max:200|numeric',
+            'start_date'    => 'required',
+            'end_date'      => 'required',
+            'is_active'     => '',
         ]);
-
         try {
             DB::beginTransaction();
-            $tax = Taxes::where('id',$id)->update($req);
+            $discount = Discounts::where('id',$id)->update($request->all());
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
             return response()->json(['error'=>'Internal server error.','success'=>false]);
         }
         return response()->json([
-            'tax'    => Taxes::where('id',$id)->first(),
+            'discounts'    => Discounts::where('id',$id)->first(),
             'message' => 'Success',
             'success' => true,
         ], 200);
@@ -124,14 +140,14 @@ class TaxesController extends Controller
     {
         try {    
             DB::beginTransaction();        
-                Taxes::where('id',$id)->delete();
+                Discounts::where('id',$id)->delete();
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
             return response()->json(['error'=>'Internal server error.','success'=>false]);
         }
         return response()->json([
-            'message' => 'Tax deleted successfully!',
+            'message' => 'Discount deleted successfully!',
             'success' => true,
         ], 200);
     }

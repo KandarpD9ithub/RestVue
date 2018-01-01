@@ -119,7 +119,7 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">Add New Customer</h4>
+                        <h4 class="modal-title">Update Customer</h4>
                     </div>
                     <div class="modal-body">
 
@@ -221,7 +221,6 @@
             createCustomers()
             {
                 //create customer and axios used to set methods and hit api.
-                console.log(this.userModel.role_name);
                 axios.post('/api/users', {
                     name: this.userModel.name,
                     email: this.userModel.email,

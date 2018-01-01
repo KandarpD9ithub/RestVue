@@ -103,7 +103,7 @@
 						</ul>
 					</li>
 					<li>
-						<a href="table.html">
+						<a href="{{ URL::to('tables') }}">
 						<i class="icon-basket"></i>
 						<span class="title">Table</span>
 						<span class="arrow"></span>

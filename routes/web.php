@@ -29,6 +29,8 @@ Route::group( [ 'middleware' => [ 'auth','web' ] ], function() {
 	Route::get('subCategories','BackEnd\ShowController@showSubCategories');
 	Route::get('products','BackEnd\ShowController@showProducts');
 	Route::get('taxRules','BackEnd\ShowController@showTaxRules');
+	Route::get('discounts','BackEnd\ShowController@showDiscounts');
+	Route::get('tables','BackEnd\ShowController@showTables');
 	Route::get('logOut',function(){
 		Auth::logout();
 		return redirect()->to('/');

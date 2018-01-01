@@ -106,7 +106,7 @@
                         <div class="form-group">
                             <label for="tax_id" name="category">Tax:</label>
                             <select id="tax_id" name="tax_id" class="form-control" v-model="productModel.tax_id">
-                                <option value="">Tax </option>
+                                <option value="">Select Tax </option>
                                 <option v-for="(tax,id,name) in taxes" v-bind:value="tax.id"> {{tax.name}} </option>
                             </select>
                         </div>
@@ -266,7 +266,6 @@
         {
         axios.get('/api/products')
                     .then(response => {
-                        console.log(response.data.products);
                         this.prodcutUpdateModelData = response.data.products;
                     });
             this.readProducts();
@@ -374,7 +373,6 @@
                 });
                 axios.get('/api/products')
                     .then(response => {
-                        console.log(response.data.products);
                         this.prodcutUpdateModelData = response.data.products;
                     });
             },
@@ -383,7 +381,6 @@
             
                 this.errors = [];
                 $("#update_product_model").modal("show");
-                console.log(this.prodcutUpdateModelData[index]);
                 this.productUpdateModel = this.prodcutUpdateModelData[index];
             },
             updateProduct()

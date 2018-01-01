@@ -28,7 +28,7 @@ class CreateCustomersTable extends Migration
             $table->integer('country')->nullable();
             $table->unsignedTinyInteger('gender')->comment('0 (male), 1 (female)')->default(0);
             $table->string('address')->nullable();
-            $table->dateTime('birth_date')->nullable();
+            $table->date('birth_date')->nullable();
             $table->unsignedTinyInteger('is_active')->comment('0 (inActive), 1 (Active)')->default(1);
             $table->unsignedTinyInteger('created_by')->nullable();
             $table->unsignedTinyInteger('updated_by')->nullable();

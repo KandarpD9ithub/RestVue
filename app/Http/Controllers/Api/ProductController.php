@@ -8,6 +8,7 @@ use App\Products;
 use App\Categories;
 use App\SubCategories;
 use DB;
+use Auth;
 
 class ProductController extends Controller
 {
@@ -46,7 +47,7 @@ class ProductController extends Controller
         $request->validate([
             
             'name'              => 'required|max:100',
-            'price'             => 'required|max:100',
+            'price'             => 'required|max:10000|numeric',
             'categories_id'       => 'required',
             'sub_categories_id'   => 'required',
             'tax_id'            => 'required',
@@ -106,7 +107,7 @@ class ProductController extends Controller
         $prod = $request->validate([
             
             'name'              => 'required|max:100',
-            'price'             => 'required|max:100',
+            'price'             => 'required|max:10000|numeric',
             'categories_id'       => 'required',
             'sub_categories_id'   => 'required',
             'tax_id'            => 'required',

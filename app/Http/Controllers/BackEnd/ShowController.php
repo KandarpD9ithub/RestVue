@@ -155,4 +155,26 @@ class ShowController extends Controller
         return view('restaurant.tax_rule');
     }
 
+    /**
+     * get discount form.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function showDiscounts()
+    {
+        return view('restaurant.discount');
+    }
+
+    /**
+     * get discount form.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function showTables()
+    {
+        return view('restaurant.tables');
+    }
+
 }

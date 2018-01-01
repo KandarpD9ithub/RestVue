@@ -1072,7 +1072,7 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(11);
-module.exports = __webpack_require__(54);
+module.exports = __webpack_require__(60);
 
 
 /***/ }),
@@ -1106,7 +1106,11 @@ Vue.component('subcategory', __webpack_require__(48));
 
 Vue.component('products', __webpack_require__(51));
 
-Vue.component('taxrules', __webpack_require__(64));
+Vue.component('taxrules', __webpack_require__(54));
+
+Vue.component('discount', __webpack_require__(57));
+
+Vue.component('tables', __webpack_require__(70));
 /*Vue.component('pagination', require('laravel-vue-pagination'));*/
 
 var app = new Vue({
@@ -44193,7 +44197,7 @@ var staticRenderFns = [
         [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
       ),
       _vm._v(" "),
-      _c("h4", { staticClass: "modal-title" }, [_vm._v("Add New Customer")])
+      _c("h4", { staticClass: "modal-title" }, [_vm._v("Update Customer")])
     ])
   }
 ]
@@ -44482,7 +44486,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this2 = this;
 
             //create customer and axios used to set methods and hit api.
-            console.log(this.userModel.role_name);
             axios.post('/api/users', {
                 name: this.userModel.name,
                 email: this.userModel.email,
@@ -45343,7 +45346,7 @@ var staticRenderFns = [
         [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
       ),
       _vm._v(" "),
-      _c("h4", { staticClass: "modal-title" }, [_vm._v("Add New Customer")])
+      _c("h4", { staticClass: "modal-title" }, [_vm._v("Update Customer")])
     ])
   }
 ]
@@ -47886,7 +47889,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         var _this = this;
 
         axios.get('/api/products').then(function (response) {
-            console.log(response.data.products);
             _this.prodcutUpdateModelData = response.data.products;
         });
         this.readProducts();
@@ -47986,7 +47988,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this3.taxes = response.data.tax;
             });
             axios.get('/api/products').then(function (response) {
-                console.log(response.data.products);
                 _this3.prodcutUpdateModelData = response.data.products;
             });
         },
@@ -47994,7 +47995,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             this.errors = [];
             $("#update_product_model").modal("show");
-            console.log(this.prodcutUpdateModelData[index]);
             this.productUpdateModel = this.prodcutUpdateModelData[index];
         },
         updateProduct: function updateProduct() {
@@ -48455,7 +48455,9 @@ var render = function() {
                       }
                     },
                     [
-                      _c("option", { attrs: { value: "" } }, [_vm._v("Tax ")]),
+                      _c("option", { attrs: { value: "" } }, [
+                        _vm._v("Select Tax ")
+                      ]),
                       _vm._v(" "),
                       _vm._l(_vm.taxes, function(tax, id, name) {
                         return _c("option", { domProps: { value: tax.id } }, [
@@ -49325,29 +49327,14 @@ if (false) {
 
 /***/ }),
 /* 54 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 55 */,
-/* 56 */,
-/* 57 */,
-/* 58 */,
-/* 59 */,
-/* 60 */,
-/* 61 */,
-/* 62 */,
-/* 63 */,
-/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(65)
+var __vue_script__ = __webpack_require__(55)
 /* template */
-var __vue_template__ = __webpack_require__(66)
+var __vue_template__ = __webpack_require__(56)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -49386,7 +49373,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 65 */
+/* 55 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -49678,7 +49665,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 66 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -50270,6 +50257,2357 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-072ca78a", module.exports)
+  }
+}
+
+/***/ }),
+/* 57 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(58)
+/* template */
+var __vue_template__ = __webpack_require__(59)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\discountComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-ce7b8716", Component.options)
+  } else {
+    hotAPI.reload("data-v-ce7b8716", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 58 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            discountModel: {
+                name: '',
+                description: '',
+                type: '',
+                minimum_amount: '',
+                value: '',
+                start_date: '',
+                end_date: '',
+                is_active: ''
+            }, //this is for tax creation time set all data null
+            errors: [], //errors varidale define as null
+            discountUpdateModelData: [], //this varidale define as null when instant changes in table
+            discountUpdateModel: {}, //this varidale for get value from the model
+            success: [],
+            internal: [],
+            types: []
+
+        };
+    },
+    mounted: function mounted() {
+        this.readDiscount(); //call when page load
+    },
+
+    methods: {
+        initAddDiscount: function initAddDiscount() {
+
+            $("#add_discount_model").modal("show"); //show discounts popup when create
+        },
+        createDiscount: function createDiscount() {
+            var _this = this;
+
+            //create discounts and axios used to set methods and hit api.
+            axios.post('/api/discounts', {
+                name: this.discountModel.name,
+                description: this.discountModel.description,
+                is_active: this.discountModel.is_active,
+                type: this.discountModel.type,
+                minimum_amount: this.discountModel.minimum_amount,
+                value: this.discountModel.value,
+                start_date: this.discountModel.start_date,
+                end_date: this.discountModel.end_date
+
+            }).then(function (response) {
+                _this.errors = [];
+                _this.internal = [];
+                if (response.data.success == true) {
+                    _this.success = [];
+                    _this.success.push('Discount created successfully!.');
+                    _this.reset(); //reset this value
+                    _this.discountUpdateModelData.push(response.data.discounts); //assign responce data to the discountUpdateModelData model to fetch data instantly
+                    $("#add_discount_model").modal("hide"); //hide model
+                }
+                if (response.data.success == false) {
+                    _this.internal = [];
+                    _this.internal.push(response.data.error);
+                }
+            }).catch(function (error) {
+                //error handling
+                _this.errors = [];
+                if (error.response.data.errors.name) {
+                    _this.errors.push(error.response.data.errors.name[0]);
+                }
+                if (error.response.data.errors.description) {
+                    _this.errors.push(error.response.data.errors.description[0]);
+                }
+
+                if (error.response.data.errors.type) {
+                    _this.errors.push(error.response.data.errors.type[0]);
+                }
+                if (error.response.data.errors.minimum_amount) {
+                    _this.errors.push(error.response.data.errors.minimum_amount[0]);
+                }
+
+                if (error.response.data.errors.value) {
+                    _this.errors.push(error.response.data.errors.value[0]);
+                }
+                if (error.response.data.errors.start_date) {
+                    _this.errors.push(error.response.data.errors.start_date[0]);
+                }
+
+                if (error.response.data.errors.end_date) {
+                    _this.errors.push(error.response.data.errors.end_date[0]);
+                }
+
+                if (error.response.data.errors.is_active) {
+                    _this.errors.push(error.response.data.errors.is_active[0]);
+                }
+            });
+        },
+        reset: function reset() {
+            //reset all the vue models data
+            this.discountModel.name = '';
+            this.discountModel.description = '';
+            this.discountModel.available = '';
+            this.discountModel.is_active = '';
+
+            this.discountModel.type = '';
+            this.discountModel.minimum_amount = '';
+            this.discountModel.value = '';
+
+            this.discountModel.start_date = '';
+            this.discountModel.end_date = '';
+        },
+        readDiscount: function readDiscount() {
+            var _this2 = this;
+
+            axios.get('/api/discounts').then(function (response) {
+                _this2.discountUpdateModelData = response.data.discounts;
+            });
+        },
+        initUpdate: function initUpdate(index) {
+            this.errors = [];
+            $("#update_discount_model").modal("show");
+            this.discountUpdateModel = this.discountUpdateModelData[index];
+        },
+        updateDiscount: function updateDiscount() {
+            var _this3 = this;
+
+            axios.patch('/api/discounts/' + this.discountUpdateModel.id, {
+                name: this.discountUpdateModel.name,
+                description: this.discountUpdateModel.description,
+                is_active: this.discountUpdateModel.is_active,
+                type: this.discountUpdateModel.type,
+                minimum_amount: this.discountUpdateModel.minimum_amount,
+                value: this.discountUpdateModel.value,
+
+                start_date: this.discountUpdateModel.start_date,
+                end_date: this.discountUpdateModel.end_date
+
+            }).then(function (response) {
+                _this3.errors = [];
+                _this3.internal = [];
+                if (response.data.success == true) {
+                    _this3.success = [];
+                    _this3.success.push('Discount updated successfully!.');
+                    $("#update_discount_model").modal("hide"); //hide model
+                }
+                if (response.data.success == false) {
+                    _this3.internal = [];
+                    _this3.internal.push(response.data.error);
+                }
+            }).catch(function (error) {
+
+                _this3.errors = [];
+                if (error.response.data.errors.name) {
+                    _this3.errors.push(error.response.data.errors.name[0]);
+                }
+                if (error.response.data.errors.description) {
+                    _this3.errors.push(error.response.data.errors.description[0]);
+                }
+
+                if (error.response.data.errors.type) {
+                    _this3.errors.push(error.response.data.errors.type[0]);
+                }
+                if (error.response.data.errors.minimum_amount) {
+                    _this3.errors.push(error.response.data.errors.minimum_amount[0]);
+                }
+
+                if (error.response.data.errors.value) {
+                    _this3.errors.push(error.response.data.errors.value[0]);
+                }
+                if (error.response.data.errors.start_date) {
+                    _this3.errors.push(error.response.data.errors.start_date[0]);
+                }
+
+                if (error.response.data.errors.end_date) {
+                    _this3.errors.push(error.response.data.errors.end_date[0]);
+                }
+
+                if (error.response.data.errors.is_active) {
+                    _this3.errors.push(error.response.data.errors.is_active[0]);
+                }
+            });
+        },
+        deleteDiscount: function deleteDiscount(index) {
+            var _this4 = this;
+
+            //delete perticular data
+            var conf = confirm("Do you ready want to delete this Discount?");
+            if (conf === true) {
+                axios.delete('/api/discounts/' + this.discountUpdateModelData[index].id).then(function (response) {
+                    if (response.data.success == true) {
+                        _this4.success = [];
+                        _this4.success.push('Discount deleted successfully!.');
+                    }
+                    _this4.discountUpdateModelData.splice(index, 1);
+                }).catch(function (error) {});
+            }
+        }
+    }
+});
+
+/***/ }),
+/* 59 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-md-11" }, [
+        _c("div", [
+          _c("div", [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary btn-xs pull-right",
+                on: {
+                  click: function($event) {
+                    _vm.initAddDiscount()
+                  }
+                }
+              },
+              [
+                _vm._v(
+                  "\n                        + Add New Discount\n                    "
+                )
+              ]
+            ),
+            _vm._v(" "),
+            _vm._m(0)
+          ]),
+          _vm._v(" "),
+          _vm.success.length > 0
+            ? _c("div", { staticClass: "alert alert-success" }, [
+                _c(
+                  "ul",
+                  _vm._l(_vm.success, function(suc) {
+                    return _c("li", [_vm._v(_vm._s(suc))])
+                  })
+                )
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c("div", { staticClass: "panel-body" }, [
+            _vm.discountUpdateModelData.length > 0
+              ? _c(
+                  "table",
+                  {
+                    staticClass:
+                      "table table-bordered table-striped table-responsive"
+                  },
+                  [
+                    _c(
+                      "tbody",
+                      [
+                        _vm._m(1),
+                        _vm._v(" "),
+                        _vm._l(_vm.discountUpdateModelData, function(
+                          disc,
+                          index
+                        ) {
+                          return _c("tr", [
+                            _c("td", [_vm._v(_vm._s(index + 1))]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _vm._v(
+                                "\n                                " +
+                                  _vm._s(disc.name) +
+                                  "\n                            "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _vm._v(
+                                "\n                                " +
+                                  _vm._s(disc.type) +
+                                  "\n                            "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _vm._v(
+                                "\n                                " +
+                                  _vm._s(disc.start_date) +
+                                  "\n                            "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _vm._v(
+                                "\n                                " +
+                                  _vm._s(disc.end_date) +
+                                  "\n                            "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              disc.is_active == 1
+                                ? _c("div", [_vm._v("Yes")])
+                                : _vm._e(),
+                              _vm._v(" "),
+                              disc.is_active == 0
+                                ? _c("div", [_vm._v("No")])
+                                : _vm._e(),
+                              _vm._v(" "),
+                              disc.is_active == null
+                                ? _c("div", [_vm._v("No")])
+                                : _vm._e()
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-success btn-xs",
+                                  on: {
+                                    click: function($event) {
+                                      _vm.initUpdate(index)
+                                    }
+                                  }
+                                },
+                                [_vm._v("Edit")]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-danger btn-xs",
+                                  on: {
+                                    click: function($event) {
+                                      _vm.deleteDiscount(index)
+                                    }
+                                  }
+                                },
+                                [_vm._v("Delete")]
+                              )
+                            ])
+                          ])
+                        })
+                      ],
+                      2
+                    )
+                  ]
+                )
+              : _vm._e()
+          ])
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: { tabindex: "-1", role: "dialog", id: "add_discount_model" }
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "modal-dialog", attrs: { role: "document" } },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _vm._m(2),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-body" }, [
+                _vm.errors.length > 0
+                  ? _c("div", { staticClass: "alert alert-danger" }, [
+                      _c(
+                        "ul",
+                        _vm._l(_vm.errors, function(error) {
+                          return _c("li", [_vm._v(_vm._s(error))])
+                        })
+                      )
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.internal.length > 0
+                  ? _c("div", { staticClass: "alert alert-danger" }, [
+                      _c(
+                        "ul",
+                        _vm._l(_vm.internal, function(inter) {
+                          return _c("li", [_vm._v(_vm._s(inter))])
+                        })
+                      )
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "name" } }, [_vm._v("Name:")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.discountModel.name,
+                        expression: "discountModel.name"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      name: "name",
+                      id: "name",
+                      placeholder: "Name"
+                    },
+                    domProps: { value: _vm.discountModel.name },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.discountModel, "name", $event.target.value)
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c(
+                    "label",
+                    { attrs: { for: "description", name: "description_id" } },
+                    [_vm._v("Description:")]
+                  ),
+                  _vm._v(" "),
+                  _c("textarea", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.discountModel.description,
+                        expression: "discountModel.description"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      name: "description",
+                      id: "description",
+                      placeholder: "Description",
+                      rows: "3"
+                    },
+                    domProps: { value: _vm.discountModel.description },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.discountModel,
+                          "description",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "type", name: "type" } }, [
+                    _vm._v("Type:")
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.discountModel.type,
+                          expression: "discountModel.type"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { id: "type", name: "type" },
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            _vm.discountModel,
+                            "type",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        }
+                      }
+                    },
+                    [
+                      _c("option", { attrs: { value: "" } }, [
+                        _vm._v("Select Type ")
+                      ]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "fix" } }, [
+                        _vm._v("Fix")
+                      ]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "percentage" } }, [
+                        _vm._v("Percentage")
+                      ])
+                    ]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "minimum_amount" } }, [
+                    _vm._v("Minimum Amount:")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.discountModel.minimum_amount,
+                        expression: "discountModel.minimum_amount"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      name: "minimum_amount",
+                      id: "minimum_amount",
+                      placeholder: "Minimum Amount"
+                    },
+                    domProps: { value: _vm.discountModel.minimum_amount },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.discountModel,
+                          "minimum_amount",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "value" } }, [_vm._v("Value:")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.discountModel.value,
+                        expression: "discountModel.value"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      name: "value",
+                      id: "value",
+                      placeholder: "value"
+                    },
+                    domProps: { value: _vm.discountModel.value },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.discountModel,
+                          "value",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "start_date" } }, [
+                    _vm._v("Start Date:")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.discountModel.start_date,
+                        expression: "discountModel.start_date"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "date",
+                      name: "start_date",
+                      id: "start_date"
+                    },
+                    domProps: { value: _vm.discountModel.start_date },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.discountModel,
+                          "start_date",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "end_date" } }, [
+                    _vm._v("End Date:")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.discountModel.end_date,
+                        expression: "discountModel.end_date"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { type: "date", name: "end_date", id: "end_date" },
+                    domProps: { value: _vm.discountModel.end_date },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.discountModel,
+                          "end_date",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "is_active_id" } }, [
+                    _vm._v("isActive:")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.discountModel.is_active,
+                        expression: "discountModel.is_active"
+                      }
+                    ],
+                    attrs: {
+                      type: "checkbox",
+                      name: "is_active",
+                      id: "is_active",
+                      value: "1"
+                    },
+                    domProps: {
+                      checked: Array.isArray(_vm.discountModel.is_active)
+                        ? _vm._i(_vm.discountModel.is_active, "1") > -1
+                        : _vm.discountModel.is_active
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$a = _vm.discountModel.is_active,
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = "1",
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 &&
+                              (_vm.discountModel.is_active = $$a.concat([$$v]))
+                          } else {
+                            $$i > -1 &&
+                              (_vm.discountModel.is_active = $$a
+                                .slice(0, $$i)
+                                .concat($$a.slice($$i + 1)))
+                          }
+                        } else {
+                          _vm.$set(_vm.discountModel, "is_active", $$c)
+                        }
+                      }
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-footer" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-default",
+                    attrs: { type: "button", "data-dismiss": "modal" }
+                  },
+                  [_vm._v("Close")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary",
+                    attrs: { type: "button" },
+                    on: { click: _vm.createDiscount }
+                  },
+                  [_vm._v("Submit")]
+                )
+              ])
+            ])
+          ]
+        )
+      ]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: { tabindex: "-1", role: "dialog", id: "update_discount_model" }
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "modal-dialog", attrs: { role: "document" } },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _vm._m(3),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-body" }, [
+                _vm.errors.length > 0
+                  ? _c("div", { staticClass: "alert alert-danger" }, [
+                      _c(
+                        "ul",
+                        _vm._l(_vm.errors, function(error) {
+                          return _c("li", [_vm._v(_vm._s(error))])
+                        })
+                      )
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.internal.length > 0
+                  ? _c("div", { staticClass: "alert alert-danger" }, [
+                      _c(
+                        "ul",
+                        _vm._l(_vm.internal, function(inter) {
+                          return _c("li", [_vm._v(_vm._s(inter))])
+                        })
+                      )
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "name" } }, [_vm._v("Name:")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.discountUpdateModel.name,
+                        expression: "discountUpdateModel.name"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      name: "name",
+                      id: "name",
+                      placeholder: "Name"
+                    },
+                    domProps: { value: _vm.discountUpdateModel.name },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.discountUpdateModel,
+                          "name",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c(
+                    "label",
+                    { attrs: { for: "description", name: "description_id" } },
+                    [_vm._v("Description:")]
+                  ),
+                  _vm._v(" "),
+                  _c("textarea", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.discountUpdateModel.description,
+                        expression: "discountUpdateModel.description"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      name: "description",
+                      id: "description",
+                      placeholder: "Description",
+                      rows: "3"
+                    },
+                    domProps: { value: _vm.discountUpdateModel.description },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.discountUpdateModel,
+                          "description",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "type", name: "type" } }, [
+                    _vm._v("Type:")
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.discountUpdateModel.type,
+                          expression: "discountUpdateModel.type"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { id: "type", name: "type" },
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            _vm.discountUpdateModel,
+                            "type",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        }
+                      }
+                    },
+                    [
+                      _c("option", { attrs: { value: "" } }, [
+                        _vm._v("Select Type ")
+                      ]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "fix" } }, [
+                        _vm._v("Fix")
+                      ]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "percentage" } }, [
+                        _vm._v("Percentage")
+                      ])
+                    ]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "minimum_amount" } }, [
+                    _vm._v("Minimum Amount:")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.discountUpdateModel.minimum_amount,
+                        expression: "discountUpdateModel.minimum_amount"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      name: "minimum_amount",
+                      id: "minimum_amount",
+                      placeholder: "Minimum Amount"
+                    },
+                    domProps: { value: _vm.discountUpdateModel.minimum_amount },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.discountUpdateModel,
+                          "minimum_amount",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "value" } }, [_vm._v("Value:")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.discountUpdateModel.value,
+                        expression: "discountUpdateModel.value"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      name: "value",
+                      id: "value",
+                      placeholder: "Value"
+                    },
+                    domProps: { value: _vm.discountUpdateModel.value },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.discountUpdateModel,
+                          "value",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "start_date" } }, [
+                    _vm._v("Start Date:")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.discountUpdateModel.start_date,
+                        expression: "discountUpdateModel.start_date"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "date",
+                      name: "start_date",
+                      id: "start_date"
+                    },
+                    domProps: { value: _vm.discountUpdateModel.start_date },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.discountUpdateModel,
+                          "start_date",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "end_date" } }, [
+                    _vm._v("End Date:")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.discountUpdateModel.end_date,
+                        expression: "discountUpdateModel.end_date"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { type: "date", name: "end_date", id: "end_date" },
+                    domProps: { value: _vm.discountUpdateModel.end_date },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.discountUpdateModel,
+                          "end_date",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "is_active_id" } }, [
+                    _vm._v("isActive:")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.discountUpdateModel.is_active,
+                        expression: "discountUpdateModel.is_active"
+                      }
+                    ],
+                    attrs: {
+                      type: "checkbox",
+                      name: "is_active",
+                      id: "is_active",
+                      value: "1"
+                    },
+                    domProps: {
+                      checked: Array.isArray(_vm.discountUpdateModel.is_active)
+                        ? _vm._i(_vm.discountUpdateModel.is_active, "1") > -1
+                        : _vm.discountUpdateModel.is_active
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$a = _vm.discountUpdateModel.is_active,
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = "1",
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 &&
+                              (_vm.discountUpdateModel.is_active = $$a.concat([
+                                $$v
+                              ]))
+                          } else {
+                            $$i > -1 &&
+                              (_vm.discountUpdateModel.is_active = $$a
+                                .slice(0, $$i)
+                                .concat($$a.slice($$i + 1)))
+                          }
+                        } else {
+                          _vm.$set(_vm.discountUpdateModel, "is_active", $$c)
+                        }
+                      }
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-footer" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-default",
+                    attrs: { type: "button", "data-dismiss": "modal" }
+                  },
+                  [_vm._v("Close")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary",
+                    attrs: { type: "button" },
+                    on: { click: _vm.updateDiscount }
+                  },
+                  [_vm._v("Submit")]
+                )
+              ])
+            ])
+          ]
+        )
+      ]
+    )
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("h3", [_c("strong", [_vm._v("Discount")])])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c("th", [
+        _vm._v(
+          "\n                                No.\n                            "
+        )
+      ]),
+      _vm._v(" "),
+      _c("th", [
+        _vm._v(
+          "\n                                Name\n                            "
+        )
+      ]),
+      _vm._v(" "),
+      _c("th", [
+        _vm._v(
+          "\n                                Type\n                            "
+        )
+      ]),
+      _vm._v(" "),
+      _c("th", [
+        _vm._v(
+          "\n                                Start Date\n                            "
+        )
+      ]),
+      _vm._v(" "),
+      _c("th", [
+        _vm._v(
+          "\n                                End Date\n                            "
+        )
+      ]),
+      _vm._v(" "),
+      _c("th", [
+        _vm._v(
+          "\n                                Active\n                            "
+        )
+      ]),
+      _vm._v(" "),
+      _c("th", [
+        _vm._v(
+          "\n                                Action\n                            "
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      ),
+      _vm._v(" "),
+      _c("h4", { staticClass: "modal-title" }, [_vm._v("Add New Discount")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      ),
+      _vm._v(" "),
+      _c("h4", { staticClass: "modal-title" }, [_vm._v("Update Discount")])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-ce7b8716", module.exports)
+  }
+}
+
+/***/ }),
+/* 60 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 61 */,
+/* 62 */,
+/* 63 */,
+/* 64 */,
+/* 65 */,
+/* 66 */,
+/* 67 */,
+/* 68 */,
+/* 69 */,
+/* 70 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(71)
+/* template */
+var __vue_template__ = __webpack_require__(72)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\tablesComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-ed787bde", Component.options)
+  } else {
+    hotAPI.reload("data-v-ed787bde", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 71 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            tablesModel: {
+                name: '',
+                is_active: ''
+            }, //this is for tax creation time set all data null
+            errors: [], //errors varidale define as null
+            tablesUpdateModelData: [], //this varidale define as null when instant changes in table
+            tablesUpdateModel: {}, //this varidale for get value from the model
+            success: [],
+            internal: [],
+            types: []
+
+        };
+    },
+    mounted: function mounted() {
+        this.readTables(); //call when page load
+    },
+
+    methods: {
+        initAddTables: function initAddTables() {
+
+            $("#add_tables_model").modal("show"); //show tables popup when create
+        },
+        createTables: function createTables() {
+            var _this = this;
+
+            //create tables and axios used to set methods and hit api.
+            axios.post('/api/tables', {
+                name: this.tablesModel.name,
+                is_active: this.tablesModel.is_active
+
+            }).then(function (response) {
+                _this.errors = [];
+                _this.internal = [];
+                if (response.data.success == true) {
+                    _this.success = [];
+                    _this.success.push('Table created successfully!.');
+                    _this.reset(); //reset this value
+                    _this.tablesUpdateModelData.push(response.data.tables); //assign responce data to the tablesUpdateModelData model to fetch data instantly
+                    $("#add_tables_model").modal("hide"); //hide model
+                }
+                if (response.data.success == false) {
+                    _this.internal = [];
+                    _this.internal.push(response.data.error);
+                }
+            }).catch(function (error) {
+                //error handling
+                _this.errors = [];
+                if (error.response.data.errors.name) {
+                    _this.errors.push(error.response.data.errors.name[0]);
+                }
+                if (error.response.data.errors.is_active) {
+                    _this.errors.push(error.response.data.errors.is_active[0]);
+                }
+            });
+        },
+        reset: function reset() {
+            //reset all the vue models data
+            this.tablesModel.name = '';
+            this.tablesModel.is_active = '';
+        },
+        readTables: function readTables() {
+            var _this2 = this;
+
+            axios.get('/api/tables').then(function (response) {
+                _this2.tablesUpdateModelData = response.data.tables;
+            });
+        },
+        initUpdate: function initUpdate(index) {
+            this.errors = [];
+            $("#update_tables_model").modal("show");
+            this.tablesUpdateModel = this.tablesUpdateModelData[index];
+        },
+        updateTables: function updateTables() {
+            var _this3 = this;
+
+            axios.patch('/api/tables/' + this.tablesUpdateModel.id, {
+                name: this.tablesUpdateModel.name,
+                is_active: this.tablesUpdateModel.is_active
+            }).then(function (response) {
+                _this3.errors = [];
+                _this3.internal = [];
+                if (response.data.success == true) {
+                    _this3.success = [];
+                    _this3.success.push('Table updated successfully!.');
+                    $("#update_tables_model").modal("hide"); //hide model
+                }
+                if (response.data.success == false) {
+                    _this3.internal = [];
+                    _this3.internal.push(response.data.error);
+                }
+            }).catch(function (error) {
+
+                _this3.errors = [];
+                if (error.response.data.errors.name) {
+                    _this3.errors.push(error.response.data.errors.name[0]);
+                }
+                if (error.response.data.errors.is_active) {
+                    _this3.errors.push(error.response.data.errors.is_active[0]);
+                }
+            });
+        },
+        deleteTables: function deleteTables(index) {
+            var _this4 = this;
+
+            //delete perticular data
+            var conf = confirm("Do you ready want to delete this Table?");
+            if (conf === true) {
+                axios.delete('/api/tables/' + this.tablesUpdateModelData[index].id).then(function (response) {
+                    if (response.data.success == true) {
+                        _this4.success = [];
+                        _this4.success.push('Table deleted successfully!.');
+                    }
+                    _this4.tablesUpdateModelData.splice(index, 1);
+                }).catch(function (error) {});
+            }
+        }
+    }
+});
+
+/***/ }),
+/* 72 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-md-11" }, [
+        _c("div", [
+          _c("div", [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary btn-xs pull-right",
+                on: {
+                  click: function($event) {
+                    _vm.initAddTables()
+                  }
+                }
+              },
+              [
+                _vm._v(
+                  "\n                        + Add New Tables\n                    "
+                )
+              ]
+            ),
+            _vm._v(" "),
+            _vm._m(0)
+          ]),
+          _vm._v(" "),
+          _vm.success.length > 0
+            ? _c("div", { staticClass: "alert alert-success" }, [
+                _c(
+                  "ul",
+                  _vm._l(_vm.success, function(suc) {
+                    return _c("li", [_vm._v(_vm._s(suc))])
+                  })
+                )
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c("div", { staticClass: "panel-body" }, [
+            _vm.tablesUpdateModelData.length > 0
+              ? _c(
+                  "table",
+                  {
+                    staticClass:
+                      "table table-bordered table-striped table-responsive"
+                  },
+                  [
+                    _c(
+                      "tbody",
+                      [
+                        _vm._m(1),
+                        _vm._v(" "),
+                        _vm._l(_vm.tablesUpdateModelData, function(
+                          disc,
+                          index
+                        ) {
+                          return _c("tr", [
+                            _c("td", [_vm._v(_vm._s(index + 1))]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _vm._v(
+                                "\n                                " +
+                                  _vm._s(disc.name) +
+                                  "\n                            "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              disc.is_active == 1
+                                ? _c("div", [_vm._v("Yes")])
+                                : _vm._e(),
+                              _vm._v(" "),
+                              disc.is_active == 0
+                                ? _c("div", [_vm._v("No")])
+                                : _vm._e(),
+                              _vm._v(" "),
+                              disc.is_active == null
+                                ? _c("div", [_vm._v("No")])
+                                : _vm._e()
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-success btn-xs",
+                                  on: {
+                                    click: function($event) {
+                                      _vm.initUpdate(index)
+                                    }
+                                  }
+                                },
+                                [_vm._v("Edit")]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-danger btn-xs",
+                                  on: {
+                                    click: function($event) {
+                                      _vm.deleteTables(index)
+                                    }
+                                  }
+                                },
+                                [_vm._v("Delete")]
+                              )
+                            ])
+                          ])
+                        })
+                      ],
+                      2
+                    )
+                  ]
+                )
+              : _vm._e()
+          ])
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: { tabindex: "-1", role: "dialog", id: "add_tables_model" }
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "modal-dialog", attrs: { role: "document" } },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _vm._m(2),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-body" }, [
+                _vm.errors.length > 0
+                  ? _c("div", { staticClass: "alert alert-danger" }, [
+                      _c(
+                        "ul",
+                        _vm._l(_vm.errors, function(error) {
+                          return _c("li", [_vm._v(_vm._s(error))])
+                        })
+                      )
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.internal.length > 0
+                  ? _c("div", { staticClass: "alert alert-danger" }, [
+                      _c(
+                        "ul",
+                        _vm._l(_vm.internal, function(inter) {
+                          return _c("li", [_vm._v(_vm._s(inter))])
+                        })
+                      )
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "name" } }, [_vm._v("Name:")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.tablesModel.name,
+                        expression: "tablesModel.name"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      name: "name",
+                      id: "name",
+                      placeholder: "Name"
+                    },
+                    domProps: { value: _vm.tablesModel.name },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.tablesModel, "name", $event.target.value)
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "is_active_id" } }, [
+                    _vm._v("isActive:")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.tablesModel.is_active,
+                        expression: "tablesModel.is_active"
+                      }
+                    ],
+                    attrs: {
+                      type: "checkbox",
+                      name: "is_active",
+                      id: "is_active",
+                      value: "1"
+                    },
+                    domProps: {
+                      checked: Array.isArray(_vm.tablesModel.is_active)
+                        ? _vm._i(_vm.tablesModel.is_active, "1") > -1
+                        : _vm.tablesModel.is_active
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$a = _vm.tablesModel.is_active,
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = "1",
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 &&
+                              (_vm.tablesModel.is_active = $$a.concat([$$v]))
+                          } else {
+                            $$i > -1 &&
+                              (_vm.tablesModel.is_active = $$a
+                                .slice(0, $$i)
+                                .concat($$a.slice($$i + 1)))
+                          }
+                        } else {
+                          _vm.$set(_vm.tablesModel, "is_active", $$c)
+                        }
+                      }
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-footer" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-default",
+                    attrs: { type: "button", "data-dismiss": "modal" }
+                  },
+                  [_vm._v("Close")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary",
+                    attrs: { type: "button" },
+                    on: { click: _vm.createTables }
+                  },
+                  [_vm._v("Submit")]
+                )
+              ])
+            ])
+          ]
+        )
+      ]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: { tabindex: "-1", role: "dialog", id: "update_tables_model" }
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "modal-dialog", attrs: { role: "document" } },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _vm._m(3),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-body" }, [
+                _vm.errors.length > 0
+                  ? _c("div", { staticClass: "alert alert-danger" }, [
+                      _c(
+                        "ul",
+                        _vm._l(_vm.errors, function(error) {
+                          return _c("li", [_vm._v(_vm._s(error))])
+                        })
+                      )
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.internal.length > 0
+                  ? _c("div", { staticClass: "alert alert-danger" }, [
+                      _c(
+                        "ul",
+                        _vm._l(_vm.internal, function(inter) {
+                          return _c("li", [_vm._v(_vm._s(inter))])
+                        })
+                      )
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "name" } }, [_vm._v("Name:")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.tablesUpdateModel.name,
+                        expression: "tablesUpdateModel.name"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "text",
+                      name: "name",
+                      id: "name",
+                      placeholder: "Name"
+                    },
+                    domProps: { value: _vm.tablesUpdateModel.name },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.tablesUpdateModel,
+                          "name",
+                          $event.target.value
+                        )
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "is_active_id" } }, [
+                    _vm._v("isActive:")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.tablesUpdateModel.is_active,
+                        expression: "tablesUpdateModel.is_active"
+                      }
+                    ],
+                    attrs: {
+                      type: "checkbox",
+                      name: "is_active",
+                      id: "is_active",
+                      value: "1"
+                    },
+                    domProps: {
+                      checked: Array.isArray(_vm.tablesUpdateModel.is_active)
+                        ? _vm._i(_vm.tablesUpdateModel.is_active, "1") > -1
+                        : _vm.tablesUpdateModel.is_active
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$a = _vm.tablesUpdateModel.is_active,
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = "1",
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 &&
+                              (_vm.tablesUpdateModel.is_active = $$a.concat([
+                                $$v
+                              ]))
+                          } else {
+                            $$i > -1 &&
+                              (_vm.tablesUpdateModel.is_active = $$a
+                                .slice(0, $$i)
+                                .concat($$a.slice($$i + 1)))
+                          }
+                        } else {
+                          _vm.$set(_vm.tablesUpdateModel, "is_active", $$c)
+                        }
+                      }
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-footer" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-default",
+                    attrs: { type: "button", "data-dismiss": "modal" }
+                  },
+                  [_vm._v("Close")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary",
+                    attrs: { type: "button" },
+                    on: { click: _vm.updateTables }
+                  },
+                  [_vm._v("Submit")]
+                )
+              ])
+            ])
+          ]
+        )
+      ]
+    )
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("h3", [_c("strong", [_vm._v("Tables")])])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c("th", [
+        _vm._v(
+          "\n                                No.\n                            "
+        )
+      ]),
+      _vm._v(" "),
+      _c("th", [
+        _vm._v(
+          "\n                                Table No.\n                            "
+        )
+      ]),
+      _vm._v(" "),
+      _c("th", [
+        _vm._v(
+          "\n                                Active\n                            "
+        )
+      ]),
+      _vm._v(" "),
+      _c("th", [
+        _vm._v(
+          "\n                                Action\n                            "
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      ),
+      _vm._v(" "),
+      _c("h4", { staticClass: "modal-title" }, [_vm._v("Update Tables")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      ),
+      _vm._v(" "),
+      _c("h4", { staticClass: "modal-title" }, [_vm._v("Update Tables")])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-ed787bde", module.exports)
   }
 }
 
