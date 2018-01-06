@@ -1,4 +1,4 @@
-  <?php
+<?php
 
 /*
 |--------------------------------------------------------------------------
@@ -18,7 +18,7 @@ Route::get('/login', function () {
 Route::post('Login','BackEnd\ShowController@Login');
 Route::post('Register','BackEnd\ShowController@Register');
 
-Route::group( [ 'middleware' => [ 'auth','web' ] ], function() {
+//Route::group( [ 'middleware' => [ 'auth','web' ] ], function() {
 
 	Route::get('/home', function () {
 	    return view('restaurant.index');
@@ -31,9 +31,11 @@ Route::group( [ 'middleware' => [ 'auth','web' ] ], function() {
 	Route::get('taxRules','BackEnd\ShowController@showTaxRules');
 	Route::get('discounts','BackEnd\ShowController@showDiscounts');
 	Route::get('tables','BackEnd\ShowController@showTables');
+	Route::get('roleManagement','BackEnd\ShowController@showRoleManagement');
+	Route::get('orders','BackEnd\ShowController@showOrder');
 	Route::get('logOut',function(){
 		Auth::logout();
 		return redirect()->to('/');
 	});
 
-});
+//});

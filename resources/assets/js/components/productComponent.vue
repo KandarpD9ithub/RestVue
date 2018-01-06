@@ -89,17 +89,17 @@
 
                         <div class="form-group">
                             <label for="category_id" name="category">Category:</label>
-                            <select id="category_id" name="categories_id" class="form-control" v-model="productModel.categories_id">
+                            <select id="category_id" name="categories_id" class="form-control" v-model="productModel.categories_id" @change="OnclickEvents(productModel.categories_id)">
                                 <option value="">Select Categorys </option>
                                 <option v-for="(cat,id,name) in category" v-bind:value="cat.id"> {{cat.name}} </option>
                             </select>
                         </div>
 
                         <div class="form-group">
-                            <label for="sub_category_id" name="sub_cate">Category:</label>
+                            <label for="sub_category_id" name="sub_categories_id">Sub-Category:</label>
                             <select id="sub_category_id" name="sub_categories_id" class="form-control" v-model="productModel.sub_categories_id">
                                 <option value="">Select Sub-Category </option>
-                                <option v-for="(subcat,id,name) in subCategory" v-bind:value="subcat.id"> {{subcat.name}} </option>
+                                <option v-for="(subcat,id,name) in subCategory" v-bind:value="subcat.id" > {{subcat.name}} </option>
                             </select>
                         </div>
 
@@ -122,7 +122,7 @@
                         </div>
                         <div class="form-group">
                             <label for="image">Image:</label>
-                            <input type="text" name="image" id="image" class="form-control" placeholder="image" v-model="productModel.image">
+                            <input type="file" v-on:change="onFileChange" class="form-control">
                         </div>
 
                         <div class="form-group">
@@ -175,7 +175,7 @@
 
                             <div class="form-group">
                                 <label for="category_id" name="category">Category:</label>
-                                <select id="category_id" name="categories_id" class="form-control" v-model="productUpdateModel.categories_id">
+                                <select id="category_id" name="categories_id" class="form-control" v-model="productUpdateModel.categories_id" @change="OnclickEvents(productUpdateModel.categories_id)">
                                     <option value="">Select Category </option>
                                     <option v-for="(category,id,name) in category" v-bind:value="category.id"> {{category.name}} </option>
                                 </select>
@@ -209,7 +209,7 @@
 
                             <div class="form-group">
                                 <label for="image">Image:</label>
-                                <textarea name="image" id="mobile" class="form-control" placeholder="image" v-model="productUpdateModel.image" rows="3"></textarea>
+                                <input type="file" v-on:change="onFileChange" class="form-control">
                             </div>
 
                             <div class="form-group">
@@ -260,10 +260,13 @@
                 taxes: [],
                 success: [],
                 internal: [],
+                auth_id: localStorage.getItem('auth_id'),
+                status: '',
             }
         },
         mounted()
         {
+        console.log(this.auth_id);
         axios.get('/api/products')
                     .then(response => {
                         this.prodcutUpdateModelData = response.data.products;
@@ -274,6 +277,12 @@
             initAddProduct()
             {
                 $("#add_product_model").modal("show");
+            },
+            OnclickEvents (id){
+            axios.get('/api/subCategoryList/'+id)
+                .then(response => {
+                    this.subCategory = response.data.subCategoryList;
+                });
             },
             createProduct()
             {
@@ -296,6 +305,7 @@
                         this.success = [];
                         this.success.push('Product created successfully!.');
                         this.reset();//reset this value
+                        this.productModel.image = '';
                         this.prodcutUpdateModelData.push(response.data.products);//assign responce data to the prodcutUpdateModelData model to fetch data instantly
                         $("#add_product_model").modal("hide");//hide model
                     }
@@ -362,10 +372,7 @@
                 .then(response => {
                     this.category = response.data.categoryList;
                 });
-            axios.get('/api/subCategoryList')
-                .then(response => {
-                    this.subCategory = response.data.subCategoryList;
-                });
+            
 
             axios.get('/api/taxRules')
                 .then(response => {
@@ -382,9 +389,13 @@
                 this.errors = [];
                 $("#update_product_model").modal("show");
                 this.productUpdateModel = this.prodcutUpdateModelData[index];
+                this.OnclickEvents(this.productUpdateModel.categories_id);
             },
             updateProduct()
             {
+            if(!this.status){
+                this.productUpdateModel.image = '';
+            }
                 axios.put('/api/products/' + this.productUpdateModel.id, {
                     name: this.productUpdateModel.name,
                     price: this.productUpdateModel.price,
@@ -403,6 +414,8 @@
                         this.internal = [];
                         if (response.data.success == true){
                         this.success = [];
+                            
+                            this.productUpdateModel.image = '';
                             this.success.push('Product updated successfully!.');
                             $("#update_product_model").modal("hide");//hide model
                         }
@@ -453,7 +466,10 @@
                 if (conf === true) {
                     axios.delete('/api/products/' + this.prodcutUpdateModelData[index].id)
                         .then(response => {
-
+                            if (response.data.success == true){
+                            this.success = [];
+                                this.success.push('Product deleted successfully!.');
+                            }
                             this.prodcutUpdateModelData.splice(index, 1);
 
                         })
@@ -461,6 +477,22 @@
 
                         });
                 }
+            },
+            onFileChange(e) {
+                let files = e.target.files || e.dataTransfer.files;
+                if (!files.length)
+                    return;
+                this.createImage(files[0]);
+            },
+            createImage(file) {
+                let reader = new FileReader();
+                let vm = this;
+                reader.onload = (e) => {
+                    this.productModel.image = e.target.result;
+                    this.productUpdateModel.image = e.target.result;
+                    this.status=true;
+                };
+                reader.readAsDataURL(file);
             }
         }
     }

@@ -31,6 +31,12 @@ Vue.component('taxrules', require('./components/taxRulesComponent.vue'));
 Vue.component('discount', require('./components/discountComponent.vue'));
 
 Vue.component('tables', require('./components/tablesComponent.vue'));
+
+Vue.component('managerole', require('./components/manageRoleComponent.vue'));
+
+Vue.component('login', require('./components/loginComponent.vue'));
+
+Vue.component('order', require('./components/orderComponent.vue'));
 /*Vue.component('pagination', require('laravel-vue-pagination'));*/
 
 const app = new Vue({

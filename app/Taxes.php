@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Products;
 
 class Taxes extends Model
 {
@@ -13,4 +14,9 @@ class Taxes extends Model
     ];
 
     protected $dats =['deleted_at'];
+
+    public function product()
+    {
+    	return $this->hasMany(Products::class);
+    }
 }

@@ -124,7 +124,6 @@ class ShowController extends Controller
     /**
      * show login form.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function getLogin()
@@ -136,7 +135,6 @@ class ShowController extends Controller
     /**
      * get product form.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function showProducts()
@@ -147,7 +145,6 @@ class ShowController extends Controller
     /**
      * get product form.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function showTaxRules()
@@ -158,7 +155,6 @@ class ShowController extends Controller
     /**
      * get discount form.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function showDiscounts()
@@ -167,14 +163,33 @@ class ShowController extends Controller
     }
 
     /**
-     * get discount form.
+     * get tables form.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function showTables()
     {
         return view('restaurant.tables');
+    }
+
+    /**
+     * get role management form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showRoleManagement()
+    {
+        return view('restaurant.role_management');
+    }
+
+    /**
+     * get Order form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showOrder()
+    {
+        return view('restaurant.order');
     }
 
 }

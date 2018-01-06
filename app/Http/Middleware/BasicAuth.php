@@ -10,6 +10,10 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+
 
 class BasicAuth
 {

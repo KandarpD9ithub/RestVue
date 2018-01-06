@@ -341,7 +341,8 @@
                 if (conf === true) {
                     axios.delete('/api/users/' + this.userUpdateModelData[index].id)
                         .then(response => {
-
+                            this.success = [];
+                                this.success.push('User deleted successfully!.');
                             this.userUpdateModelData.splice(index, 1);
 
                         })

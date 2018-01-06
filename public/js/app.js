@@ -1072,7 +1072,7 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(11);
-module.exports = __webpack_require__(60);
+module.exports = __webpack_require__(72);
 
 
 /***/ }),
@@ -1110,7 +1110,13 @@ Vue.component('taxrules', __webpack_require__(54));
 
 Vue.component('discount', __webpack_require__(57));
 
-Vue.component('tables', __webpack_require__(70));
+Vue.component('tables', __webpack_require__(60));
+
+Vue.component('managerole', __webpack_require__(63));
+
+Vue.component('login', __webpack_require__(66));
+
+Vue.component('order', __webpack_require__(69));
 /*Vue.component('pagination', require('laravel-vue-pagination'));*/
 
 var app = new Vue({
@@ -44598,7 +44604,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var conf = confirm("Do you ready want to delete this user?");
             if (conf === true) {
                 axios.delete('/api/users/' + this.userUpdateModelData[index].id).then(function (response) {
-
+                    _this5.success = [];
+                    _this5.success.push('User deleted successfully!.');
                     _this5.userUpdateModelData.splice(index, 1);
                 }).catch(function (error) {});
             }
@@ -47882,12 +47889,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             subCategory: [],
             taxes: [],
             success: [],
-            internal: []
+            internal: [],
+            auth_id: localStorage.getItem('auth_id'),
+            status: ''
         };
     },
     mounted: function mounted() {
         var _this = this;
 
+        console.log(this.auth_id);
         axios.get('/api/products').then(function (response) {
             _this.prodcutUpdateModelData = response.data.products;
         });
@@ -47898,8 +47908,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         initAddProduct: function initAddProduct() {
             $("#add_product_model").modal("show");
         },
-        createProduct: function createProduct() {
+        OnclickEvents: function OnclickEvents(id) {
             var _this2 = this;
+
+            axios.get('/api/subCategoryList/' + id).then(function (response) {
+                _this2.subCategory = response.data.subCategoryList;
+            });
+        },
+        createProduct: function createProduct() {
+            var _this3 = this;
 
             axios.post('/api/products', {
                 name: this.productModel.name,
@@ -47913,51 +47930,52 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 is_active: this.productModel.is_active,
                 time_duration: this.productModel.time_duration
             }).then(function (response) {
-                _this2.errors = [];
-                _this2.internal = [];
+                _this3.errors = [];
+                _this3.internal = [];
                 if (response.data.success == true) {
-                    _this2.success = [];
-                    _this2.success.push('Product created successfully!.');
-                    _this2.reset(); //reset this value
-                    _this2.prodcutUpdateModelData.push(response.data.products); //assign responce data to the prodcutUpdateModelData model to fetch data instantly
+                    _this3.success = [];
+                    _this3.success.push('Product created successfully!.');
+                    _this3.reset(); //reset this value
+                    _this3.productModel.image = '';
+                    _this3.prodcutUpdateModelData.push(response.data.products); //assign responce data to the prodcutUpdateModelData model to fetch data instantly
                     $("#add_product_model").modal("hide"); //hide model
                 }
                 if (response.data.success == false) {
-                    _this2.internal = [];
-                    _this2.internal.push(response.data.error);
+                    _this3.internal = [];
+                    _this3.internal.push(response.data.error);
                 }
             }).catch(function (error) {
                 //error handling
-                _this2.errors = [];
+                _this3.errors = [];
                 if (error.response.data.errors.name) {
-                    _this2.errors.push(error.response.data.errors.name[0]);
+                    _this3.errors.push(error.response.data.errors.name[0]);
                 }
                 if (error.response.data.errors.price) {
-                    _this2.errors.push(error.response.data.errors.price[0]);
+                    _this3.errors.push(error.response.data.errors.price[0]);
                 }
                 if (error.response.data.errors.categories_id) {
-                    _this2.errors.push(error.response.data.errors.categories_id[0]);
+                    _this3.errors.push(error.response.data.errors.categories_id[0]);
                 }
                 if (error.response.data.errors.sub_categories_id) {
-                    _this2.errors.push(error.response.data.errors.sub_categories_id[0]);
+                    _this3.errors.push(error.response.data.errors.sub_categories_id[0]);
                 }
                 if (error.response.data.errors.tax_id) {
-                    _this2.errors.push(error.response.data.errors.tax_id[0]);
+                    _this3.errors.push(error.response.data.errors.tax_id[0]);
                 }
                 if (error.response.data.errors.available) {
-                    _this2.errors.push(error.response.data.errors.available[0]);
+                    _this3.errors.push(error.response.data.errors.available[0]);
                 }
                 if (error.response.data.errors.description) {
-                    _this2.errors.push(error.response.data.errors.description[0]);
+                    _this3.errors.push(error.response.data.errors.description[0]);
                 }
                 if (error.response.data.errors.image) {
-                    _this2.errors.push(error.response.data.errors.image[0]);
+                    _this3.errors.push(error.response.data.errors.image[0]);
                 }
                 if (error.response.data.errors.is_active) {
-                    _this2.errors.push(error.response.data.errors.is_active[0]);
+                    _this3.errors.push(error.response.data.errors.is_active[0]);
                 }
                 if (error.response.data.errors.time_duration) {
-                    _this2.errors.push(error.response.data.errors.time_duration[0]);
+                    _this3.errors.push(error.response.data.errors.time_duration[0]);
                 }
             });
         },
@@ -47975,20 +47993,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.productModel.time_duration = '';
         },
         readProducts: function readProducts() {
-            var _this3 = this;
+            var _this4 = this;
 
             axios.get('/api/categoryList').then(function (response) {
-                _this3.category = response.data.categoryList;
-            });
-            axios.get('/api/subCategoryList').then(function (response) {
-                _this3.subCategory = response.data.subCategoryList;
+                _this4.category = response.data.categoryList;
             });
 
             axios.get('/api/taxRules').then(function (response) {
-                _this3.taxes = response.data.tax;
+                _this4.taxes = response.data.tax;
             });
             axios.get('/api/products').then(function (response) {
-                _this3.prodcutUpdateModelData = response.data.products;
+                _this4.prodcutUpdateModelData = response.data.products;
             });
         },
         initUpdate: function initUpdate(index) {
@@ -47996,10 +48011,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.errors = [];
             $("#update_product_model").modal("show");
             this.productUpdateModel = this.prodcutUpdateModelData[index];
+            this.OnclickEvents(this.productUpdateModel.categories_id);
         },
         updateProduct: function updateProduct() {
-            var _this4 = this;
+            var _this5 = this;
 
+            if (!this.status) {
+                this.productUpdateModel.image = '';
+            }
             axios.put('/api/products/' + this.productUpdateModel.id, {
                 name: this.productUpdateModel.name,
                 price: this.productUpdateModel.price,
@@ -48013,62 +48032,84 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 time_duration: this.productUpdateModel.time_duration
 
             }).then(function (response) {
-                _this4.errors = [];
-                _this4.internal = [];
+                _this5.errors = [];
+                _this5.internal = [];
                 if (response.data.success == true) {
-                    _this4.success = [];
-                    _this4.success.push('Product updated successfully!.');
+                    _this5.success = [];
+
+                    _this5.productUpdateModel.image = '';
+                    _this5.success.push('Product updated successfully!.');
                     $("#update_product_model").modal("hide"); //hide model
                 }
                 if (response.data.success == false) {
-                    _this4.internal = [];
-                    _this4.internal.push(response.data.error);
+                    _this5.internal = [];
+                    _this5.internal.push(response.data.error);
                 }
             }).catch(function (error) {
-                _this4.errors = [];
+                _this5.errors = [];
                 if (error.response.data.errors.name) {
-                    _this4.errors.push(error.response.data.errors.name[0]);
+                    _this5.errors.push(error.response.data.errors.name[0]);
                 }
                 if (error.response.data.errors.price) {
-                    _this4.errors.push(error.response.data.errors.price[0]);
+                    _this5.errors.push(error.response.data.errors.price[0]);
                 }
                 if (error.response.data.errors.categories_id) {
-                    _this4.errors.push(error.response.data.errors.categories_id[0]);
+                    _this5.errors.push(error.response.data.errors.categories_id[0]);
                 }
                 if (error.response.data.errors.sub_categories_id) {
-                    _this4.errors.push(error.response.data.errors.sub_categories_id[0]);
+                    _this5.errors.push(error.response.data.errors.sub_categories_id[0]);
                 }
                 if (error.response.data.errors.tax_id) {
-                    _this4.errors.push(error.response.data.errors.tax_id[0]);
+                    _this5.errors.push(error.response.data.errors.tax_id[0]);
                 }
                 if (error.response.data.errors.available) {
-                    _this4.errors.push(error.response.data.errors.available[0]);
+                    _this5.errors.push(error.response.data.errors.available[0]);
                 }
                 if (error.response.data.errors.description) {
-                    _this4.errors.push(error.response.data.errors.description[0]);
+                    _this5.errors.push(error.response.data.errors.description[0]);
                 }
                 if (error.response.data.errors.image) {
-                    _this4.errors.push(error.response.data.errors.image[0]);
+                    _this5.errors.push(error.response.data.errors.image[0]);
                 }
                 if (error.response.data.errors.is_active) {
-                    _this4.errors.push(error.response.data.errors.is_active[0]);
+                    _this5.errors.push(error.response.data.errors.is_active[0]);
                 }
                 if (error.response.data.errors.time_duration) {
-                    _this4.errors.push(error.response.data.errors.time_duration[0]);
+                    _this5.errors.push(error.response.data.errors.time_duration[0]);
                 }
             });
         },
         deleteProduct: function deleteProduct(index) {
-            var _this5 = this;
+            var _this6 = this;
 
             //delete perticular data
             var conf = confirm("Do you ready want to delete this Product?");
             if (conf === true) {
                 axios.delete('/api/products/' + this.prodcutUpdateModelData[index].id).then(function (response) {
-
-                    _this5.prodcutUpdateModelData.splice(index, 1);
+                    if (response.data.success == true) {
+                        _this6.success = [];
+                        _this6.success.push('Product deleted successfully!.');
+                    }
+                    _this6.prodcutUpdateModelData.splice(index, 1);
                 }).catch(function (error) {});
             }
+        },
+        onFileChange: function onFileChange(e) {
+            var files = e.target.files || e.dataTransfer.files;
+            if (!files.length) return;
+            this.createImage(files[0]);
+        },
+        createImage: function createImage(file) {
+            var _this7 = this;
+
+            var reader = new FileReader();
+            var vm = this;
+            reader.onload = function (e) {
+                _this7.productModel.image = e.target.result;
+                _this7.productUpdateModel.image = e.target.result;
+                _this7.status = true;
+            };
+            reader.readAsDataURL(file);
         }
     }
 });
@@ -48322,23 +48363,28 @@ var render = function() {
                       staticClass: "form-control",
                       attrs: { id: "category_id", name: "categories_id" },
                       on: {
-                        change: function($event) {
-                          var $$selectedVal = Array.prototype.filter
-                            .call($event.target.options, function(o) {
-                              return o.selected
-                            })
-                            .map(function(o) {
-                              var val = "_value" in o ? o._value : o.value
-                              return val
-                            })
-                          _vm.$set(
-                            _vm.productModel,
-                            "categories_id",
-                            $event.target.multiple
-                              ? $$selectedVal
-                              : $$selectedVal[0]
-                          )
-                        }
+                        change: [
+                          function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.$set(
+                              _vm.productModel,
+                              "categories_id",
+                              $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            )
+                          },
+                          function($event) {
+                            _vm.OnclickEvents(_vm.productModel.categories_id)
+                          }
+                        ]
                       }
                     },
                     [
@@ -48359,8 +48405,13 @@ var render = function() {
                 _c("div", { staticClass: "form-group" }, [
                   _c(
                     "label",
-                    { attrs: { for: "sub_category_id", name: "sub_cate" } },
-                    [_vm._v("Category:")]
+                    {
+                      attrs: {
+                        for: "sub_category_id",
+                        name: "sub_categories_id"
+                      }
+                    },
+                    [_vm._v("Sub-Category:")]
                   ),
                   _vm._v(" "),
                   _c(
@@ -48579,30 +48630,9 @@ var render = function() {
                   _c("label", { attrs: { for: "image" } }, [_vm._v("Image:")]),
                   _vm._v(" "),
                   _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.productModel.image,
-                        expression: "productModel.image"
-                      }
-                    ],
                     staticClass: "form-control",
-                    attrs: {
-                      type: "text",
-                      name: "image",
-                      id: "image",
-                      placeholder: "image"
-                    },
-                    domProps: { value: _vm.productModel.image },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.productModel, "image", $event.target.value)
-                      }
-                    }
+                    attrs: { type: "file" },
+                    on: { change: _vm.onFileChange }
                   })
                 ]),
                 _vm._v(" "),
@@ -48835,23 +48865,30 @@ var render = function() {
                       staticClass: "form-control",
                       attrs: { id: "category_id", name: "categories_id" },
                       on: {
-                        change: function($event) {
-                          var $$selectedVal = Array.prototype.filter
-                            .call($event.target.options, function(o) {
-                              return o.selected
-                            })
-                            .map(function(o) {
-                              var val = "_value" in o ? o._value : o.value
-                              return val
-                            })
-                          _vm.$set(
-                            _vm.productUpdateModel,
-                            "categories_id",
-                            $event.target.multiple
-                              ? $$selectedVal
-                              : $$selectedVal[0]
-                          )
-                        }
+                        change: [
+                          function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.$set(
+                              _vm.productUpdateModel,
+                              "categories_id",
+                              $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            )
+                          },
+                          function($event) {
+                            _vm.OnclickEvents(
+                              _vm.productUpdateModel.categories_id
+                            )
+                          }
+                        ]
                       }
                     },
                     [
@@ -49096,35 +49133,10 @@ var render = function() {
                 _c("div", { staticClass: "form-group" }, [
                   _c("label", { attrs: { for: "image" } }, [_vm._v("Image:")]),
                   _vm._v(" "),
-                  _c("textarea", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.productUpdateModel.image,
-                        expression: "productUpdateModel.image"
-                      }
-                    ],
+                  _c("input", {
                     staticClass: "form-control",
-                    attrs: {
-                      name: "image",
-                      id: "mobile",
-                      placeholder: "image",
-                      rows: "3"
-                    },
-                    domProps: { value: _vm.productUpdateModel.image },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(
-                          _vm.productUpdateModel,
-                          "image",
-                          $event.target.value
-                        )
-                      }
-                    }
+                    attrs: { type: "file" },
+                    on: { change: _vm.onFileChange }
                   })
                 ]),
                 _vm._v(" "),
@@ -51765,29 +51777,14 @@ if (false) {
 
 /***/ }),
 /* 60 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 61 */,
-/* 62 */,
-/* 63 */,
-/* 64 */,
-/* 65 */,
-/* 66 */,
-/* 67 */,
-/* 68 */,
-/* 69 */,
-/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(71)
+var __vue_script__ = __webpack_require__(61)
 /* template */
-var __vue_template__ = __webpack_require__(72)
+var __vue_template__ = __webpack_require__(62)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -51826,7 +51823,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 71 */
+/* 61 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -52099,7 +52096,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 72 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -52610,6 +52607,1555 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-ed787bde", module.exports)
   }
 }
+
+/***/ }),
+/* 63 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(64)
+/* template */
+var __vue_template__ = __webpack_require__(65)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\manageRoleComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-1ed2043b", Component.options)
+  } else {
+    hotAPI.reload("data-v-1ed2043b", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 64 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            subCategoryModel: {
+                name: '',
+                categories_id: '',
+                available: '',
+                is_active: ''
+            }, //this is for category creation time set all data null
+            errors: [], //errors varidale define as null
+            subCategoryUpdateModelData: [], //this varidale define as null when instant changes in table
+            subCategoryUpdateModel: {}, //this varidale for get value from the model
+            success: [],
+            internal: [],
+            subCategory: [],
+            categories: []
+
+        };
+    },
+    mounted: function mounted() {
+
+        this.readCategory(); //call when page load
+    },
+
+    methods: {
+        initAddSubCategory: function initAddSubCategory() {
+
+            $("#add_sub_category_model").modal("show"); //show category popup when create
+        },
+        createCategory: function createCategory() {
+            var _this = this;
+
+            //create category and axios used to set methods and hit api.
+            axios.post('/api/subCategory', {
+                name: this.subCategoryModel.name,
+                categories_id: this.subCategoryModel.categories_id,
+                available: this.subCategoryModel.available,
+                is_active: this.subCategoryModel.is_active
+
+            }).then(function (response) {
+                _this.errors = [];
+                _this.internal = [];
+                if (response.data.success == true) {
+                    _this.success = [];
+                    _this.success.push('Sub-Category created successfully!.');
+                    _this.reset(); //reset this value
+                    _this.subCategoryUpdateModelData.push(response.data.categories); //assign responce data to the subCategoryUpdateModelData model to fetch data instantly
+                    $("#add_sub_category_model").modal("hide"); //hide model
+                }
+                if (response.data.success == false) {
+                    _this.internal = [];
+                    _this.internal.push(response.data.error);
+                }
+            }).catch(function (error) {
+                //error handling
+                _this.errors = [];
+                if (error.response.data.errors.name) {
+                    _this.errors.push(error.response.data.errors.name[0]);
+                }
+                if (error.response.data.errors.categories_id) {
+                    _this.errors.push(error.response.data.errors.categories_id[0]);
+                }
+            });
+        },
+        reset: function reset() {
+            //reset all the vue models data
+            this.subCategoryModel.name = '';
+            this.subCategoryModel.categories_id = '';
+            this.subCategoryModel.available = '';
+            this.subCategoryModel.is_active = '';
+        },
+        readCategory: function readCategory() {
+            var _this2 = this;
+
+            //get all the subcategory list
+            //get request using axios
+            axios.get('/api/users').then(function (response) {
+                _this2.subCategoryUpdateModelData = response.data.subCategories; //asign responce to the subCategoryUpdateModelData
+            });
+        },
+        initUpdate: function initUpdate(index) {
+            //set data for update perticular id
+            this.errors = [];
+            $("#update_category_model").modal("show");
+            this.subCategoryUpdateModel = this.subCategoryUpdateModelData[index];
+        },
+        updateCategory: function updateCategory() {
+            var _this3 = this;
+
+            //send data to the api for update
+            axios.patch('/api/subCategory/' + this.subCategoryUpdateModel.id, {
+                name: this.subCategoryUpdateModel.name,
+                categories_id: this.subCategoryUpdateModel.categories_id,
+                available: this.subCategoryUpdateModel.available,
+                is_active: this.subCategoryUpdateModel.is_active
+
+            }).then(function (response) {
+                _this3.errors = [];
+                _this3.internal = [];
+                if (response.data.success == true) {
+                    _this3.success = [];
+                    _this3.success.push('Sub-Category updated successfully!.');
+                    $("#update_category_model").modal("hide"); //hide model
+                }
+                if (response.data.success == false) {
+                    _this3.internal = [];
+                    _this3.internal.push(response.data.error);
+                }
+            }).catch(function (error) {
+
+                _this3.errors = [];
+                if (error.response.data.errors.name) {
+                    _this3.errors.push(error.response.data.errors.name[0]);
+                }
+                if (error.response.data.errors.categories_id) {
+                    _this3.errors.push(error.response.data.errors.categories_id[0]);
+                }
+            });
+        },
+        deleteSubCategory: function deleteSubCategory(index) {
+            var _this4 = this;
+
+            //delete perticular data
+            var conf = confirm("Do you ready want to delete this Sub-Category?");
+            if (conf === true) {
+                axios.delete('/api/subCategory/' + this.subCategoryUpdateModelData[index].id).then(function (response) {
+                    if (response.data.success == true) {
+                        _this4.success = [];
+                        _this4.success.push('Sub-Category deleted successfully!.');
+                    }
+                    _this4.subCategoryUpdateModelData.splice(index, 1);
+                }).catch(function (error) {});
+            }
+        }
+    }
+});
+
+/***/ }),
+/* 65 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-md-11" }, [
+        _c("div", [
+          _c("div", [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary btn-xs pull-right",
+                on: {
+                  click: function($event) {
+                    _vm.initAddSubCategory()
+                  }
+                }
+              },
+              [
+                _vm._v(
+                  "\n                            + Add New Sub-Category\n                        "
+                )
+              ]
+            ),
+            _vm._v(" "),
+            _vm._m(0)
+          ]),
+          _vm._v(" "),
+          _vm.success.length > 0
+            ? _c("div", { staticClass: "alert alert-success" }, [
+                _c(
+                  "ul",
+                  _vm._l(_vm.success, function(suc) {
+                    return _c("li", [_vm._v(_vm._s(suc))])
+                  })
+                )
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c("div", { staticClass: "panel-body" }, [
+            _vm.subCategoryUpdateModelData.length > 0
+              ? _c(
+                  "table",
+                  {
+                    staticClass:
+                      "table table-bordered table-striped table-responsive"
+                  },
+                  [
+                    _c(
+                      "tbody",
+                      [
+                        _vm._m(1),
+                        _vm._v(" "),
+                        _vm._l(_vm.subCategoryUpdateModelData, function(
+                          category,
+                          index
+                        ) {
+                          return _c("tr", [
+                            _c("td", [_vm._v(_vm._s(index + 1))]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _vm._v(
+                                "\n                                    " +
+                                  _vm._s(category.name) +
+                                  "\n                                "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              category.is_active == 1
+                                ? _c("div", [_vm._v("Yes")])
+                                : _vm._e(),
+                              _vm._v(" "),
+                              category.is_active == 0
+                                ? _c("div", [_vm._v("No")])
+                                : _vm._e()
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _c("input", {
+                                attrs: {
+                                  type: "checkbox",
+                                  name: "create",
+                                  value: ""
+                                }
+                              }),
+                              _vm._v("Create   \n   "),
+                              _c("input", {
+                                attrs: {
+                                  type: "checkbox",
+                                  name: "edit",
+                                  value: ""
+                                }
+                              }),
+                              _vm._v("Edit   \n   "),
+                              _c("input", {
+                                attrs: {
+                                  type: "checkbox",
+                                  name: "delete",
+                                  value: ""
+                                }
+                              }),
+                              _vm._v(
+                                "Delete \n                                   "
+                              ),
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-success btn-xs",
+                                  on: {
+                                    click: function($event) {
+                                      _vm.initUpdate(index)
+                                    }
+                                  }
+                                },
+                                [_vm._v("Edit")]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-danger btn-xs",
+                                  on: {
+                                    click: function($event) {
+                                      _vm.deleteSubCategory(index)
+                                    }
+                                  }
+                                },
+                                [_vm._v("Delete")]
+                              )
+                            ])
+                          ])
+                        })
+                      ],
+                      2
+                    )
+                  ]
+                )
+              : _vm._e()
+          ])
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("h3", [_c("strong", [_vm._v("Sub-Category")])])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c("th", [
+        _vm._v(
+          "\n                                    No.\n                                "
+        )
+      ]),
+      _vm._v(" "),
+      _c("th", [
+        _vm._v(
+          "\n                                    Name\n                                "
+        )
+      ]),
+      _vm._v(" "),
+      _c("th", [
+        _vm._v(
+          "\n                                    Active\n                                "
+        )
+      ]),
+      _vm._v(" "),
+      _c("th", [
+        _vm._v(
+          "\n                                    Action\n                                "
+        )
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-1ed2043b", module.exports)
+  }
+}
+
+/***/ }),
+/* 66 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(67)
+/* template */
+var __vue_template__ = __webpack_require__(68)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\loginComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-00591eaa", Component.options)
+  } else {
+    hotAPI.reload("data-v-00591eaa", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 67 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            model: {
+
+                email: '',
+                password: ''
+            },
+            errors: [],
+            success: [],
+            internal: []
+
+        };
+    },
+
+    methods: {
+        login: function login() {
+            var _this = this;
+
+            axios.post('/api/Login', {
+                email: this.model.email,
+                password: this.model.password
+            }).then(function (response) {
+                console.log(response);
+                if (response.data.success == true) {
+                    var auth_id = response.data.auth_id;
+                    if (auth_id) {
+                        localStorage.setItem('auth_id', auth_id);
+                    }
+                    console.log(auth_id);
+                    window.location.href = '/home';
+                }
+                if (response.data.success == false) {
+                    _this.errors = [];
+                    _this.errors.push(response.data.message);
+                }
+            }).catch(function (error) {
+                console.log('error');
+                //error handling
+                _this.errors = [];
+                if (error.response.data.errors.email) {
+                    _this.errors.push(error.response.data.errors.email[0]);
+                }
+                if (error.response.data.errors.password) {
+                    _this.errors.push(error.response.data.errors.password[0]);
+                }
+            });
+        }
+    }
+});
+
+/***/ }),
+/* 68 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", [
+      _c("div", [
+        _c("div", [
+          _c("div", [
+            _vm.errors.length > 0
+              ? _c("div", { staticClass: "alert alert-danger" }, [
+                  _c(
+                    "ul",
+                    _vm._l(_vm.errors, function(error) {
+                      return _c("li", [_vm._v(_vm._s(error))])
+                    })
+                  )
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.internal.length > 0
+              ? _c("div", { staticClass: "alert alert-danger" }, [
+                  _c(
+                    "ul",
+                    _vm._l(_vm.internal, function(inter) {
+                      return _c("li", [_vm._v(_vm._s(inter))])
+                    })
+                  )
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c(
+                "label",
+                { staticClass: "control-label visible-ie8 visible-ie9" },
+                [_vm._v("Username")]
+              ),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.model.email,
+                    expression: "model.email"
+                  }
+                ],
+                staticClass:
+                  "form-control form-control-solid placeholder-no-fix",
+                attrs: {
+                  type: "text",
+                  autocomplete: "off",
+                  placeholder: "Username",
+                  name: "email",
+                  id: "email"
+                },
+                domProps: { value: _vm.model.email },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.model, "email", $event.target.value)
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c(
+                "label",
+                { staticClass: "control-label visible-ie8 visible-ie9" },
+                [_vm._v("Password")]
+              ),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.model.password,
+                    expression: "model.password"
+                  }
+                ],
+                staticClass:
+                  "form-control form-control-solid placeholder-no-fix",
+                attrs: {
+                  type: "password",
+                  autocomplete: "off",
+                  placeholder: "Password",
+                  name: "password",
+                  id: "password"
+                },
+                domProps: { value: _vm.model.password },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.model, "password", $event.target.value)
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-actions" }, [
+              _c("input", {
+                staticClass: "btn btn-success uppercase",
+                attrs: { type: "submit", value: "Submit" },
+                on: { click: _vm.login }
+              }),
+              _vm._v(" "),
+              _vm._m(0),
+              _vm._v(" "),
+              _c(
+                "a",
+                {
+                  staticClass: "forget-password",
+                  attrs: {
+                    href: "javascript:;",
+                    id: "forget-password",
+                    onclick: "showForm('forgot')"
+                  }
+                },
+                [_vm._v("Forgot Password?")]
+              )
+            ])
+          ])
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", { staticClass: "rememberme check" }, [
+      _c("input", {
+        attrs: { type: "checkbox", name: "remember", value: "1" }
+      }),
+      _vm._v("Remember ")
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-00591eaa", module.exports)
+  }
+}
+
+/***/ }),
+/* 69 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(70)
+/* template */
+var __vue_template__ = __webpack_require__(71)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\orderComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-8a4ad634", Component.options)
+  } else {
+    hotAPI.reload("data-v-8a4ad634", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 70 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            orderModel: {
+                search_customer: '',
+                search_product: '',
+                order_customer: ''
+            },
+            errors: [],
+            success: [],
+            internal: [],
+            productModel: [],
+            searchProduct: [],
+            results: [],
+            resultsCustomer: [],
+            productSelect: [],
+            customerSelect: [],
+            searchCustomer: [],
+            total: 0,
+            sub_total: 0,
+            grand_total: 0,
+            tax: 0,
+            discount: 0
+        };
+    },
+    mounted: function mounted() {
+        this.readOrder(); //call when page load
+    },
+
+    methods: {
+        initAddOrder: function initAddOrder() {
+            alert('fgh');
+        },
+        createOrder: function createOrder() {
+            var _this = this;
+
+            axios.post('/api/orders', {}).then(function (response) {
+                _this.errors = [];
+                _this.internal = [];
+                if (response.data.success == true) {
+                    _this.success = [];
+                    _this.success.push('Tax created successfully!.');
+                    _this.reset(); //reset this value
+                    _this.taxesUpdateModelData.push(response.data.tax); //assign response data to the taxesUpdateModelData model to fetch data instantly
+                    $("#add_tax_model").modal("hide"); //hide model
+                }
+                if (response.data.success == false) {
+                    _this.internal = [];
+                    _this.internal.push(response.data.error);
+                }
+            }).catch(function (error) {
+                //error handling
+                _this.errors = [];
+                if (error.response.data.errors.name) {
+                    _this.errors.push(error.response.data.errors.name[0]);
+                }
+                if (error.response.data.errors.percentage) {
+                    _this.errors.push(error.response.data.errors.percentage[0]);
+                }
+            });
+        },
+        reset: function reset() {
+            //reset all the vue models data
+            this.orderModel.search_customer = '';
+            this.orderModel.ssearch_product = '';
+        },
+        readOrder: function readOrder() {
+            var _this2 = this;
+
+            axios.get('/api/products').then(function (response) {
+                _this2.productModel = response.data.products;
+            });
+        },
+        autoComplete: function autoComplete() {
+            var _this3 = this;
+
+            this.results = [];
+            if (this.orderModel.search_product.length > 0) {
+                axios.get('/api/search', { params: { query: this.orderModel.search_product } }).then(function (response) {
+                    _this3.searchProduct = response.data;
+                });
+            }
+        },
+        addProductCart: function addProductCart(id) {
+            var _this4 = this;
+
+            axios.get('/api/getProduct/' + id).then(function (response) {
+                _this4.calculation(response.data.products[0]);
+                _this4.productSelect.push(response.data.products[0]);
+            });
+            this.searchProduct = [];
+            this.orderModel.search_product = '';
+        },
+        removeProduct: function removeProduct(id) {
+            this.productSelect.splice(id, 1);
+            this.calculationDec(this.productSelect);
+        },
+        autoCompleteCustomer: function autoCompleteCustomer() {
+            var _this5 = this;
+
+            this.resultsCustomer = [];
+            if (this.orderModel.search_customer.length > 0) {
+                axios.get('/api/searchCustomer', { params: { query: this.orderModel.search_customer } }).then(function (response) {
+                    _this5.searchCustomer = response.data;
+                });
+            }
+        },
+        addCustomer: function addCustomer(id) {
+            var _this6 = this;
+
+            axios.get('/api/getCustomer/' + id).then(function (response) {
+                _this6.customerSelect.push(response.data.customer);
+                _this6.orderModel.search_customer = response.data.customer[0].name;
+                _this6.orderModel.order_customer = response.data.customer[0].id;
+                _this6.searchCustomer = [];
+            });
+        },
+        calculation: function calculation(data) {
+            this.total += data.price * 1;
+            var tax_total = data.price * data.tax_id / 100;
+            this.tax += tax_total * 1;
+            this.grand_total = this.total + this.tax;
+        },
+        calculationDec: function calculationDec(datas) {
+            this.total = 0;
+            this.tax = 0;
+            this.grand_total = 0;
+            for (var i = 0; i < datas.length; i++) {
+                this.total += datas[i].price * 1;
+                var tax_total = datas[i].price * datas[i].tax_id / 100;
+                this.tax += tax_total * 1;
+                this.grand_total = this.total + this.tax;
+            }
+        },
+        checkOut: function checkOut() {
+            this.errors = [];
+            if (this.productSelect.length == 0) {
+                this.errors.push('please select product');
+            }
+            if (this.customerSelect.length == 0) {
+                this.errors.push('please select Customer');
+            }
+            if (this.customerSelect.length > 0 && this.productSelect.length > 0) {
+                $("#invoice_model").modal("show");
+            }
+        }
+    }
+});
+
+/***/ }),
+/* 71 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "row" }, [
+    _c("div", { staticClass: "col-sm-md-12" }, [
+      _c("div", { staticClass: "col-sm-md-6" }, [
+        _vm.errors.length > 0
+          ? _c("div", { staticClass: "alert alert-danger" }, [
+              _c(
+                "ul",
+                _vm._l(_vm.errors, function(error) {
+                  return _c("li", [_vm._v(_vm._s(error))])
+                })
+              )
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-md-3" }, [
+          _c("div", { staticClass: "form-group" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.orderModel.search_product,
+                  expression: "orderModel.search_product"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: {
+                type: "text",
+                name: "search_product",
+                id: "search_product",
+                placeholder: "Search Product"
+              },
+              domProps: { value: _vm.orderModel.search_product },
+              on: {
+                keyup: _vm.autoComplete,
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(
+                    _vm.orderModel,
+                    "search_product",
+                    $event.target.value
+                  )
+                }
+              }
+            }),
+            _vm._v(" "),
+            _vm.searchProduct.length
+              ? _c("div", { staticClass: "panel-footer" }, [
+                  _c(
+                    "ul",
+                    { staticClass: "list-group" },
+                    _vm._l(_vm.searchProduct, function(result) {
+                      return _c(
+                        "li",
+                        {
+                          staticClass: "list-group-item",
+                          on: {
+                            click: function($event) {
+                              _vm.addProductCart(result.id)
+                            }
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\r\n                                 " +
+                              _vm._s(result.name) +
+                              "\r\n                                "
+                          )
+                        ]
+                      )
+                    })
+                  )
+                ])
+              : _vm._e()
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-md-3" }, [
+          _c("div", { staticClass: "form-group" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.orderModel.search_customer,
+                  expression: "orderModel.search_customer"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: {
+                type: "text",
+                name: "search_customer",
+                id: "search_customer",
+                placeholder: "Search Customer"
+              },
+              domProps: { value: _vm.orderModel.search_customer },
+              on: {
+                keyup: _vm.autoCompleteCustomer,
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(
+                    _vm.orderModel,
+                    "search_customer",
+                    $event.target.value
+                  )
+                }
+              }
+            }),
+            _vm._v(" "),
+            _vm.searchCustomer.length
+              ? _c("div", { staticClass: "panel-footer" }, [
+                  _c(
+                    "ul",
+                    { staticClass: "list-group" },
+                    _vm._l(_vm.searchCustomer, function(customer) {
+                      return _c(
+                        "li",
+                        {
+                          staticClass: "list-group-item",
+                          on: {
+                            click: function($event) {
+                              _vm.addCustomer(customer.id)
+                            }
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\r\n                                 " +
+                              _vm._s(customer.name) +
+                              "\r\n                                "
+                          )
+                        ]
+                      )
+                    })
+                  )
+                ])
+              : _vm._e()
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "col-sm-md-6" },
+        [
+          _vm._m(0),
+          _vm._v(" "),
+          _vm._l(_vm.productModel, function(product) {
+            return _c("div", [
+              _c("div", { staticClass: "col-md-2" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "form-control",
+                    attrs: {
+                      for: "sub_category_id",
+                      name: "sub_categories_id",
+                      value: product.id
+                    },
+                    on: {
+                      click: function($event) {
+                        _vm.addProductCart(product.id)
+                      }
+                    }
+                  },
+                  [_vm._v(_vm._s(product.name))]
+                )
+              ])
+            ])
+          })
+        ],
+        2
+      )
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "col-sm-md-12 scroll" }, [
+      _c(
+        "div",
+        { staticClass: "col-sm-md-6" },
+        _vm._l(_vm.productSelect, function(elsefor, index) {
+          return _vm.productSelect.length
+            ? _c("div", { staticClass: "panel-footer" }, [
+                _c("li", { staticClass: "list-group-item" }, [
+                  _c("div", { staticClass: "col-sm-md-4" }, [
+                    _c("label", [_vm._v(_vm._s(elsefor.name))])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-sm-md-2" }, [
+                    _c("label", { staticClass: "red" }, [
+                      _vm._v(" " + _vm._s(elsefor.price))
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "close_btn",
+                        on: {
+                          click: function($event) {
+                            _vm.removeProduct(index)
+                          }
+                        }
+                      },
+                      [_vm._v("X")]
+                    )
+                  ])
+                ])
+              ])
+            : _vm._e()
+        })
+      )
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "col-md-6" }, [
+      _c("b", [
+        _vm._v("\r\n                Sub-Total   :- ₹" + _vm._s(this.total)),
+        _c("br"),
+        _vm._v(
+          "\r\n                Tax (CGST: 2.50%, SGST: 2.50%) GST         :-  ₹" +
+            _vm._s(this.tax)
+        ),
+        _c("br"),
+        _vm._v("\r\n                Discount    :- ₹" + _vm._s(this.discount)),
+        _c("br"),
+        _vm._v(
+          "\r\n                Grand-Total :- ₹" + _vm._s(this.grand_total)
+        ),
+        _c("br")
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "col-md-6" }, [
+      _c("div", { staticClass: "col-md-3" }, [
+        _c("input", {
+          staticClass: "form-control",
+          attrs: { type: "submit", name: "checkout", value: "Check-Out" },
+          on: { click: _vm.checkOut }
+        })
+      ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: { tabindex: "-1", role: "dialog", id: "invoice_model" }
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "modal-dialog", attrs: { role: "document" } },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _vm._m(1),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-body" }, [
+                _c("div", { staticClass: "col-sm-md-12" }, [
+                  _c("div", { staticClass: "col-md-3" }, [
+                    _vm._v(
+                      "\r\n                                    Customer Name:-\r\n                                "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-sm-md-3" }, [
+                    _vm._v(
+                      "\r\n                                    " +
+                        _vm._s(this.orderModel.search_customer) +
+                        "\r\n                                "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("hr"),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "col-md-12" },
+                    [
+                      _vm._m(2),
+                      _vm._v(" "),
+                      _vm._m(3),
+                      _vm._v(" "),
+                      _vm._l(_vm.productSelect, function(elsefor, index) {
+                        return _vm.productSelect.length
+                          ? _c("div", { staticClass: "col-md-12" }, [
+                              _c("div", { staticClass: "col-md-4" }, [
+                                _vm._v(
+                                  "\r\n                                             " +
+                                    _vm._s(elsefor.name) +
+                                    " \r\n                                        "
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "col-md-6" }, [
+                                _vm._v(
+                                  "\r\n                                         " +
+                                    _vm._s(elsefor.price) +
+                                    "\r\n                                        "
+                                )
+                              ])
+                            ])
+                          : _vm._e()
+                      })
+                    ],
+                    2
+                  ),
+                  _vm._v(" "),
+                  _vm._m(4),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-md-4" }, [
+                    _vm._v(
+                      "\r\n                                    Sub-Total:-\r\n                                "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-sm-md-6" }, [
+                    _c("b", [_vm._v(" ₹ " + _vm._s(this.total) + " ")])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-md-4" }, [
+                    _vm._v(
+                      "\r\n                                    Tax:-\r\n                                "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-sm-md-6" }, [
+                    _c("b", [_vm._v(" ₹ " + _vm._s(this.tax) + " ")])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-md-4" }, [
+                    _vm._v(
+                      "\r\n                                    Discount:-\r\n                                "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-sm-md-6" }, [
+                    _c("b", [_vm._v(" ₹ " + _vm._s(this.discount) + " ")])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-md-4" }, [
+                    _vm._v(
+                      "\r\n                                    Gand-Total:-\r\n                                "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-sm-md-6" }, [
+                    _c("b", [_vm._v(" ₹ " + _vm._s(this.grand_total) + " ")])
+                  ])
+                ])
+              ])
+            ])
+          ]
+        )
+      ]
+    )
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-2" }, [
+      _c("h4", { staticClass: "modal-title" }, [_vm._v("Products")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      ),
+      _vm._v(" "),
+      _c("h4", { staticClass: "modal-title" }, [_vm._v("Invoice")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-4" }, [
+      _c("b", [_vm._v(" Items ")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-6" }, [
+      _c("b", [_vm._v(" Price ")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-12" }, [_c("hr")])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-8a4ad634", module.exports)
+  }
+}
+
+/***/ }),
+/* 72 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);

@@ -12,6 +12,8 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Categories;
+use App\SubCategories;
+use App\Products;
 use DB;
 use Auth;
 
@@ -134,6 +136,14 @@ class CategoryController extends Controller
         try {    
             DB::beginTransaction();        
                 Categories::where('id',$id)->delete();
+                $subCategory = SubCategories::where('categories_id',$id)->get();
+                foreach ($subCategory as $key => $value) {
+                    $value->delete();
+                }
+                $product = Products::where('categories_id',$id)->get();
+                foreach ($product as $keys => $values) {
+                    $values->delete();
+                }
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();

@@ -88,7 +88,11 @@ class CustomerController extends Controller
      */
     public function show($id)
     {
-        //
+        $customer = Customers::where('id',$id)->get();
+        return response()->json([
+                'customer'   => $customer,
+                'success'           => true,
+            ]);
     }
 
     /**
@@ -175,5 +179,12 @@ class CustomerController extends Controller
             $file->move($destinationPath,$fileName); // uploading file to given path
         return $fileName;
         }
+    }
+
+    public function searchCustomer(Request $request)
+    {
+        $query = $request->get('query');
+        $customer = Customers::where('name','like','%'.$query.'%')->get();
+        return response()->json($customer);
     }
 }

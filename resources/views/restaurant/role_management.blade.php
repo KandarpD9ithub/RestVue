@@ -1,9 +1,6 @@
 @extends('layout.master')
-
 @section('content')
 <div id="app">
-    
-    <order></order>
-
+<managerole></managerole>
 </div>
 @endsection

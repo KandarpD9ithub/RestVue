@@ -28,7 +28,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->integer('country')->nullable();
             $table->string('mobile', 15)->nullable();
-            $table->unsignedTinyInteger('role_name')->comment('1 (Admin), 2 (Accountant), 3 (Cashier), 4 (Store Manager), 5 ( Chef)');
+            $table->unsignedTinyInteger('role_name')->comment('1 (Admin), 2 (Accountant), 3 (Cashier), 4 (Store Manager), 5 ( Chef)')->nullable();
             $table->enum('is_active', [0,1])->default(1);
             $table->rememberToken();
             $table->softDeletes();

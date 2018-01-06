@@ -23,7 +23,9 @@ class CreateSubCategoriesTable extends Migration
         Schema::create('sub_categories', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->nullable();
-            $table->string('categories_id')->nullable();
+            //$table->string('categories_id')->nullable();
+            $table->integer('categories_id')->unsigned();
+            $table->foreign('categories_id')->references('id')->on('categories');
             $table->unsignedTinyInteger('available')->comment('0 (No), 1 (Yes)')->default(0);
             $table->unsignedTinyInteger('is_active')->comment('0 (inActive), 1 (Active)')->default(1);
             $table->string('created_by')->nullable();

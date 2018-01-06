@@ -7,8 +7,11 @@ use App\Http\Controllers\Controller;
 use App\Products;
 use App\Categories;
 use App\SubCategories;
+use App\Taxes;
 use DB;
 use Auth;
+use Image;
+use Input;
 
 class ProductController extends Controller
 {
@@ -52,7 +55,7 @@ class ProductController extends Controller
             'sub_categories_id'   => 'required',
             'tax_id'            => 'required',
             'available'         => 'required',
-            'image'             => 'required',
+            'image'             => '',
             'description'       => 'required|max:200',
             'is_active'         => 'required',
             'time_duration'     => 'required',
@@ -60,6 +63,10 @@ class ProductController extends Controller
 
         try {
             DB::beginTransaction();
+            $file = $request->get('image');
+            $name_prefix="product_";
+            $product_image=$this->UploadImagePath($file,$name_prefix);//upload image in folder
+            $request['image'] = $product_image;
             $product = Products::create($request->all());
             DB::commit();
         } catch (\Exception $e) {
@@ -72,7 +79,21 @@ class ProductController extends Controller
             'success' => true,
         ], 200);
     }
-
+    public function UploadImagePath($file,$name_prefix)
+    {
+      /*
+        desc    : upload image in the folder
+        dev. name  : Pandya Kandarp
+        date    : 26-02-2017
+        update date  :
+        update desc  :
+      */
+          $data = Image::make($file);//make image 
+          $fileName = $name_prefix.time().".jpg"; // renameing image
+          $path = public_path().'/upload/'. $fileName;//path
+          $data->save($path);//save images
+          return $fileName;
+    }
     /**
      * Display the specified resource.
      *
@@ -81,7 +102,19 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        //
+        $products = Products::where('id',$id)->get();
+        foreach ($products as $key => $value) {
+            $tax= Taxes::where('id',$value->tax_id)->first();
+            if (count($tax) > 0) {
+              $value->tax_id = $tax->percentage;
+            }else{
+              $value->tax_id = 0;
+            }
+        }
+        return response()->json([
+                'products'   => $products,
+                'success'           => true,
+            ]);
     }
 
     /**
@@ -112,7 +145,7 @@ class ProductController extends Controller
             'sub_categories_id'   => 'required',
             'tax_id'            => 'required',
             'available'         => 'required',
-            'image'             => 'required',
+            'image'             => '',
             'description'       => 'required|max:200',
             'is_active'         => 'required',
             'time_duration'     => 'required',
@@ -120,7 +153,13 @@ class ProductController extends Controller
         
         try {
             DB::beginTransaction();
-            $product = Products::where('id',$id)->update($prod);
+            $file = $request->get('image');
+            if($file!=null){
+              $name_prefix="product_";
+              $product_image=$this->UploadImagePath($file,$name_prefix);//upload image in folder
+              $prod['image'] = $product_image;
+            }
+              $product = Products::where('id',$id)->update($prod);
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
@@ -188,5 +227,21 @@ class ProductController extends Controller
                 'success'   => true,
                 'productList'  => $productAll,
             ], 200);
+    }
+
+    public function searchProduct(Request $request)
+    {
+
+        $query = $request->get('query');
+        $product = Products::where('name','like','%'.$query.'%')->get();
+        foreach ($product as $key => $value) {
+            $tax= DB::table('taxes')->where('id',$value->tax_id)->first();
+            if (count($tax) > 0) {
+              $value->tax_id = $tax->percentage;
+            }else{
+              $value->tax_id = 0;
+            }
+        }
+        return response()->json($product);
     }
 }

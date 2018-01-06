@@ -61,7 +61,7 @@ License: You must have a valid license purchased only from themeforest(the above
 <div class="content">
 	<!-- BEGIN LOGIN FORM -->
 	<!-- <form class="login-form" action="index.html" method="post"> -->
-		{{ Form::open(['url'=>'Login','class'=>'login-form','id'=>'loginId']) }}
+		
 		<h3 class="form-title">Sign In</h3>
         <div class="alert alert-danger display-hide">
             <button class="close" data-close="alert"></button>
@@ -77,20 +77,8 @@ License: You must have a valid license purchased only from themeforest(the above
 					        </ul>
 					    </div>
 					@endif
-        <div class="form-group">
-            <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
-            <label class="control-label visible-ie8 visible-ie9">Username</label>
-            <input class="form-control form-control-solid placeholder-no-fix" type="text" autocomplete="off" placeholder="Username" name="email"/>
-        </div>
-        <div class="form-group">
-            <label class="control-label visible-ie8 visible-ie9">Password</label>
-            <input class="form-control form-control-solid placeholder-no-fix" type="password" autocomplete="off" placeholder="Password" name="password"/>
-        </div>
-        <div class="form-actions">
-        	{{ Form::submit('Login',['class'=>'btn btn-success uppercase']) }}
-            <label class="rememberme check">
-            <input type="checkbox" name="remember" value="1"/>Remember </label>
-            <a href="javascript:;" id="forget-password" onclick="showForm('forgot')" class="forget-password">Forgot Password?</a>
+        <div id="app">
+        	<login></login>
         </div>
         <div class="login-options">
             <h4>Or login with</h4>
@@ -114,7 +102,7 @@ License: You must have a valid license purchased only from themeforest(the above
                 <a href="javascript:;" onclick="showForm('register')" id="register-btn" class="uppercase">Create an account</a>
             </p>
         </div> -->
-		{{ Form::Close() }}
+		
 	<!-- </form> -->
 	<!-- END LOGIN FORM -->
 	<!-- BEGIN FORGOT PASSWORD FORM -->
