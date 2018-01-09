@@ -35,6 +35,7 @@ Route::resource('products','Api\ProductController');
 Route::resource('taxRules','Api\TaxesController');
 Route::resource('discounts','Api\DiscountController');
 Route::resource('tables','Api\TablesController');
+Route::resource('orders','Api\OrderController');
 
 
 Route::get('getSubCategory','Api\SubCategoryController@getSubCategory');
@@ -50,6 +51,10 @@ Route::get('types','Api\FetchDataController@');
 
 Route::get('productList','Api\ProductController@productList');
 
+Route::get('subProductList/{id}','Api\ProductController@subProductList');
+
+Route::get('catProductList/{id}','Api\ProductController@catProductList');
+
 
 
 Route::post('uploadProfilePicture','Api\CustomerController@uploadProfilePicture');
@@ -58,6 +63,8 @@ Route::post('Login','Api\FetchDataController@Login');
 
 Route::get('search','Api\ProductController@searchProduct');
 Route::get('getProduct/{id}','Api\ProductController@show');
+
+Route::post('checkProductExist','Api\ProductController@checkProductExist');
 
 Route::get('searchCustomer','Api\CustomerController@searchCustomer');
 Route::get('getCustomer/{id}','Api\CustomerController@show');

@@ -53572,6 +53572,69 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -53579,12 +53642,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             orderModel: {
                 search_customer: '',
                 search_product: '',
-                order_customer: ''
+                order_customer: '',
+                parcel: ''
             },
             errors: [],
             success: [],
             internal: [],
             productModel: [],
+            categoriesModel: [],
+            subCategoriesModel: [],
             searchProduct: [],
             results: [],
             resultsCustomer: [],
@@ -53595,7 +53661,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             sub_total: 0,
             grand_total: 0,
             tax: 0,
-            discount: 0
+            discount: 0,
+            auth_id: localStorage.getItem('auth_id'),
+            order_number: '',
+            date: ''
         };
     },
     mounted: function mounted() {
@@ -53609,29 +53678,32 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         createOrder: function createOrder() {
             var _this = this;
 
-            axios.post('/api/orders', {}).then(function (response) {
+            if (this.orderModel.parcel == '') {
+                this.orderModel.parcel = false;
+            }
+            axios.post('/api/orders', {
+
+                customer_id: this.orderModel.order_customer,
+                auth_id: this.auth_id,
+                products: this.productSelect,
+                parcel: this.orderModel.parcel,
+                sub_total: this.total,
+                grand_total: this.grand_total,
+                tax: this.tax,
+                discount: this.discount
+
+            }).then(function (response) {
                 _this.errors = [];
                 _this.internal = [];
                 if (response.data.success == true) {
                     _this.success = [];
-                    _this.success.push('Tax created successfully!.');
-                    _this.reset(); //reset this value
-                    _this.taxesUpdateModelData.push(response.data.tax); //assign response data to the taxesUpdateModelData model to fetch data instantly
-                    $("#add_tax_model").modal("hide"); //hide model
+                    _this.success.push(response.data.message);
                 }
-                if (response.data.success == false) {
-                    _this.internal = [];
-                    _this.internal.push(response.data.error);
-                }
+                _this.date = response.data.orderDetails.ordered_at;
+                _this.order_number = response.data.orderDetails.order_number;
             }).catch(function (error) {
                 //error handling
                 _this.errors = [];
-                if (error.response.data.errors.name) {
-                    _this.errors.push(error.response.data.errors.name[0]);
-                }
-                if (error.response.data.errors.percentage) {
-                    _this.errors.push(error.response.data.errors.percentage[0]);
-                }
             });
         },
         reset: function reset() {
@@ -53644,6 +53716,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             axios.get('/api/products').then(function (response) {
                 _this2.productModel = response.data.products;
+            });
+            axios.get('/api/category').then(function (response) {
+                _this2.categoriesModel = response.data.categories;
+            });
+            axios.get('/api/subCategory').then(function (response) {
+                _this2.subCategoriesModel = response.data.subCategories;
             });
         },
         autoComplete: function autoComplete() {
@@ -53660,14 +53738,36 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this4 = this;
 
             axios.get('/api/getProduct/' + id).then(function (response) {
-                _this4.calculation(response.data.products[0]);
-                _this4.productSelect.push(response.data.products[0]);
+
+                if (_this4.productSelect.length > 0) {
+                    var i = _this4.productSelect.map(function (item) {
+                        return item.id;
+                    }).indexOf(id);
+                    if (_this4.productSelect[i]) {
+                        if (id == _this4.productSelect[i].id) {
+                            console.log(_this4.productSelect);
+                            _this4.productSelect[i].quantity = _this4.productSelect[i].quantity + 1;
+                            _this4.calculation(response.data.products);
+                        } else {
+                            _this4.productSelect.push(response.data.products);
+                            _this4.calculation(response.data.products);
+                        }
+                    } else {
+                        _this4.productSelect.push(response.data.products);
+                        _this4.calculation(response.data.products);
+                    }
+                } else {
+                    _this4.productSelect.push(response.data.products);
+                    _this4.calculation(response.data.products);
+                }
             });
+
             this.searchProduct = [];
             this.orderModel.search_product = '';
         },
-        removeProduct: function removeProduct(id) {
-            this.productSelect.splice(id, 1);
+        removeProduct: function removeProduct(index) {
+            console.log(index);
+            this.productSelect.splice(index, 1);
             this.calculationDec(this.productSelect);
         },
         autoCompleteCustomer: function autoCompleteCustomer() {
@@ -53701,8 +53801,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.tax = 0;
             this.grand_total = 0;
             for (var i = 0; i < datas.length; i++) {
-                this.total += datas[i].price * 1;
-                var tax_total = datas[i].price * datas[i].tax_id / 100;
+                this.total += datas[i].price * datas[i].quantity;
+                var tax_total = datas[i].price * datas[i].quantity * datas[i].tax_id / 100;
                 this.tax += tax_total * 1;
                 this.grand_total = this.total + this.tax;
             }
@@ -53716,7 +53816,56 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 this.errors.push('please select Customer');
             }
             if (this.customerSelect.length > 0 && this.productSelect.length > 0) {
+                this.createOrder();
                 $("#invoice_model").modal("show");
+            }
+        },
+        Cancel: function Cancel() {
+            this.productSelect = [];
+            this.customerSelect = [];
+            this.tax = '';
+            this.total = '';
+            this.grand_total = '';
+            this.discount = '';
+            this.reset();
+        },
+        addSubCategoryCart: function addSubCategoryCart(id) {
+            var _this7 = this;
+
+            axios.get('/api/subCategoryList/' + id).then(function (response) {
+                _this7.subCategoriesModel = [];
+                _this7.subCategoriesModel = response.data.subCategoryList;
+            });
+            axios.get('/api/catProductList/' + id) //product by sub category
+            .then(function (response) {
+                _this7.productModel = [];
+                _this7.productModel = response.data.catProductList;
+            });
+        },
+        addSubCatProductCart: function addSubCatProductCart(id) {
+            var _this8 = this;
+
+            axios.get('/api/subProductList/' + id) //product by sub category
+            .then(function (response) {
+                _this8.productModel = [];
+                _this8.productModel = response.data.subProductList;
+            });
+        },
+        removeProductCartQuantity: function removeProductCartQuantity(id, index) {
+            if (this.productSelect.length > 0) {
+                var i = this.productSelect.map(function (item) {
+                    return item.id;
+                }).indexOf(id);
+                if (this.productSelect[i]) {
+                    if (id == this.productSelect[i].id) {
+                        this.productSelect[i].quantity = this.productSelect[i].quantity - 1;
+                        console.log(this.productSelect);
+                        this.calculationDec(this.productSelect);
+                    }
+                    if (this.productSelect[i].quantity == 0) {
+                        this.removeProduct(index);
+                    }
+                }
             }
         }
     }
@@ -53739,6 +53888,17 @@ var render = function() {
                 "ul",
                 _vm._l(_vm.errors, function(error) {
                   return _c("li", [_vm._v(_vm._s(error))])
+                })
+              )
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.success.length > 0
+          ? _c("div", { staticClass: "alert alert-success" }, [
+              _c(
+                "ul",
+                _vm._l(_vm.success, function(suc) {
+                  return _c("li", [_vm._v(_vm._s(suc))])
                 })
               )
             ])
@@ -53875,38 +54035,97 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "col-sm-md-6" },
-        [
-          _vm._m(0),
-          _vm._v(" "),
-          _vm._l(_vm.productModel, function(product) {
-            return _c("div", [
-              _c("div", { staticClass: "col-md-2" }, [
-                _c(
-                  "button",
-                  {
-                    staticClass: "form-control",
-                    attrs: {
-                      for: "sub_category_id",
-                      name: "sub_categories_id",
-                      value: product.id
-                    },
-                    on: {
-                      click: function($event) {
-                        _vm.addProductCart(product.id)
+      _c("div", { staticClass: "col-sm-6" }, [
+        _c("div", [
+          _c(
+            "div",
+            { staticClass: "col-sm-6 row" },
+            [
+              _vm._m(0),
+              _vm._v(" "),
+              _vm._l(_vm.categoriesModel, function(cat) {
+                return _c("div", { staticClass: "col-sm-12" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "form-control btn btn-group",
+                      attrs: {
+                        for: "sub_category_id",
+                        name: "sub_categories_id",
+                        value: cat.id
+                      },
+                      on: {
+                        click: function($event) {
+                          _vm.addSubCategoryCart(cat.id)
+                        }
                       }
-                    }
-                  },
-                  [_vm._v(_vm._s(product.name))]
-                )
-              ])
-            ])
-          })
-        ],
-        2
-      )
+                    },
+                    [_vm._v(_vm._s(cat.name))]
+                  )
+                ])
+              }),
+              _vm._v(" "),
+              _c("hr"),
+              _vm._v(" "),
+              _vm._m(1),
+              _vm._v(" "),
+              _vm._l(_vm.subCategoriesModel, function(subcat) {
+                return _c("div", { staticClass: "col-sm-12" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "form-control btn btn-group",
+                      attrs: {
+                        for: "category_id",
+                        name: "categories_id",
+                        value: subcat.id
+                      },
+                      on: {
+                        click: function($event) {
+                          _vm.addSubCatProductCart(subcat.id)
+                        }
+                      }
+                    },
+                    [_vm._v(_vm._s(subcat.name))]
+                  )
+                ])
+              })
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "col-sm-6 row" },
+            [
+              _vm._m(2),
+              _vm._v(" "),
+              _vm._l(_vm.productModel, function(product) {
+                return _c("div", { staticClass: "col-sm-12" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "form-control btn btn-group",
+                      attrs: {
+                        for: "product_id",
+                        name: "product_id",
+                        value: product.id
+                      },
+                      on: {
+                        click: function($event) {
+                          _vm.addProductCart(product.id)
+                        }
+                      }
+                    },
+                    [_vm._v(_vm._s(product.name))]
+                  )
+                ])
+              })
+            ],
+            2
+          )
+        ])
+      ])
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "col-sm-md-12 scroll" }, [
@@ -53917,14 +54136,40 @@ var render = function() {
           return _vm.productSelect.length
             ? _c("div", { staticClass: "panel-footer" }, [
                 _c("li", { staticClass: "list-group-item" }, [
-                  _c("div", { staticClass: "col-sm-md-4" }, [
-                    _c("label", [_vm._v(_vm._s(elsefor.name))])
+                  _c("div", { staticClass: "col-sm-6" }, [
+                    _c("label", [
+                      _vm._v(
+                        _vm._s(elsefor.name) +
+                          " X " +
+                          _vm._s(elsefor.quantity) +
+                          "  X " +
+                          _vm._s(elsefor.price)
+                      )
+                    ])
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "col-sm-md-2" }, [
                     _c("label", { staticClass: "red" }, [
-                      _vm._v(" " + _vm._s(elsefor.price))
+                      _vm._v(" " + _vm._s(elsefor.quantity * elsefor.price))
                     ]),
+                    _vm._v(" "),
+                    _c("input", {
+                      attrs: { type: "button", value: "+" },
+                      on: {
+                        click: function($event) {
+                          _vm.addProductCart(elsefor.id)
+                        }
+                      }
+                    }),
+                    _vm._v(" " + _vm._s(elsefor.quantity) + " "),
+                    _c("input", {
+                      attrs: { type: "button", value: "-" },
+                      on: {
+                        click: function($event) {
+                          _vm.removeProductCartQuantity(elsefor.id, index)
+                        }
+                      }
+                    }),
                     _vm._v(" "),
                     _c(
                       "button",
@@ -53967,6 +54212,47 @@ var render = function() {
     _c("div", { staticClass: "col-md-6" }, [
       _c("div", { staticClass: "col-md-3" }, [
         _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.orderModel.parcel,
+              expression: "orderModel.parcel"
+            }
+          ],
+          attrs: { type: "checkbox", name: "parcel", value: "1" },
+          domProps: {
+            checked: Array.isArray(_vm.orderModel.parcel)
+              ? _vm._i(_vm.orderModel.parcel, "1") > -1
+              : _vm.orderModel.parcel
+          },
+          on: {
+            change: function($event) {
+              var $$a = _vm.orderModel.parcel,
+                $$el = $event.target,
+                $$c = $$el.checked ? true : false
+              if (Array.isArray($$a)) {
+                var $$v = "1",
+                  $$i = _vm._i($$a, $$v)
+                if ($$el.checked) {
+                  $$i < 0 && (_vm.orderModel.parcel = $$a.concat([$$v]))
+                } else {
+                  $$i > -1 &&
+                    (_vm.orderModel.parcel = $$a
+                      .slice(0, $$i)
+                      .concat($$a.slice($$i + 1)))
+                }
+              } else {
+                _vm.$set(_vm.orderModel, "parcel", $$c)
+              }
+            }
+          }
+        }),
+        _vm._v("Parcel\r\n            ")
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-3" }, [
+        _c("input", {
           staticClass: "form-control",
           attrs: { type: "submit", name: "checkout", value: "Check-Out" },
           on: { click: _vm.checkOut }
@@ -53986,7 +54272,7 @@ var render = function() {
           { staticClass: "modal-dialog", attrs: { role: "document" } },
           [
             _c("div", { staticClass: "modal-content" }, [
-              _vm._m(1),
+              _vm._m(3),
               _vm._v(" "),
               _c("div", { staticClass: "modal-body" }, [
                 _c("div", { staticClass: "col-sm-md-12" }, [
@@ -54004,20 +54290,52 @@ var render = function() {
                     )
                   ]),
                   _vm._v(" "),
+                  _c("div", { staticClass: "col-md-3" }, [
+                    _vm._v(
+                      "\r\n                                    Order Number:-\r\n                                "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-sm-md-3" }, [
+                    _vm._v(
+                      "\r\n                                    " +
+                        _vm._s(this.order_number) +
+                        "\r\n                                "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-md-3" }, [
+                    _vm._v(
+                      "\r\n                                    Date:-\r\n                                "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-sm-md-3" }, [
+                    _vm._v(
+                      "\r\n                                    " +
+                        _vm._s(this.date) +
+                        "\r\n                                "
+                    )
+                  ]),
+                  _vm._v(" "),
                   _c("hr"),
                   _vm._v(" "),
                   _c(
                     "div",
                     { staticClass: "col-md-12" },
                     [
-                      _vm._m(2),
+                      _vm._m(4),
                       _vm._v(" "),
-                      _vm._m(3),
+                      _vm._m(5),
+                      _vm._v(" "),
+                      _vm._m(6),
+                      _vm._v(" "),
+                      _vm._m(7),
                       _vm._v(" "),
                       _vm._l(_vm.productSelect, function(elsefor, index) {
                         return _vm.productSelect.length
                           ? _c("div", { staticClass: "col-md-12" }, [
-                              _c("div", { staticClass: "col-md-4" }, [
+                              _c("div", { staticClass: "col-md-3" }, [
                                 _vm._v(
                                   "\r\n                                             " +
                                     _vm._s(elsefor.name) +
@@ -54025,11 +54343,27 @@ var render = function() {
                                 )
                               ]),
                               _vm._v(" "),
-                              _c("div", { staticClass: "col-md-6" }, [
+                              _c("div", { staticClass: "col-md-3" }, [
                                 _vm._v(
                                   "\r\n                                         " +
                                     _vm._s(elsefor.price) +
                                     "\r\n                                        "
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "col-md-3" }, [
+                                _vm._v(
+                                  "\r\n                                         " +
+                                    _vm._s(elsefor.quantity) +
+                                    " \r\n                                        "
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "col-md-3" }, [
+                                _vm._v(
+                                  "\r\n                                         " +
+                                    _vm._s(elsefor.price * elsefor.quantity) +
+                                    " \r\n                                        "
                                 )
                               ])
                             ])
@@ -54039,7 +54373,7 @@ var render = function() {
                     2
                   ),
                   _vm._v(" "),
-                  _vm._m(4),
+                  _vm._m(8),
                   _vm._v(" "),
                   _c("div", { staticClass: "col-md-4" }, [
                     _vm._v(
@@ -54079,6 +54413,23 @@ var render = function() {
                   _vm._v(" "),
                   _c("div", { staticClass: "col-sm-md-6" }, [
                     _c("b", [_vm._v(" ₹ " + _vm._s(this.grand_total) + " ")])
+                  ]),
+                  _vm._v(" "),
+                  _c("hr"),
+                  _vm._v(" "),
+                  _vm._m(9),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-sm-md-2" }, [
+                    _c("input", {
+                      staticClass: "form-control",
+                      attrs: {
+                        type: "button",
+                        name: "print",
+                        value: "Cancel",
+                        "data-dismiss": "modal"
+                      },
+                      on: { click: _vm.Cancel }
+                    })
                   ])
                 ])
               ])
@@ -54090,6 +54441,22 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-2" }, [
+      _c("h4", { staticClass: "modal-title" }, [_vm._v("Category")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm-6" }, [
+      _c("h4", { staticClass: "modal-title" }, [_vm._v("Sub-Category")])
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -54123,7 +54490,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-4" }, [
+    return _c("div", { staticClass: "col-md-3" }, [
       _c("b", [_vm._v(" Items ")])
     ])
   },
@@ -54131,7 +54498,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-6" }, [
+    return _c("div", { staticClass: "col-md-3" }, [
       _c("b", [_vm._v(" Price ")])
     ])
   },
@@ -54139,7 +54506,34 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-3" }, [
+      _c("b", [_vm._v(" Qnty. ")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-3" }, [
+      _c("b", [_vm._v(" s.total. ")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
     return _c("div", { staticClass: "col-md-12" }, [_c("hr")])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm-md-2" }, [
+      _c("input", {
+        staticClass: "form-control",
+        attrs: { type: "submit", name: "print", value: "Print" }
+      })
+    ])
   }
 ]
 render._withStripped = true

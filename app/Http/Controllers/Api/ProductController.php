@@ -102,15 +102,15 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        $products = Products::where('id',$id)->get();
-        foreach ($products as $key => $value) {
-            $tax= Taxes::where('id',$value->tax_id)->first();
+        $products = Products::where('id',$id)->first();
+        
+            $tax= Taxes::where('id',$products->tax_id)->first();
             if (count($tax) > 0) {
-              $value->tax_id = $tax->percentage;
+              $products->tax_id = $tax->percentage;
             }else{
-              $value->tax_id = 0;
+              $products->tax_id = 0;
             }
-        }
+        $products->quantity = 1;
         return response()->json([
                 'products'   => $products,
                 'success'           => true,
@@ -193,7 +193,12 @@ class ProductController extends Controller
             'success' => true,
         ], 200);
     }
-
+    /**
+     * get product list with category and subcategory.
+     *
+     * @param  
+     * @return \Illuminate\Http\Response
+     */
     public function productList()
     {
         $productAll = [];
@@ -229,6 +234,12 @@ class ProductController extends Controller
             ], 200);
     }
 
+    /**
+     * search product by name.
+     *
+     * @param  request
+     * @return \Illuminate\Http\Response
+     */
     public function searchProduct(Request $request)
     {
 
@@ -243,5 +254,46 @@ class ProductController extends Controller
             }
         }
         return response()->json($product);
+    }
+
+    /**
+     * Get product by subcategory .
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function subProductList($id)
+    {
+        $product = Products::where('sub_categories_id',$id)->where('is_active',1)->get();
+        return response()->json([
+            'success' => true,
+            'subProductList' => $product,
+        ]);
+    }
+
+    /**
+     * Get product by category.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function catProductList($id)
+    {
+        $product = Products::where('categories_id',$id)->where('is_active',1)->get();
+        return response()->json([
+            'success' => true,
+            'catProductList' => $product,
+        ]);
+    }
+
+    /**
+     * check product is exist in array.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function checkProductExist(Request $request)
+    { 
+        return [count($request->get('products')),$request->get('products')];
     }
 }
